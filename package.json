@@ -11,9 +11,12 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@liveblocks/client": "^2.11.0",
+    "@liveblocks/react": "^2.11.0",
     "next": "14.2.17",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.2",
