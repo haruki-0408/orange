@@ -1,8 +1,7 @@
-import React, { useMemo } from "react";
-import { useRouter } from "next/router";
+"use client"
+import React from "react";
 import { useOthers, useMyPresence } from "@liveblocks/react";
-// import styles from "../styles/style.module.css"; // Adjusted path to CSS module
-import Cursor from "@/components/ui-parts/Cursor";
+import { MultiplayerCursor } from "../ui-mass/MultiplayerCursor";
 
 /**
  * This file shows how to add basic live cursors on your product.
@@ -19,7 +18,7 @@ const COLORS = [
   "#7986CB",
 ];
 
-function MultiplayerComponent() {
+function MultiplayerLayer() {
 
   /**
    * useMyPresence returns the presence of the current user and a function to update it.
@@ -35,6 +34,7 @@ function MultiplayerComponent() {
   const others = useOthers();
 
   return (
+  
     <div
       className="w-screen h-screen"
       onPointerMove={(event) => {
@@ -69,10 +69,12 @@ function MultiplayerComponent() {
           }
 
           return (
-            <Cursor
+            <MultiplayerCursor
               key={`cursor-${connectionId}`}
               // connectionId is an integer that is incremented at every new connections
               // Assigning a color with a modulo makes sure that a specific user has the same colors on every client
+              id={`cursor-${connectionId}`}
+              name={`Guest${connectionId}`}
               color={COLORS[connectionId % COLORS.length]}
               x={presence.cursor.x}
               y={presence.cursor.y}
@@ -84,4 +86,4 @@ function MultiplayerComponent() {
   );
 }
 
-export default MultiplayerComponent;
+export default MultiplayerLayer;
