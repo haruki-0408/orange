@@ -1,5 +1,6 @@
+import { broadcastToWorkflow } from '@/lib/websocket/SSEManager';
 import { NextRequest, NextResponse } from 'next/server';
-import { broadcastToWorkflow } from '../sse/[workflow_id]/route';
+
 
 export async function POST(req: NextRequest) {
   try {
