@@ -1,0 +1,117 @@
+.customNodeWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding:  2px; /* 外枠の余白 */
+  border-radius: 20px; /* 外枠の丸み */
+  background: linear-gradient(90deg, #ff0000, #ff7300, #ffe600, #47ff00, #00ffed, #2b65ff, #8000ff, #ff0080);
+}
+
+.customNode {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 16px; /* 内側の丸み */
+  background-color: #000000; /* 内側の黒背景 */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  width: 400px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.titleArea {
+  flex: 1;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.description {
+  margin: 6px 0 0;
+  font-size: 16px;
+  color: #d1d5db;
+}
+
+.separator {
+  margin: 16px 0;
+  border: none;
+  border-bottom: 1px solid #333333;
+}
+
+.toggleButton {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 16px;
+
+  &:hover {
+    background-color: #1d4ed8;
+  }
+}
+
+.codeBlock {
+  background-color: #111827;
+  color: #d1d5db;
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 12px;
+  font-size: 14px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* ステータスバッジのスタイル */
+.badge {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: capitalize;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+.badge.pending {
+  background-color: #f59e0b;
+}
+
+.badge.progress {
+  background-color: #3b82f6;
+}
+
+.badge.success {
+  background-color: #10b981;
+}
+
+.badge.error {
+  background-color: #ef4444;
+}

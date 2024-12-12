@@ -10,15 +10,58 @@
 // }
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import ReactFlow, { Node, Edge, useNodesState, useEdgesState, addEdge, Connection, Controls, Background, MiniMap } from 'reactflow';
+import { CustomEdge } from '@/components/ui-mass/CustomEdge';
+import { CustomNode } from '@/components/ui-mass/CustomNode';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import ReactFlow, { Node, Edge, useNodesState, useEdgesState, addEdge, Connection, Controls, Background, MiniMap, BezierEdge } from 'reactflow';
 import 'reactflow/dist/style.css';
 
-const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: 'Step 1' } },
-  { id: '2', position: { x: 200, y: 100 }, data: { label: 'Step 2' } },
+const nodeTypes = {
+  custom: CustomNode,
+};
+
+const edgeTypes = {
+  custom: CustomEdge,
+};
+
+// ノードの初期データ
+const initialNodes: Node[] = [
+  {
+    id: '1', // ノードのID
+    type: 'custom', // カスタムノードタイプ
+    position: { x: 100, y: 100 },
+    data: {
+      title: 'Lambda Function',
+      description: 'Fetch Data',
+      icon: '🔄',
+      status: 'progress',
+      code: 'fetch("/api")',
+    },
+  },
+  {
+    id: '2', // ノードのID
+    type: 'custom',
+    position: { x: 300, y: 100 },
+    data: {
+      title: 'DynamoDB',
+      description: 'Save Data',
+      icon: '📦',
+      status: 'success',
+      code: 'dynamodb.put({...})',
+    },
+  },
 ];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+
+// エッジの初期データ
+const initialEdges: Edge[] = [
+  {
+    id: 'e1-2', // エッジのID
+    source: '1', // エッジの始点ノードID
+    target: '2', // エッジの終点ノードID
+    type: 'default', // デフォルトタイプのエッジ
+  },
+];
+
 
 export default function Page() {
   const [workflowId, setWorkflowId] = useState<string | null>(null);
@@ -84,17 +127,19 @@ export default function Page() {
       <button onClick={startWorkflow}>Start Workflow</button>
       {workflowId && <p>Connecting to workflow .......</p>}
       {progress && <p>Progress: {progress}</p>}
-      <div style={{ height: '500px', width: '100%', marginTop: '20px' }}>
+      <div style={{ height: '500px', width: '50%', marginTop: '20px' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
         >
           <Controls />
           <MiniMap />
-          <Background gap={12} size={1} />
+          <Background gap={20} size={1} style={{ backgroundColor: '#0000' }} />
         </ReactFlow>
       </div>
     </div>
