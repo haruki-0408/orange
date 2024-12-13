@@ -1,38 +1,70 @@
-import React from 'react';
-import { EdgeProps, getBezierPath } from 'reactflow';
-import './style.module.scss';
+import { FCX } from "@/types/types";
+import React from "react";
+import { EdgeProps, getSmoothStepPath } from "reactflow";
+import styles from "./style.module.scss";
 
-export const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY, markerEnd }: EdgeProps) => {
-  const [edgePath] = getBezierPath({
+export const CustomEdge: FCX<EdgeProps> = ({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  style = {},
+}) => {
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
+    sourcePosition,
     targetX,
     targetY,
+    targetPosition,
   });
 
   return (
     <>
-      {/* SVGグラデーション定義 */}
-      <svg>
+      <svg style={{ position: 'absolute', top: 0, left: 0 }}>
         <defs>
-          <linearGradient id={`gradient-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#ff0000" />
-            <stop offset="25%" stopColor="#00ff00" />
-            <stop offset="50%" stopColor="#0000ff" />
-            <stop offset="75%" stopColor="#ff00ff" />
-            <stop offset="100%" stopColor="#ff0000" />
-          </linearGradient>
+          <marker
+            id="edge-arrow"
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="6"
+            markerHeight="6"
+            orient="auto-start-reverse"
+          >
+            <path
+              className={styles['edge-arrow']}
+              d="M 0 0 L 10 5 L 0 10 z"
+            />
+          </marker>
         </defs>
       </svg>
-      {/* エッジパス */}
-      <path
-        id={id}
-        className="custom-edge-path"
-        d={edgePath}
-        markerEnd={markerEnd}
-        style={{ stroke: `url(#gradient-${id})` }}
-      />
+      <div className={styles['custom-edge-wrapper']}>
+        <path
+          id={id}
+          className={styles['custom-edge-path']}
+          d={edgePath}
+          markerEnd="url(#edge-arrow)"
+        />
+        <button
+          className={styles['edge-button']}
+          style={{
+            left: labelX,
+            top: labelY,
+          }}
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          →
+        </button>
+      </div>
     </>
   );
 };
+
+export default CustomEdge;
 

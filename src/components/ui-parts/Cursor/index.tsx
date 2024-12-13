@@ -1,12 +1,12 @@
-import { FCX } from "@/types/types";
 import React from "react";
+import { FCX } from "@/types/types";
+import styles from "./style.module.scss";
 
-type Props = {
+interface Props {
   color: string;
   x: number;
   y: number;
-};
-
+}
 
 export const Cursor:FCX<Props> = ({color, x, y}) => {
   return (

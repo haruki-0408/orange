@@ -1,7 +1,8 @@
 "use client"
 import React from "react";
+import { FCX } from "@/types/types";
 import { useOthers, useMyPresence } from "@liveblocks/react";
-import { MultiplayerCursor } from "../ui-mass/MultiplayerCursor";
+import { MultiplayerCursor } from "@/components/ui-mass/MutiplayerCursor";
 
 /**
  * This file shows how to add basic live cursors on your product.
@@ -18,7 +19,7 @@ const COLORS = [
   "#7986CB",
 ];
 
-function MultiplayerLayer() {
+export const MultiplayerLayer: FCX = ({children}) => {
 
   /**
    * useMyPresence returns the presence of the current user and a function to update it.
@@ -69,6 +70,7 @@ function MultiplayerLayer() {
           }
 
           return (
+            <>
             <MultiplayerCursor
               key={`cursor-${connectionId}`}
               // connectionId is an integer that is incremented at every new connections
@@ -79,11 +81,11 @@ function MultiplayerLayer() {
               x={presence.cursor.x}
               y={presence.cursor.y}
             />
+            </>
+            
           );
         })
       }
     </div>
   );
 }
-
-export default MultiplayerLayer;

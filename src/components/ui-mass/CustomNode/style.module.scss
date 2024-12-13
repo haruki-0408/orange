@@ -1,40 +1,28 @@
 .customNodeWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding:  2px; /* 外枠の余白 */
-  border-radius: 20px; /* 外枠の丸み */
-  background: linear-gradient(90deg, #ff0000, #ff7300, #ffe600, #47ff00, #00ffed, #2b65ff, #8000ff, #ff0080);
+  position: relative;
+  min-width: 250px;
 }
 
 .customNode {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  border-radius: 16px; /* 内側の丸み */
-  background-color: #000000; /* 内側の黒背景 */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: #ffffff;
-  width: 400px;
+  padding: 15px;
+  border-radius: 8px;
+  background: #fff;
+  border: 2px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
 }
 
 .icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #1a1a1a;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  margin-right: 10px;
 }
 
 .titleArea {
@@ -43,75 +31,222 @@
 
 .title {
   margin: 0;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .description {
-  margin: 6px 0 0;
-  font-size: 16px;
-  color: #d1d5db;
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: #666;
 }
 
 .separator {
-  margin: 16px 0;
+  margin: 10px 0;
   border: none;
-  border-bottom: 1px solid #333333;
+  border-top: 1px solid #eee;
 }
 
-.toggleButton {
-  background-color: #2563eb;
-  color: #ffffff;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 12px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 16px;
-
-  &:hover {
-    background-color: #1d4ed8;
+// AWS Lambda - 黄色系
+.lambdaNode {
+  &.customNode {
+    border-color: #ffd700;
+  }
+  
+  &.toggleButton {
+    background-color: #ffd700;
+    color: #333;
+    
+    &:hover {
+      background-color: darken(#ffd700, 10%);
+    }
+  }
+  
+  &.codeBlock {
+    border-left: 4px solid #ffd700;
+    background-color: rgba(#ffd700, 0.1);
   }
 }
 
-.codeBlock {
-  background-color: #111827;
-  color: #d1d5db;
-  padding: 16px;
-  border-radius: 12px;
-  margin-top: 12px;
-  font-size: 14px;
-  overflow-x: auto;
-  font-family: 'Courier New', Courier, monospace;
+// AWS SQS - 薄赤系
+.sqsNode {
+  &.customNode {
+    border-color: #ff8f8f;
+  }
+  
+  &.toggleButton {
+    background-color: #ff8f8f;
+    color: white;
+    
+    &:hover {
+      background-color: darken(#ff8f8f, 10%);
+    }
+  }
+  
+  &.codeBlock {
+    border-left: 4px solid #ff8f8f;
+    background-color: rgba(#ff8f8f, 0.1);
+  }
 }
 
-/* ステータスバッジのスタイル */
+// API Gateway - 紫系
+.apiGatewayNode {
+  &.customNode {
+    border-color: #8a2be2;
+  }
+  
+  &.toggleButton {
+    background-color: #8a2be2;
+    color: white;
+    
+    &:hover {
+      background-color: darken(#8a2be2, 10%);
+    }
+  }
+  
+  &.codeBlock {
+    border-left: 4px solid #8a2be2;
+    background-color: rgba(#8a2be2, 0.1);
+  }
+}
+
+// DynamoDB - 青系
+.dynamodbNode {
+  &.customNode {
+    border-color: #0066cc;
+  }
+  
+  &.toggleButton {
+    background-color: #0066cc;
+    color: white;
+    
+    &:hover {
+      background-color: darken(#0066cc, 10%);
+    }
+  }
+  
+  &.codeBlock {
+    border-left: 4px solid #0066cc;
+    background-color: rgba(#0066cc, 0.1);
+  }
+}
+
+// S3 - 緑系
+.s3Node {
+  &.customNode {
+    border-color: #2e8b57;
+  }
+  
+  &.toggleButton {
+    background-color: #2e8b57;
+    color: white;
+    
+    &:hover {
+      background-color: darken(#2e8b57, 10%);
+    }
+  }
+  
+  &.codeBlock {
+    border-left: 4px solid #2e8b57;
+    background-color: rgba(#2e8b57, 0.1);
+  }
+}
+
+// 共通のボタンスタイル
+.toggleButton {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+  width: 100%;
+  margin: 8px 0;
+}
+
+// コードブロック
+.codeBlock {
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+// ステータスバッジ
 .badge {
   position: absolute;
-  top: -12px;
-  right: -12px;
-  padding: 6px 12px;
+  top: -10px;
+  right: -10px;
+  padding: 4px 8px;
   border-radius: 12px;
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: capitalize;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  
+  &.pending {
+    background-color: #f59e0b;
+    animation: pulse 2s infinite;
+  }
+  
+  &.success {
+    background-color: #22c55e;
+  }
+  
+  &.failed {
+    background-color: #ef4444;
+  }
+  
+  &.progress {
+    background-color: #3b82f6;
+    animation: pulse 1.5s infinite;
+  }
+  
+  &.stopped {
+    background-color: #6b7280;
+    animation: pulse 2.5s infinite;
+  }
 }
 
-.badge.pending {
-  background-color: #f59e0b;
+// パルスアニメーション
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.badge.progress {
-  background-color: #3b82f6;
-}
+// ステータスに応じたボ��ダースタイル
+.customNode {
+  &.pending {
+    border-style: dashed;
+  }
 
-.badge.success {
-  background-color: #10b981;
-}
+  &.progress {
+    border-style: solid;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  }
 
-.badge.error {
-  background-color: #ef4444;
+  &.success {
+    border-style: solid;
+  }
+
+  &.failed {
+    border-style: solid;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+  }
+
+  &.stopped {
+    border-style: dotted;
+    opacity: 0.8;
+  }
 }
