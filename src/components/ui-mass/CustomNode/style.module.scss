@@ -1,28 +1,123 @@
 .customNodeWrapper {
   position: relative;
-  min-width: 250px;
+  min-width: 300px;
+  max-width: 500px;
 }
 
 .customNode {
-  padding: 15px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 12px;
   background: #fff;
-  border: 2px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+
+  &.ready {
+    opacity: 0.85;
+    background: linear-gradient(to right bottom, #fff, #F9FAFB);
+  }
+
+  &.progress {
+    background: linear-gradient(to right bottom, #fff, #EFF6FF);
+    animation: pulseNode 2s infinite;
+  }
+
+  &.success {
+    background: linear-gradient(to right bottom, #fff, #ECFDF5);
+  }
+
+  &.failed {
+    background: linear-gradient(to right bottom, #fff, #FEF2F2);
+  }
+
+  &.stopped {
+    opacity: 0.7;
+    filter: grayscale(20%);
+  }
+
+  &.Lambda {
+    border-color: #FF9900;
+    .icon {
+      color: #FF9900;
+      background: rgba(255, 153, 0, 0.1);
+    }
+    .codeBlock {
+      border-color: #FF9900;
+      background: rgba(255, 153, 0, 0.03);
+    }
+  }
+
+  &.SQS {
+    border-color: #e33c3c;
+    .icon {
+      color: #e33c3c;
+      background: rgba(227, 60, 60, 0.1);
+    }
+    .codeBlock {
+      border-color: #e33c3c;
+      background: rgba(227, 60, 60, 0.03);
+    }
+  }
+
+  &.APIGateway {
+    border-color: #8a2be2;
+    .icon {
+      color: #8a2be2;
+      background: rgba(138, 43, 226, 0.1);
+    }
+    .codeBlock {
+      border-color: #8a2be2;
+      background: rgba(138, 43, 226, 0.03);
+    }
+  }
+
+  &.DynamoDB {
+    border-color: #0066cc;
+    .icon {
+      color: #0066cc;
+      background: rgba(0, 102, 204, 0.1);
+    }
+    .codeBlock {
+      border-color: #0066cc;
+      background: rgba(0, 102, 204, 0.03);
+    }
+  }
+
+  &.S3 {
+    border-color: #2e8b57;
+    .icon {
+      color: #2e8b57;
+      background: rgba(46, 139, 87, 0.1);
+    }
+    .codeBlock {
+      border-color: #2e8b57;
+      background: rgba(46, 139, 87, 0.03);
+    }
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .icon {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 18px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 6px;
+  transition: all 0.3s ease;
 }
 
 .titleArea {
@@ -31,147 +126,87 @@
 
 .title {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  color: #1F2937;
 }
 
 .description {
   margin: 4px 0 0;
   font-size: 0.85rem;
-  color: #666;
+  color: #6B7280;
+  line-height: 1.4;
 }
 
 .separator {
-  margin: 10px 0;
+  margin: 12px 0;
   border: none;
-  border-top: 1px solid #eee;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-// AWS Lambda - 黄色系
-.lambdaNode {
-  &.customNode {
-    border-color: #ffd700;
-  }
-  
-  &.toggleButton {
-    background-color: #ffd700;
-    color: #333;
-    
-    &:hover {
-      background-color: darken(#ffd700, 10%);
-    }
-  }
-  
-  &.codeBlock {
-    border-left: 4px solid #ffd700;
-    background-color: rgba(#ffd700, 0.1);
-  }
-}
-
-// AWS SQS - 薄赤系
-.sqsNode {
-  &.customNode {
-    border-color: #ff8f8f;
-  }
-  
-  &.toggleButton {
-    background-color: #ff8f8f;
-    color: white;
-    
-    &:hover {
-      background-color: darken(#ff8f8f, 10%);
-    }
-  }
-  
-  &.codeBlock {
-    border-left: 4px solid #ff8f8f;
-    background-color: rgba(#ff8f8f, 0.1);
-  }
-}
-
-// API Gateway - 紫系
-.apiGatewayNode {
-  &.customNode {
-    border-color: #8a2be2;
-  }
-  
-  &.toggleButton {
-    background-color: #8a2be2;
-    color: white;
-    
-    &:hover {
-      background-color: darken(#8a2be2, 10%);
-    }
-  }
-  
-  &.codeBlock {
-    border-left: 4px solid #8a2be2;
-    background-color: rgba(#8a2be2, 0.1);
-  }
-}
-
-// DynamoDB - 青系
-.dynamodbNode {
-  &.customNode {
-    border-color: #0066cc;
-  }
-  
-  &.toggleButton {
-    background-color: #0066cc;
-    color: white;
-    
-    &:hover {
-      background-color: darken(#0066cc, 10%);
-    }
-  }
-  
-  &.codeBlock {
-    border-left: 4px solid #0066cc;
-    background-color: rgba(#0066cc, 0.1);
-  }
-}
-
-// S3 - 緑系
-.s3Node {
-  &.customNode {
-    border-color: #2e8b57;
-  }
-  
-  &.toggleButton {
-    background-color: #2e8b57;
-    color: white;
-    
-    &:hover {
-      background-color: darken(#2e8b57, 10%);
-    }
-  }
-  
-  &.codeBlock {
-    border-left: 4px solid #2e8b57;
-    background-color: rgba(#2e8b57, 0.1);
-  }
-}
-
-// 共通のボタンスタイル
 .toggleButton {
   padding: 6px 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.85rem;
-  transition: background-color 0.2s;
-  width: 100%;
-  margin: 8px 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: auto;
+  margin: 8px auto;
+  position: relative;
+  overflow: hidden;
+  background: #F3F4F6;
+  color: #374151;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s ease;
+  }
+
+  &.open svg {
+    transform: rotate(180deg);
+  }
+
+  &:hover {
+    background: #E5E7EB;
+    transform: translateY(-1px);
+  }
 }
 
-// コードブロック
 .codeBlock {
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 4px;
-  font-family: monospace;
+  padding: 0;
+  margin: 0;
+  border-radius: 8px;
+  font-family: 'Geist Mono', monospace;
   font-size: 0.85rem;
-  overflow-x: auto;
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.02);
+  border-left: 3px solid currentColor;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.open {
+    padding: 12px;
+    max-height: 500px;
+    opacity: 1;
+    transform: scale(1);
+    margin: 8px 0;
+  }
+
+  code {
+    display: block;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
 }
 
 // ステータスバッジ
@@ -179,74 +214,132 @@
   position: absolute;
   top: -10px;
   right: -10px;
-  padding: 4px 8px;
+  padding: 4px 12px;
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 600;
   color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
   
-  &.pending {
-    background-color: #f59e0b;
+  &.ready {
+    background: linear-gradient(135deg, #6B7280, #9CA3AF);
+  }
+  
+  &.progress {
+    background: linear-gradient(135deg, #3b82f6, #60A5FA);
     animation: pulse 2s infinite;
   }
   
   &.success {
-    background-color: #22c55e;
+    background: linear-gradient(135deg, #10B981, #34D399);
   }
   
   &.failed {
-    background-color: #ef4444;
-  }
-  
-  &.progress {
-    background-color: #3b82f6;
-    animation: pulse 1.5s infinite;
+    background: linear-gradient(135deg, #DC2626, #EF4444);
   }
   
   &.stopped {
-    background-color: #6b7280;
-    animation: pulse 2.5s infinite;
+    background: linear-gradient(135deg, #4B5563, #6B7280);
   }
 }
 
-// パルスアニメーション
 @keyframes pulse {
-  0% {
+  0%, 100% {
     opacity: 1;
     transform: scale(1);
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.8;
     transform: scale(1.05);
   }
-  100% {
-    opacity: 1;
-    transform: scale(1);
+}
+
+@keyframes pulseNode {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(59, 130, 246, 0.25);
   }
 }
 
-// ステータスに応じたボ��ダースタイル
-.customNode {
-  &.pending {
-    border-style: dashed;
-  }
+.serviceDetails {
+  margin: 12px 0;
+  font-size: 0.85rem;
+}
 
-  &.progress {
-    border-style: solid;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-  }
+.detailItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
 
-  &.success {
-    border-style: solid;
-  }
+.detailLabel {
+  color: #6B7280;
+  font-weight: 500;
+  min-width: 80px;
+}
 
-  &.failed {
-    border-style: solid;
-    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
-  }
+.detailValue {
+  color: #111827;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.8rem;
+}
 
-  &.stopped {
-    border-style: dotted;
-    opacity: 0.8;
+.detailsRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+
+.detailChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.03);
+  color: #374151;
+  font-family: 'Geist Mono', monospace;
+}
+
+.chipIcon {
+  font-size: 0.9rem;
+}
+
+.indexList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.indexChip {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #4B5563;
+  font-family: 'Geist Mono', monospace;
+}
+
+// サービス固有のスタイル
+.Lambda {
+  .detailChip {
+    background: rgba(255, 153, 0, 0.1);
+    color: darken(#FF9900, 10%);
   }
 }
+
+.DynamoDB {
+  .detailChip {
+    background: rgba(0, 102, 204, 0.1);
+    color: darken(#0066cc, 10%);
+  }
+}
+
+// 他のサービスも同様にスタイリング...

@@ -1,7 +1,8 @@
 import { FCX } from "@/types/types";
-import React from "react";
-import { EdgeProps, getSmoothStepPath } from "reactflow";
-import styles from "./style.module.scss";
+import React from 'react';
+import { EdgeProps, getSmoothStepPath } from 'reactflow';
+import styles from './style.module.scss';
+import clsx from 'clsx';
 
 export const CustomEdge: FCX<EdgeProps> = ({
   id,
@@ -11,57 +12,47 @@ export const CustomEdge: FCX<EdgeProps> = ({
   targetY,
   sourcePosition,
   targetPosition,
+  data,
   style = {},
 }) => {
-  const [edgePath, labelX, labelY] = getSmoothStepPath({
+  const [edgePath] = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,
     targetX,
     targetY,
     targetPosition,
+    borderRadius: 0,
   });
 
+  const edgeStatus = data?.targetNodeStatus || 'ready';
+  
   return (
     <>
-      <svg style={{ position: 'absolute', top: 0, left: 0 }}>
+      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
         <defs>
           <marker
             id="edge-arrow"
-            viewBox="0 0 10 10"
-            refX="8"
-            refY="5"
-            markerWidth="6"
-            markerHeight="6"
-            orient="auto-start-reverse"
+            viewBox="0 0 12 12"
+            refX="6"
+            refY="6"
+            markerWidth="8"
+            markerHeight="8"
+            orient="auto"
           >
             <path
-              className={styles['edge-arrow']}
-              d="M 0 0 L 10 5 L 0 10 z"
+              d="M 0 0 L 12 6 L 0 12 z"
+              className={clsx(styles.arrow, styles[edgeStatus])}
             />
           </marker>
         </defs>
       </svg>
-      <div className={styles['custom-edge-wrapper']}>
-        <path
-          id={id}
-          className={styles['custom-edge-path']}
-          d={edgePath}
-          markerEnd="url(#edge-arrow)"
-        />
-        <button
-          className={styles['edge-button']}
-          style={{
-            left: labelX,
-            top: labelY,
-          }}
-          onClick={(event) => {
-            event.stopPropagation();
-          }}
-        >
-          →
-        </button>
-      </div>
+      <path
+        id={id}
+        className={clsx(styles.customEdge, styles[edgeStatus])}
+        d={edgePath}
+        markerEnd="url(#edge-arrow)"
+      />
     </>
   );
 };

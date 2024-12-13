@@ -55,9 +55,10 @@ export const MultiplayerLayer: FCX = ({children}) => {
       }
     >
       <div>
-        {cursor
+        {/* {cursor
           ? `${cursor.x} × ${cursor.y}`
-          : "Move your cursor to broadcast its position to other people in the room."}
+          : "Move your cursor to broadcast its position to other people in the room."} */}
+          {children}
       </div>
 
       {
@@ -70,7 +71,6 @@ export const MultiplayerLayer: FCX = ({children}) => {
           }
 
           return (
-            <>
             <MultiplayerCursor
               key={`cursor-${connectionId}`}
               // connectionId is an integer that is incremented at every new connections
@@ -81,8 +81,6 @@ export const MultiplayerLayer: FCX = ({children}) => {
               x={presence.cursor.x}
               y={presence.cursor.y}
             />
-            </>
-            
           );
         })
       }

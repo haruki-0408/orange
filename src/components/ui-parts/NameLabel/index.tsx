@@ -9,11 +9,25 @@ interface Props {
   y: number
 }
 
-export const NameLabel: FCX<Props> = ({ name, color }) => {
+export const NameLabel: FCX<Props> = ({ x, y, name, color }) => {
   return (
-    <div className={styles.label} style={{ backgroundColor: color }}>
-      {name}
-    </div>
+    <div
+        style={{
+          position: 'absolute',
+          top: y + 25,
+          left: x,
+          transform: 'translateX(-50%)',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          color: color,
+          padding: '5px 10px',
+          borderRadius: '10px',
+          fontSize: '12px',
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
+        }}
+      >
+        {name}
+      </div>
   );
 };
 

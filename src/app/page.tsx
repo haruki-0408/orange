@@ -2,7 +2,7 @@
 import { Room } from "@/features/room/components/Room";
 import { CustomEdge } from "@/components/ui-mass/CustomEdge";
 import { CustomNode } from "@/components/ui-mass/CustomNode";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ReactFlow, {
   Node,
   Edge,
@@ -13,7 +13,6 @@ import ReactFlow, {
   Controls,
   Background,
   MiniMap,
-  BezierEdge
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { MultiplayerLayer } from "@/components/layout/MultiplayerLayer";
@@ -37,8 +36,14 @@ const initialNodes: Node[] = [
       description: "Lambda function for user authentication",
       icon: "λ",
       status: "progress",
-      code: "exports.handler = async (event) => {\n  // Lambda authentication logic\n  return { statusCode: 200 };\n}",
-      serviceType: "Lambda"
+      serviceType: "Lambda",
+      details: {
+        functionName: "auth-handler",
+        memory: 256,
+        timeout: 30,
+        runtime: "Node.js 18"
+      },
+      code: "exports.handler = async (event) => {\n  // Lambda authentication logic\n  return { statusCode: 200 };\n}"
     }
   },
   {
@@ -49,9 +54,15 @@ const initialNodes: Node[] = [
       title: "Message Queue",
       description: "SQS queue for message processing",
       icon: "⇄",
-      status: "pending",
-      code: '{\n  "QueueName": "ProcessingQueue",\n  "DelaySeconds": 0,\n  "MessageRetentionPeriod": 345600\n}',
-      serviceType: "SQS"
+      status: "ready",
+      serviceType: "SQS",
+      details: {
+        queueName: "processing-queue",
+        messageRetention: 345600,
+        visibilityTimeout: 30,
+        delaySeconds: 0
+      },
+      code: '{\n  "QueueName": "ProcessingQueue",\n  "DelaySeconds": 0,\n  "MessageRetentionPeriod": 345600\n}'
     }
   },
   {
@@ -63,8 +74,14 @@ const initialNodes: Node[] = [
       description: "API Gateway endpoint for client requests",
       icon: "⚡",
       status: "success",
-      code: '{\n  "path": "/api/v1",\n  "method": "POST",\n  "integration": "Lambda"\n}',
-      serviceType: "APIGateway"
+      serviceType: "APIGateway",
+      details: {
+        endpoint: "/api/v1/users",
+        method: "POST",
+        stage: "prod",
+        authType: "IAM"
+      },
+      code: '{\n  "path": "/api/v1",\n  "method": "POST",\n  "integration": "Lambda"\n}'
     }
   },
   {
@@ -76,21 +93,34 @@ const initialNodes: Node[] = [
       description: "DynamoDB table for user data",
       icon: "📊",
       status: "failed",
-      code: '{\n  "TableName": "Users",\n  "KeySchema": [\n    { "AttributeName": "userId", "KeyType": "HASH" }\n  ]\n}',
-      serviceType: "DynamoDB"
+      serviceType: "DynamoDB",
+      details: {
+        tableName: "Users",
+        primaryKey: "userId",
+        readCapacity: 5,
+        writeCapacity: 5,
+        indexes: ["email-index", "status-index"]
+      },
+      code: '{\n  "TableName": "Users",\n  "KeySchema": [\n    { "AttributeName": "userId", "KeyType": "HASH" }\n  ]\n}'
     }
   },
   {
     id: "5",
     type: "custom",
-    position: { x: 250, y: 450 },
+    position: { x: 700, y: 150 },
     data: {
       title: "File Storage",
-      description: "S3 bucket for file storage",
-      icon: "���",
+      description: "S3 bucket for user uploads",
+      icon: "📦",
       status: "stopped",
-      code: '{\n  "BucketName": "user-files",\n  "AccessControl": "Private",\n  "VersioningConfiguration": "Enabled"\n}',
-      serviceType: "S3"
+      serviceType: "S3",
+      details: {
+        bucketName: "user-uploads",
+        versioning: true,
+        encryption: "AES-256",
+        accessControl: "Private"
+      },
+      code: '{\n  "BucketName": "user-uploads",\n  "Versioning": "Enabled",\n  "Encryption": "AES-256"\n}'
     }
   }
 ];
@@ -102,7 +132,10 @@ const initialEdges = [
     target: "2",
     type: "custom",
     sourceHandle: "bottom",
-    targetHande: "top"
+    targetHandle: "top",
+    data: {
+      targetNodeStatus: "ready"
+    }
   },
   {
     id: "e1-3",
@@ -110,7 +143,10 @@ const initialEdges = [
     target: "3",
     type: "custom",
     sourceHandle: "bottom",
-    targetHande: "top"
+    targetHandle: "top",
+    data: {
+      targetNodeStatus: "ready"
+    }
   },
   {
     id: "e2-4",
@@ -118,7 +154,10 @@ const initialEdges = [
     target: "4",
     type: "custom",
     sourceHandle: "bottom",
-    targetHande: "top"
+    targetHandle: "top",
+    data: {
+      targetNodeStatus: "ready"
+    }
   },
   {
     id: "e3-4",
@@ -126,7 +165,10 @@ const initialEdges = [
     target: "4",
     type: "custom",
     sourceHandle: "bottom",
-    targetHande: "top"
+    targetHandle: "top",
+    data: {
+      targetNodeStatus: "ready"
+    }
   },
   {
     id: "e4-5",
@@ -134,7 +176,10 @@ const initialEdges = [
     target: "5",
     type: "custom",
     sourceHandle: "bottom",
-    targetHande: "top"
+    targetHandle: "top",
+    data: {
+      targetNodeStatus: "ready"
+    }
   }
 ];
 
@@ -175,7 +220,7 @@ export default function Page() {
           })
         );
       } catch (error) {
-        console.error("メッセージパースエラー:", error);
+        console.error("メッセージ���ースエラー:", error);
       }
     };
 
@@ -196,30 +241,50 @@ export default function Page() {
     console.log(`Started workflow with ID: ${randomWorkflowId}`);
   };
 
+  // ノードのステータスが変更されたときにエッジのステータスも更新する
+  useEffect(() => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        const targetNode = nodes.find(node => node.id === edge.target);
+        if (targetNode) {
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              targetNodeStatus: targetNode.data.status
+            }
+          };
+        }
+        return edge;
+      })
+    );
+  }, [nodes]);
+
   return (
-    // <div style={{ width: "100vw", height: "100vh", padding: "20px" }}>
-    //   <h1>Workflow Progress Tracker</h1>
-    //   <button onClick={startWorkflow}>Start Workflow</button>
-    //   {workflowId && <p>Connecting to workflow .......</p>}
-    //   {progress && <p>Progress: {progress}</p>}
-    //   <div style={{ height: "calc(100vh - 200px)", width: "100%", marginTop: "20px" }}>
-    //     <ReactFlow
-    //       nodes={nodes}
-    //       edges={edges}
-    //       nodeTypes={nodeTypes}
-    //       edgeTypes={edgeTypes}
-    //       onNodesChange={onNodesChange}
-    //       onEdgesChange={onEdgesChange}
-    //       onConnect={onConnect}
-    //     >
-    //       <Controls />
-    //       <MiniMap />
-    //       <Background gap={20} size={1} style={{ backgroundColor: "#0000" }} />
-    //     </ReactFlow>
-    //   </div>
-    // </div>
     <Room>
-      <MultiplayerLayer/>
+      <div className="w-screen p-5">
+      <MultiplayerLayer>
+        <h1>Workflow Progress Tracker</h1>
+        <button onClick={startWorkflow}>Start Workflow</button>
+        {workflowId && <p>Connecting to workflow .......</p>}
+        {progress && <p>Progress: {progress}</p>}
+        <div className="h-[calc(100vh-200px)] w-full mt-5">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+          >
+            <Controls />
+            <MiniMap />
+            <Background gap={20} size={1} className="bg-[#0000]" />
+          </ReactFlow>
+        </div>
+      </MultiplayerLayer>
+      </div>
     </Room>
   );
 }
