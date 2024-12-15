@@ -182,7 +182,7 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
         onTitleChange={setThesisTitle}
       />
       <ReactFlowProvider>
-        <div className="flex w-full relative">
+        <div className="w-full relative flex">
           <div style={{ 
             width: isSidebarOpen ? "60%" : `calc(100% - ${TOGGLE_BUTTON_WIDTH}px)`,
             height: "calc(100vh - 100px)",
