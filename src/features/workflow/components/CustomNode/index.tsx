@@ -5,6 +5,7 @@ import styles from './style.module.scss';
 import clsx from 'clsx';
 import { FCX } from '@/types/types';
 import Image from 'next/image';
+import { StatusType, ServiceType, ServiceDetails } from '@/features/workflow/types/types';
 
 interface Props {
   title: string;

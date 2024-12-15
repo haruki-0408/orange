@@ -104,6 +104,12 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   }
+
+  &.highlighted {
+    box-shadow: 0 0 0 2px #6366f1, 0 0 20px rgba(99, 102, 241, 0.3);
+    transform: scale(1.05);
+    z-index: 10;
+  }
 }
 
 .header {

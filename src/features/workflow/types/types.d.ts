@@ -1,7 +1,7 @@
-type ServiceType = 'Lambda' | 'SQS' | 'APIGateway' | 'DynamoDB' | 'S3';
-type StatusType = 'ready' | 'success' | 'failed' | 'progress' | 'stopped';
+export type ServiceType = 'Lambda' | 'SQS' | 'APIGateway' | 'DynamoDB' | 'S3';
+export type StatusType = 'ready' | 'success' | 'failed' | 'progress' | 'stopped';
 
-interface ServiceDetails {
+export interface ServiceDetails {
   Lambda: {
     functionName: string;
     memory: number;
@@ -34,3 +34,20 @@ interface ServiceDetails {
     accessControl: string;
   };
 }
+
+export interface TraceData {
+  id: string;
+  name: string;
+  duration: number;
+  startTime: string;
+  status: 'success' | 'error' | 'throttle' | 'fault';
+  serviceType: string;
+  details: {
+    requestId?: string;
+    resourceName?: string;
+    errorMessage?: string;
+    memoryUsed?: number;
+    coldStart?: boolean;
+  };
+  subsegments?: TraceData[];
+} 
