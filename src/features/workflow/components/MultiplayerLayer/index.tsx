@@ -2,7 +2,7 @@
 import React from "react";
 import { FCX } from "@/types/types";
 import { useOthers, useMyPresence } from "@liveblocks/react";
-import { MultiplayerCursor } from "@/components/ui-mass/MutiplayerCursor";
+import { MultiplayerCursor } from "@/features/room/components/MutiplayerCursor";
 
 /**
  * This file shows how to add basic live cursors on your product.
@@ -37,7 +37,7 @@ export const MultiplayerLayer: FCX = ({children}) => {
   return (
   
     <div
-      className="w-screen h-screen"
+      // className="w-screen"
       onPointerMove={(event) => {
         // Update the user cursor position on every pointer move
         updateMyPresence({

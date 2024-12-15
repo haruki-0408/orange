@@ -1,7 +1,7 @@
 import { FCX } from "@/types/types";
 import React from "react";
-import { NameLabel } from "@/components/ui-parts/NameLabel";
-import { Cursor } from "@/components/ui-parts/Cursor";
+import { NameLabel } from "@/features/room/components/NameLabel";
+import { Cursor } from "@/features/room/components/Cursor";
 import styles from "./style.module.scss";
 
 type Props = {

@@ -13,7 +13,6 @@ export const CustomEdge: FCX<EdgeProps> = ({
   sourcePosition,
   targetPosition,
   data,
-  style = {},
 }) => {
   const [edgePath] = getSmoothStepPath({
     sourceX,

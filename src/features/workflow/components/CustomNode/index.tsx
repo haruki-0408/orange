@@ -4,55 +4,19 @@ import { Handle, NodeProps, Position } from 'reactflow';
 import styles from './style.module.scss';
 import clsx from 'clsx';
 import { FCX } from '@/types/types';
+import Image from 'next/image';
 
-type ServiceType = 'Lambda' | 'SQS' | 'APIGateway' | 'DynamoDB' | 'S3';
-type StatusType = 'ready' | 'success' | 'failed' | 'progress' | 'stopped';
-
-interface ServiceDetails {
-  Lambda: {
-    functionName: string;
-    memory: number;
-    timeout: number;
-    runtime: string;
-  };
-  DynamoDB: {
-    tableName: string;
-    primaryKey: string;
-    readCapacity: number;
-    writeCapacity: number;
-    indexes?: string[];
-  };
-  SQS: {
-    queueName: string;
-    messageRetention: number;
-    visibilityTimeout: number;
-    delaySeconds: number;
-  };
-  APIGateway: {
-    endpoint: string;
-    method: string;
-    stage: string;
-    authType: string;
-  };
-  S3: {
-    bucketName: string;
-    versioning: boolean;
-    encryption: string;
-    accessControl: string;
-  };
-}
-
-interface CustomNodeData {
+interface Props {
   title: string;
   description: string;
   icon?: string;
   status: StatusType;
-  code: string;
+  logs: string;
   serviceType: ServiceType;
   details: Partial<ServiceDetails[ServiceType]>;
 }
 
-export const CustomNode: FCX<NodeProps<CustomNodeData>> = memo(({ data }) => {
+export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const renderServiceDetails = () => {
@@ -191,15 +155,63 @@ export const CustomNode: FCX<NodeProps<CustomNodeData>> = memo(({ data }) => {
     }
   };
 
+  // Handleのスタイル
+  const handleStyle = {
+    width: '10px',
+    height: '10px',
+    background: '#555',
+    border: '1px solid #333',
+  };
+
   return (
     <div className={styles.customNodeWrapper}>
-      <Handle type="target" position={Position.Top} />
+      {/* 上部のHandles */}
+      <Handle
+        id="target-top"
+        type="target"
+        position={Position.Top}
+        style={handleStyle}
+        className={styles.handle}
+      />
+      <Handle
+        id="source-top"
+        type="source"
+        position={Position.Top}
+        style={handleStyle}
+        className={styles.handle}
+      />
+
+      {/* 左側のHandles */}
+      <Handle
+        id="target-left"
+        type="target"
+        position={Position.Left}
+        style={handleStyle}
+        className={styles.handle}
+      />
+      <Handle
+        id="source-left"
+        type="source"
+        position={Position.Left}
+        style={handleStyle}
+        className={styles.handle}
+      />
+
       <div className={clsx(styles.customNode, styles[data.status], styles[data.serviceType])}>
         <div className={clsx(styles.badge, styles[data.status])}>
           {data.status}
         </div>
         <div className={styles.header}>
-          {data.icon && <div className={styles.icon}>{data.icon}</div>}
+          {data.icon && (
+            <div className={styles.icon}>
+              <Image
+                src={data.icon}
+                alt={data.serviceType}
+                width={24}
+                height={24}
+              />
+            </div>
+          )}
           <div className={styles.titleArea}>
             <h3 className={styles.title}>{data.title}</h3>
             <p className={styles.description}>{data.description}</p>
@@ -229,10 +241,41 @@ export const CustomNode: FCX<NodeProps<CustomNodeData>> = memo(({ data }) => {
           </svg>
         </button>
         <div className={clsx(styles.codeBlock, isOpen && styles.open)}>
-          <code>{data.code}</code>
+          <code>{data.logs}</code>
         </div>
       </div>
-      <Handle type="source" position={Position.Bottom} />
+
+      {/* 右側のHandles */}
+      <Handle
+        id="target-right"
+        type="target"
+        position={Position.Right}
+        style={handleStyle}
+        className={styles.handle}
+      />
+      <Handle
+        id="source-right"
+        type="source"
+        position={Position.Right}
+        style={handleStyle}
+        className={styles.handle}
+      />
+
+      {/* 下部のHandles */}
+      <Handle
+        id="target-bottom"
+        type="target"
+        position={Position.Bottom}
+        style={handleStyle}
+        className={styles.handle}
+      />
+      <Handle
+        id="source-bottom"
+        type="source"
+        position={Position.Bottom}
+        style={handleStyle}
+        className={styles.handle}
+      />
     </div>
   );
 });

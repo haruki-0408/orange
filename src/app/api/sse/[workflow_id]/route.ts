@@ -1,4 +1,4 @@
-import { addClient, removeClient } from '@/lib/websocket/SSEManager';
+import { addClient, removeClient } from "@/lib/sse/SSEManager";
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest, { params }: { params: { workflow_id: string } }) {
