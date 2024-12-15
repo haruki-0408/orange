@@ -1,0 +1,24 @@
+.choiceNode {
+  position: relative;
+  
+  .diamond {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #FCD34D, #F59E0B);
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .condition {
+      transform: rotate(-45deg);
+      color: #1F2937;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-align: center;
+      padding: 10px;
+    }
+  }
+}

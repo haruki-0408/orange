@@ -54,11 +54,13 @@ export default function Home() {
               Progress: {progress}
             </div>
           )}
-          <Workflow
-            className="w-full h-full my-4"
-            onWorkflowStart={setWorkflowId}
-            onProgressUpdate={setProgress}
-          />
+          <div className="relative max-w-[1024px] mx-auto">
+            <Workflow
+              className="w-full h-full my-4"
+              onWorkflowStart={setWorkflowId}
+              onProgressUpdate={setProgress}
+            />
+          </div>
         </MultiplayerLayer>
       </div>
     </Room>

@@ -1,0 +1,65 @@
+.react-flow {
+  &-wrapper {
+    .react-flow__node {
+      transition: all 0.3s ease;
+      
+      &.selected,
+      &:hover {
+        filter: drop-shadow(0 0 20px rgba(6, 182, 212, 0.3));
+      }
+    }
+
+    .react-flow__edge {
+      transition: all 0.3s ease;
+      
+      &.selected,
+      &:hover {
+        filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.3));
+      }
+
+      .react-flow__edge-path {
+        stroke: rgba(6, 182, 212, 0.6);
+        stroke-width: 2;
+      }
+    }
+  }
+
+  &-controls {
+    background: rgba(13, 13, 15, 0.8);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 4px;
+
+    button {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(6, 182, 212, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(6, 182, 212, 0.1);
+        border-color: rgba(6, 182, 212, 0.3);
+      }
+    }
+  }
+
+  &-minimap {
+    .react-flow__minimap-mask {
+      fill: rgba(6, 182, 212, 0.1);
+    }
+
+    .react-flow__minimap-node {
+      transition: all 0.3s ease;
+      
+      &.selected {
+        filter: drop-shadow(0 0 5px rgba(6, 182, 212, 0.5));
+      }
+    }
+  }
+
+  &-background {
+    opacity: 0.3;
+  }
+} 

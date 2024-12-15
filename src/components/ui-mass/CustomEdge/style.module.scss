@@ -1,0 +1,102 @@
+.customEdge {
+  stroke-width: 2.5;
+  fill: none;
+  pointer-events: all;
+  transition: all 0.3s ease;
+
+  &.ready {
+    stroke: #6B7280;
+    stroke-dasharray: 6;
+    animation: flowDash 30s linear infinite;
+    filter: drop-shadow(0 0 2px rgba(107, 114, 128, 0.2));
+    opacity: 0.7;
+  }
+
+  &.progress {
+    stroke: #3b82f6;
+    stroke-width: 3;
+    stroke-dasharray: 8;
+    animation: flowDash 15s linear infinite reverse;
+    filter: drop-shadow(0 0 3px rgba(59, 130, 246, 0.4));
+  }
+
+  &.success {
+    stroke: #10B981;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.3));
+  }
+
+  &.failed {
+    stroke: #DC2626;
+    stroke-width: 3;
+    stroke-dasharray: 3;
+    animation: flashError 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.4));
+  }
+
+  &.stopped {
+    stroke: #4B5563;
+    stroke-dasharray: 4;
+    opacity: 0.5;
+  }
+}
+
+.arrow {
+  fill: none;
+  stroke-width: 2;
+  transition: all 0.3s ease;
+
+  &.ready {
+    fill: #6B7280;
+    stroke: #6B7280;
+    opacity: 0.7;
+  }
+
+  &.progress {
+    fill: #3b82f6;
+    stroke: #3b82f6;
+    animation: arrowPulse 2s infinite;
+  }
+
+  &.success {
+    fill: #10B981;
+    stroke: #10B981;
+  }
+
+  &.failed {
+    fill: #DC2626;
+    stroke: #DC2626;
+  }
+
+  &.stopped {
+    fill: #4B5563;
+    stroke: #4B5563;
+    opacity: 0.5;
+  }
+}
+
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+@keyframes flashError {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.4));
+  }
+  50% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 2px rgba(220, 38, 38, 0.2));
+  }
+}
+
+@keyframes arrowPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}

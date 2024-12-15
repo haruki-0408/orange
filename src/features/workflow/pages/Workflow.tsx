@@ -23,6 +23,7 @@ import dagre from "dagre";
 import { FCX } from "@/types/types";
 import { TracesDashboard } from "../components/TracesDashboard";
 import { mockTraces } from "../const/mockTraceData";
+import { Header } from '../components/Header';
 
 interface Props {
   className?: string;
@@ -135,6 +136,8 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [thesisTitle, setThesisTitle] = useState('');
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -160,24 +163,33 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
   }, [nodes]);
 
   const handleStartWorkflow = () => {
+    if (!thesisTitle.trim()) {
+      alert('論文タイトルを入力してください');
+      return;
+    }
     const randomWorkflowId = Math.random().toString(36).substring(2, 10);
     onWorkflowStart?.(randomWorkflowId);
   };
 
+  // ボタンの幅を定数として定義
+  const TOGGLE_BUTTON_WIDTH = 24;  // px
+
   return (
     <div className={`${className} w-full h-full`}>
-      <div className="flex items-center gap-4 mb-4 p-4">
-        <h1 className="text-xl font-bold">Workflow Progress Tracker</h1>
-        <button
-          onClick={handleStartWorkflow}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-        >
-          Start Workflow
-        </button>
-      </div>
+      <Header 
+        title={thesisTitle}
+        onStart={handleStartWorkflow}
+        onTitleChange={setThesisTitle}
+      />
       <ReactFlowProvider>
-        <div className="flex">
-          <div style={{ width: "60%", height: "calc(100vh - 100px)" }}>
+        <div className="flex w-full relative">
+          <div style={{ 
+            width: isSidebarOpen ? "60%" : `calc(100% - ${TOGGLE_BUTTON_WIDTH}px)`,
+            height: "calc(100vh - 100px)",
+            transition: "width 0.3s ease",
+            position: "relative",
+            background: "linear-gradient(180deg, rgba(13, 13, 15, 0.98), rgba(17, 17, 21, 0.95))",
+          }}>
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -200,23 +212,53 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
                 maxZoom: 1
               }}
               defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
-              style={{ background: "#1a1a1a" }}
+              style={{
+                background: "transparent",
+                backgroundImage: `
+                  radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 0% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 100% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%)
+                `,
+              }}
+              className="react-flow-wrapper"
             >
-              <Controls showInteractive={false} className="text-white" />
+              <Controls 
+                showInteractive={false} 
+                className="react-flow-controls"
+              />
               <MiniMap
                 style={{
-                  backgroundColor: "#1a1a1a"
+                  backgroundColor: "rgba(13, 13, 15, 0.8)",
+                  border: "1px solid rgba(6, 182, 212, 0.2)",
+                  borderRadius: "8px",
                 }}
-                className="bg-[#1a1a1a]"
+                className="react-flow-minimap"
+                maskColor="rgba(6, 182, 212, 0.1)"
+                nodeColor={(n) => {
+                  if (n.id === selectedNodeId) return "#06b6d4";
+                  return "rgba(255, 255, 255, 0.3)";
+                }}
               />
-              <Background gap={20} size={1} color="#333333" className="bg-[#1a1a1a]" />
+              <Background 
+                gap={20} 
+                size={1} 
+                color="rgba(6, 182, 212, 0.1)" 
+                className="react-flow-background"
+              />
             </ReactFlow>
           </div>
-          <div style={{ width: "40%", height: "calc(100vh - 100px)" }}>
+          <div style={{ 
+            width: isSidebarOpen ? "40%" : `${TOGGLE_BUTTON_WIDTH}px`,
+            height: "calc(100vh - 100px)",
+            transition: "width 0.3s ease",
+            // overflow: "hidden"
+          }}>
             <TracesDashboard
               workflowId="wf-001"
               traces={mockTraces}
               currentNodeId={selectedNodeId || undefined}
+              isOpen={isSidebarOpen}
+              onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
             />
           </div>
         </div>
