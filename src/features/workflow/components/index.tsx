@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ReactFlow, {
-  Node,
   Edge,
   useNodesState,
   useEdgesState,
@@ -19,14 +18,15 @@ import { SubWorkflowGroup } from "../components/SubWorkflowGroup";
 import { ChoiceNode } from "../components/ChoiceNode";
 import { initialNodes } from "../const/initialNodes";
 import { initialEdges } from "../const/initialEdges";
-import dagre from "dagre";
 import { FCX } from "@/types/types";
 import { TracesDashboard } from "../components/TracesDashboard";
 import { mockTraces } from "../const/mockTraceData";
 import { Header } from '../components/Header';
+import { Category } from "../types/types";
 
 interface Props {
   className?: string;
+  categories: Category[];
   onWorkflowStart?: (workflowId: string) => void;
   onProgressUpdate?: (progress: string) => void;
 }
@@ -42,97 +42,7 @@ const edgeTypes = {
   custom: CustomEdge
 };
 
-const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
-  const dagreGraph = new dagre.graphlib.Graph();
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
-
-  const graphConfig = {
-    rankdir: "TB",
-    align: "UL",
-    nodesep: 80,
-    ranksep: 120,
-    marginx: 50,
-    marginy: 80
-  };
-  dagreGraph.setGraph(graphConfig);
-
-  const getNodeDimensions = (node: Node) => {
-    switch (node.type) {
-      case "mainGroup":
-        return { width: 1600, height: 800 };
-      case "subGroup":
-        return { width: 1000, height: 600 };
-      case "choice":
-        return { width: 120, height: 80 };
-      default:
-        return { width: 200, height: 100 };
-    }
-  };
-
-  nodes
-    .filter((node) => ["mainGroup", "subGroup"].includes(node.type || ""))
-    .forEach((node) => {
-      const dimensions = getNodeDimensions(node);
-      dagreGraph.setNode(node.id, dimensions);
-    });
-
-  nodes
-    .filter((node) => !["mainGroup", "subGroup"].includes(node.type || ""))
-    .forEach((node) => {
-      const dimensions = getNodeDimensions(node);
-      dagreGraph.setNode(node.id, dimensions);
-    });
-
-  edges.forEach((edge) => {
-    dagreGraph.setEdge(edge.source, edge.target);
-  });
-
-  dagre.layout(dagreGraph);
-
-  const adjustNodePositionInGroup = (node: Node, parentNode: Node | undefined) => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-    const parentPos = parentNode ? dagreGraph.node(parentNode.id) : null;
-
-    if (!nodeWithPosition) return node;
-
-    if (parentPos && node.parentNode) {
-      const padding = 50;
-      const relativeX = nodeWithPosition.x - parentPos.x;
-      const relativeY = nodeWithPosition.y - parentPos.y;
-
-      const maxX = parentPos.width - nodeWithPosition.width - padding;
-      const maxY = parentPos.height - nodeWithPosition.height - padding;
-
-      return {
-        ...node,
-        position: {
-          x: Math.max(padding, Math.min(relativeX, maxX)),
-          y: Math.max(padding, Math.min(relativeY, maxY))
-        }
-      };
-    }
-
-    return {
-      ...node,
-      position: {
-        x: nodeWithPosition.x - nodeWithPosition.width / 2,
-        y: nodeWithPosition.y - nodeWithPosition.height / 2
-      }
-    };
-  };
-
-  const layoutedNodes = nodes.map((node) => {
-    if (node.parentNode) {
-      const parentNode = nodes.find((n) => n.id === node.parentNode);
-      return adjustNodePositionInGroup(node, parentNode);
-    }
-    return adjustNodePositionInGroup(node, undefined);
-  });
-
-  return { nodes: layoutedNodes, edges };
-};
-
-export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpdate }) => {
+export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpdate, categories }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -180,9 +90,10 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
         title={thesisTitle}
         onStart={handleStartWorkflow}
         onTitleChange={setThesisTitle}
+        categories={categories}
       />
       <ReactFlowProvider>
-        <div className="w-full relative flex">
+        <div className="w-full relative flex overflow-hidden">
           <div style={{ 
             width: isSidebarOpen ? "60%" : `calc(100% - ${TOGGLE_BUTTON_WIDTH}px)`,
             height: "calc(100vh - 100px)",
@@ -251,7 +162,6 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
             width: isSidebarOpen ? "40%" : `${TOGGLE_BUTTON_WIDTH}px`,
             height: "calc(100vh - 100px)",
             transition: "width 0.3s ease",
-            // overflow: "hidden"
           }}>
             <TracesDashboard
               workflowId="wf-001"

@@ -1,4 +1,4 @@
-import { broadcastToWorkflow } from '@/lib/websocket/SSEManager';
+import { broadcastToWorkflow } from "@/lib/sse/SSEManager";
 import { NextRequest, NextResponse } from 'next/server';
 
 

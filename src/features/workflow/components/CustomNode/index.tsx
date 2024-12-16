@@ -1,4 +1,3 @@
-'use client'
 import React, { useState, memo } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import styles from './style.module.scss';
@@ -199,6 +198,7 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
       />
 
       <div className={clsx(styles.customNode, styles[data.status], styles[data.serviceType])}>
+        <div className={styles.statusIndicator} />
         <div className={clsx(styles.badge, styles[data.status])}>
           {data.status}
         </div>

@@ -1,4 +1,3 @@
-"use client"
 import React from "react";
 import { FCX } from "@/types/types";
 import { useOthers, useMyPresence } from "@liveblocks/react";

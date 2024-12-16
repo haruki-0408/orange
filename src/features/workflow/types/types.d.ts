@@ -51,3 +51,8 @@ export interface TraceData {
   };
   subsegments?: TraceData[];
 } 
+
+export interface Category {
+  category_type_en: string;
+  category_type_jp: string;
+}

@@ -1,4 +1,3 @@
-'use client'
 import React, { useState } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';

@@ -10,7 +10,7 @@ export const initialNodes: Node[] = [
       title: "Start",
       description: "Workflow Start",
       icon: "/aws/stepfunctions.svg",
-      status: "success",
+      status: "ready",
       serviceType: "Start",
       logs: "Starting workflow execution\nInitializing thesis generation process",
     }
@@ -24,7 +24,7 @@ export const initialNodes: Node[] = [
       title: "Thesis API",
       description: "API Gateway Endpoint",
       icon: "/aws/api-gateway.svg",
-      status: "success",
+      status: "ready",
       serviceType: "APIGateway",
       logs: "POST /api/v1/thesis\nAuthorization: IAM\nStage: prod\nRequest validation enabled\nCORS enabled",
       details: {

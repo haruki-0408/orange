@@ -1,23 +1,17 @@
-'use client'
 import React from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
+import { Category } from '@/features/workflow/types/types';
 
 interface Props {
   title: string;
   onStart: () => void;
   onTitleChange: (title: string) => void;
+  categories: Category[];
 }
 
-const CATEGORIES = [
-  { value: 'technology', label: '技術・工学' },
-  { value: 'science', label: '自然科学' },
-  { value: 'medical', label: '医学・生命科学' },
-  { value: 'social', label: '社会科学' },
-  { value: 'humanities', label: '人文科学' },
-];
 
-export const Header: FCX<Props> = ({ title, onStart, onTitleChange }) => {
+export const Header: FCX<Props> = ({ title, onStart, onTitleChange, categories }) => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -47,9 +41,9 @@ export const Header: FCX<Props> = ({ title, onStart, onTitleChange }) => {
             />
             <select className={styles.select} defaultValue="">
               <option value="" disabled>カテゴリを選択</option>
-              {CATEGORIES.map(cat => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
+              {categories.map(cat => (
+                <option key={cat.category_type_en} value={cat.category_type_en}>
+                  {cat.category_type_jp}
                 </option>
               ))}
             </select>

@@ -1,4 +1,3 @@
-'use client'
 import React, { memo } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import styles from './style.module.scss';
