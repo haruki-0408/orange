@@ -4,15 +4,10 @@ export const initialNodes: Node[] = [
   // Start Node
   {
     id: "start",
-    type: "custom",
+    type: "terminal",
     position: { x: 600, y: 0 },
     data: {
-      title: "Start",
-      description: "Workflow Start",
-      icon: "/aws/stepfunctions.svg",
-      status: "ready",
-      serviceType: "Start",
-      logs: "Starting workflow execution\nInitializing thesis generation process",
+      type: "start"
     }
   },
   // API Gateway Node
@@ -338,15 +333,10 @@ export const initialNodes: Node[] = [
   // End Node
   {
     id: "end",
-    type: "custom",
+    type: "terminal",
     position: { x: 600, y: 3300 },
     data: {
-      title: "End",
-      description: "Workflow End",
-      icon: "/aws/stepfunctions.svg",
-      status: "ready",
-      serviceType: "End",
-      logs: "Workflow execution completed\nThesis generation process finished"
+      type: "end"
     }
   }
 ];

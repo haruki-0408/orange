@@ -1,0 +1,63 @@
+.metricCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(6, 182, 212, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(6, 182, 212, 0.2);
+  }
+}
+
+.metricHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.metricTitle {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.metricValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e2e8f0;
+
+  .unit {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin-left: 0.25rem;
+  }
+}
+
+.trendIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+
+  &.up {
+    color: #10b981;
+  }
+
+  &.down {
+    color: #ef4444;
+  }
+
+  &.stable {
+    color: #94a3b8;
+  }
+
+  .trendIcon {
+    width: 16px;
+    height: 16px;
+  }
+} 

@@ -1,0 +1,77 @@
+:root {
+  // Light theme
+  [data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
+    
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-tertiary: #64748b;
+    
+    --border-primary: rgba(0, 0, 0, 0.1);
+    --border-secondary: rgba(0, 0, 0, 0.05);
+    
+    --accent-primary: #0284c7;
+    --accent-secondary: #0ea5e9;
+    
+    --success-primary: #059669;
+    --success-secondary: rgba(5, 150, 105, 0.1);
+    --success-border: rgba(5, 150, 105, 0.2);
+    
+    --error-primary: #dc2626;
+    --error-secondary: rgba(220, 38, 38, 0.1);
+    --error-border: rgba(220, 38, 38, 0.2);
+    
+    --warning-primary: #d97706;
+    --warning-secondary: rgba(217, 119, 6, 0.1);
+    --warning-border: rgba(217, 119, 6, 0.2);
+    
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    --theme-toggle-bg: #ffffff;
+    --theme-toggle-border: rgba(0, 0, 0, 0.1);
+    --theme-toggle-icon: #64748b;
+    --theme-toggle-hover-bg: #f8fafc;
+  }
+
+  // Dark theme
+  [data-theme="dark"] {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #e2e8f0;
+    --text-tertiary: #94a3b8;
+    
+    --border-primary: rgba(255, 255, 255, 0.1);
+    --border-secondary: rgba(255, 255, 255, 0.05);
+    
+    --accent-primary: #06b6d4;
+    --accent-secondary: #22d3ee;
+    
+    --success-primary: #10b981;
+    --success-secondary: rgba(16, 185, 129, 0.1);
+    --success-border: rgba(16, 185, 129, 0.2);
+    
+    --error-primary: #ef4444;
+    --error-secondary: rgba(239, 68, 68, 0.1);
+    --error-border: rgba(239, 68, 68, 0.2);
+    
+    --warning-primary: #f59e0b;
+    --warning-secondary: rgba(245, 158, 11, 0.1);
+    --warning-border: rgba(245, 158, 11, 0.2);
+    
+    --card-bg: rgba(17, 17, 21, 0.4);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
+    --theme-toggle-bg: rgba(255, 255, 255, 0.05);
+    --theme-toggle-border: rgba(255, 255, 255, 0.1);
+    --theme-toggle-icon: #e2e8f0;
+    --theme-toggle-hover-bg: rgba(255, 255, 255, 0.1);
+  }
+} 

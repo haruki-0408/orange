@@ -33,7 +33,6 @@ export function broadcastToWorkflow(workflowId: string, data: any) {
     return;
   }
 
-  //   const message = `event: progress\ndata: ${JSON.stringify(data)}\n\n`;
   const message = `data: ${JSON.stringify(data)}\n\n`;
   const encoded = new TextEncoder().encode(message);
 

@@ -4,7 +4,7 @@ import WorkflowClient from './WorkflowClient';
 async function getCategories() {
   'use server'
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`, {
-    cache: 'no-store', // または 'force-cache' for static data
+    cache: 'force-cache',
   });
   
   if (!res.ok) {

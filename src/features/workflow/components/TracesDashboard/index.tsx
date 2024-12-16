@@ -2,8 +2,14 @@ import React, { useState } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { useReactFlow, Node } from 'reactflow';
-import { TraceData } from '@/features/workflow/types/types';
+import { TraceData, MetricData, MetricsData } from '@/features/workflow/types/types';
 import clsx from 'clsx';
+import { MetricCard } from '../MetricCard';
+import { ErrorCard } from '../ErrorCard';
+import { TimelineCard } from '../TimelineCard';
+import { mockTraceData } from '../../const/mockTraceData';
+import { mockErrorData } from '../../const/mockErrorData';
+import { mockMetricsData } from '../../const/mockMetricsData';
 
 interface Props {
   workflowId?: string;
@@ -11,56 +17,27 @@ interface Props {
   currentNodeId?: string;
   isOpen: boolean;
   onToggle: () => void;
+  className?: string;
 }
 
-const mockErrors = [
-  {
-    id: 'err-001',
-    level: 'error',
-    message: 'Failed to generate thesis content',
-    timestamp: '2024-03-14 10:00:01.782',
-    service: 'Lambda',
-    details: 'Memory limit exceeded in content generation'
-  },
-  {
-    id: 'err-002',
-    level: 'warning',
-    message: 'High latency detected',
-    timestamp: '2024-03-14 10:00:02.123',
-    service: 'API Gateway',
-    details: 'Request processing took longer than expected'
-  },
-  {
-    id: 'err-003',
-    level: 'info',
-    message: 'Auto-scaling event triggered',
-    timestamp: '2024-03-14 10:00:02.445',
-    service: 'Lambda',
-    details: 'Function concurrency increased'
-  }
-];
+type TabType = 'metrics' | 'timeline' | 'errors';
 
 export const TracesDashboard: FCX<Props> = ({ 
   workflowId, 
-  traces, 
+  traces = mockTraceData, 
   currentNodeId,
   isOpen,
-  onToggle 
+  onToggle,
+  className 
 }) => {
   const { setCenter, getNode } = useReactFlow();
-  const [openSections, setOpenSections] = useState({
-    metrics: true,
-    timeline: true,
-    errors: true
-  });
+  const [activeTab, setActiveTab] = useState<TabType>('metrics');
 
-  // 親ノードの位置を再帰的に計算する関数
   const calculateAbsolutePosition = (node: Node) => {
     let absoluteX = node.position.x;
     let absoluteY = node.position.y;
-    let currentNode = node as Node;
+    let currentNode = node;
 
-    // 親ノードが存在する限り位置を加算
     while (currentNode.parentNode) {
       const parentNode = getNode(currentNode.parentNode);
       if (parentNode) {
@@ -78,214 +55,165 @@ export const TracesDashboard: FCX<Props> = ({
   const handleTraceClick = (nodeId: string) => {
     const node = getNode(nodeId);
     if (node) {
-      // 絶対位置を計算
-      const absolutePosition = calculateAbsolutePosition(node);
-      const centerX = absolutePosition.x + (node.width || 0) / 2;
-      const centerY = absolutePosition.y + (node.height || 0) / 2;
-
+      const position = calculateAbsolutePosition(node);
       setCenter(
-        centerX,
-        centerY,
-        { 
-          zoom: 1.5,
-          duration: 800
-        }
+        position.x + (node.width || 0) / 2,
+        position.y + (node.height || 0) / 2,
+        { zoom: 1.5, duration: 800 }
       );
     }
   };
 
-  const toggleSection = (section: keyof typeof openSections) => {
-    setOpenSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
   return (
-    <div className={styles.dashboardWrapper}>
+    <div className={clsx(styles.dashboardWrapper, className)}>
       <div className={styles.toggleButtonContainer}>
         <button 
-          className={`${styles.toggleButton} ${!isOpen ? styles.closed : ''}`}
+          className={clsx(styles.toggleButton, !isOpen && styles.closed)}
           onClick={onToggle}
           aria-label={isOpen ? "Close dashboard" : "Open dashboard"}
         />
       </div>
       <div className={styles.dashboard}>
-        {/* Workflow Overview - 常に表示 */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Workflow Overview</h2>
-          <div className={styles.overviewGrid}>
-            <div className={styles.overviewCard}>
-              <div className={styles.cardLabel}>Workflow ID</div>
-              <div className={styles.cardValue}>{workflowId || '-'}</div>
-            </div>
-            <div className={styles.overviewCard}>
-              <div className={styles.cardLabel}>Total Duration</div>
-              <div className={styles.cardValue}>2.45s</div>
-            </div>
-            <div className={styles.overviewCard}>
-              <div className={styles.cardLabel}>Services Used</div>
-              <div className={styles.cardValue}>8</div>
-            </div>
-            <div className={styles.overviewCard}>
-              <div className={styles.cardLabel}>Total Cost</div>
-              <div className={styles.cardValue}>$0.0023</div>
+        {/* Overview Section */}
+        <div className={styles.overview}>
+          <div className={styles.workflowInfo}>
+            <h2>Workflow Execution</h2>
+            <div className={styles.workflowId}>
+              <span>ID:</span>
+              <code>{workflowId}</code>
             </div>
           </div>
-        </section>
+          <div className={styles.stats}>
+            <div className={styles.statItem}>
+              <div className={styles.statValue}>{mockMetricsData.summary.totalDuration}ms</div>
+              <div className={styles.statLabel}>Duration</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statValue}>{mockMetricsData.summary.totalServices}</div>
+              <div className={styles.statLabel}>Services</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statValue}>${mockMetricsData.summary.estimatedCost}</div>
+              <div className={styles.statLabel}>Cost</div>
+            </div>
+          </div>
+        </div>
 
-        {/* Performance Metrics - トグル可能 */}
-        <section className={styles.section}>
-          <button 
-            className={styles.sectionHeader}
-            onClick={() => toggleSection('metrics')}
+        {/* Tab Navigation */}
+        <div className={styles.tabNav}>
+          <button
+            className={clsx(styles.tabButton, activeTab === 'metrics' && styles.active)}
+            onClick={() => setActiveTab('metrics')}
           >
-            <h2 className={styles.sectionTitle}>
-              <span>Performance Metrics</span>
-              <svg 
-                className={`${styles.arrow} ${openSections.metrics ? styles.open : ''}`}
-                width="12" 
-                height="8" 
-                viewBox="0 0 12 8"
-              >
-                <path 
-                  d="M1 1L6 6L11 1" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round"
-                />
-              </svg>
-            </h2>
+            <svg className={styles.tabIcon} viewBox="0 0 24 24">
+              <path d="M3 3v18h18" stroke="currentColor" strokeWidth="2" fill="none"/>
+              <path d="M7 12l4-4 4 4 4-4" stroke="currentColor" strokeWidth="2" fill="none"/>
+            </svg>
+            Metrics
           </button>
-          {openSections.metrics && (
-            <div className={styles.metricsGrid}>
-              <div className={styles.metricCard}>
-                <div className={styles.metricHeader}>
-                  <span className={styles.metricTitle}>Average Response Time</span>
-                  <span className={styles.metricValue}>245ms</span>
+          <button
+            className={clsx(styles.tabButton, activeTab === 'timeline' && styles.active)}
+            onClick={() => setActiveTab('timeline')}
+          >
+            <svg className={styles.tabIcon} viewBox="0 0 24 24">
+              <path d="M12 4v16M4 8h16M4 16h16" stroke="currentColor" strokeWidth="2" fill="none"/>
+            </svg>
+            Timeline
+          </button>
+          <button
+            className={clsx(styles.tabButton, activeTab === 'errors' && styles.active)}
+            onClick={() => setActiveTab('errors')}
+          >
+            <svg className={styles.tabIcon} viewBox="0 0 24 24">
+              <path d="M12 8v5M12 16h.01" stroke="currentColor" strokeWidth="2" fill="none"/>
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="currentColor" strokeWidth="2" fill="none"/>
+            </svg>
+            Errors
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        <div className={styles.tabContent}>
+          {activeTab === 'metrics' && (
+            <div className={styles.metricsTab}>
+              <section className={styles.section}>
+                <h3 className={styles.sectionTitle}>Performance</h3>
+                <div className={styles.metricGrid}>
+                  {mockMetricsData.performance.latency.map((metric) => (
+                    <MetricCard
+                      key={metric.id}
+                      title={metric.name}
+                      value={metric.value}
+                      unit={metric.unit}
+                      trend={metric.trend as 'up' | 'down' | 'stable'}
+                      change={metric.change}
+                    />
+                  ))}
+                  {mockMetricsData.performance.memory.map((metric) => (
+                    <MetricCard
+                      key={metric.id}
+                      title={metric.name}
+                      value={metric.value}
+                      unit={metric.unit}
+                      trend={metric.trend as 'up' | 'down' | 'stable'}
+                    />
+                  ))}
                 </div>
-                <div className={styles.metricChart}>
-                  {/* レスポンスタイムのライチャート */}
+              </section>
+
+              <section className={styles.section}>
+                <h3 className={styles.sectionTitle}>Resource Usage</h3>
+                <div className={styles.metricGrid}>
+                  <MetricCard
+                    title="Lambda Invocations"
+                    value={mockMetricsData.resources.lambda.invocations}
+                    unit="calls"
+                  />
+                  <MetricCard
+                    title="API Requests"
+                    value={mockMetricsData.resources.apiGateway.requests}
+                    unit="reqs"
+                  />
+                  <MetricCard
+                    title="DynamoDB Read Usage"
+                    value={Math.round((mockMetricsData.resources.dynamoDB.readCapacity.consumed / mockMetricsData.resources.dynamoDB.readCapacity.provisioned) * 100)}
+                    unit="%"
+                  />
+                  <MetricCard
+                    title="Cold Starts"
+                    value={mockMetricsData.performance.coldStarts.total}
+                    trend={mockMetricsData.performance.coldStarts.trend as 'up' | 'down' | 'stable'}
+                    change={mockMetricsData.performance.coldStarts.change}
+                  />
                 </div>
-              </div>
-              <div className={styles.metricCard}>
-                <div className={styles.metricHeader}>
-                  <span className={styles.metricTitle}>Memory Usage</span>
-                  <span className={styles.metricValue}>128MB</span>
-                </div>
-                <div className={styles.metricChart}>
-                  {/* メモリ使用量のエリアチャート */}
-                </div>
-              </div>
+              </section>
             </div>
           )}
-        </section>
 
-        {/* Trace Timeline - トグル可能 */}
-        <section className={styles.section}>
-          <button 
-            className={styles.sectionHeader}
-            onClick={() => toggleSection('timeline')}
-          >
-            <h2 className={styles.sectionTitle}>
-              <span>Trace Timeline</span>
-              <svg 
-                className={`${styles.arrow} ${openSections.timeline ? styles.open : ''}`}
-                width="12" 
-                height="8" 
-                viewBox="0 0 12 8"
-              >
-                <path 
-                  d="M1 1L6 6L11 1" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round"
-                />
-              </svg>
-            </h2>
-          </button>
-          {openSections.timeline && (
-            <div className={styles.timeline}>
-              {traces?.map((trace) => (
-                <div 
+          {activeTab === 'timeline' && (
+            <div className={styles.timelineTab}>
+              {mockTraceData.map((trace) => (
+                <TimelineCard
                   key={trace.id}
-                  className={`${styles.timelineItem} ${currentNodeId === trace.id ? styles.active : ''}`}
+                  trace={trace}
+                  isActive={trace.id === currentNodeId}
                   onClick={() => handleTraceClick(trace.id)}
-                >
-                  <div className={styles.timelineHeader}>
-                    <div className={styles.serviceBadge}>{trace.serviceType}</div>
-                    <div className={styles.timeInfo}>
-                      <span className={styles.duration}>{trace.duration}ms</span>
-                      <span className={styles.time}>{trace.startTime}</span>
-                    </div>
-                  </div>
-                  <div className={styles.timelineContent}>
-                    <div className={styles.traceName}>{trace.name}</div>
-                    {trace.details && (
-                      <div className={styles.traceDetails}>
-                        {trace.details.requestId && (
-                          <div className={styles.detailItem}>
-                            <span className={styles.detailLabel}>Request ID:</span>
-                            <span className={styles.detailValue}>{trace.details.requestId}</span>
-                          </div>
-                        )}
-                        {trace.details.coldStart && (
-                          <div className={styles.coldStartBadge}>Cold Start</div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Errors & Alerts - トグル可能 */}
-        <section className={styles.section}>
-          <button 
-            className={styles.sectionHeader}
-            onClick={() => toggleSection('errors')}
-          >
-            <h2 className={styles.sectionTitle}>
-              <span>Errors & Alerts</span>
-              <svg 
-                className={`${styles.arrow} ${openSections.errors ? styles.open : ''}`}
-                width="12" 
-                height="8" 
-                viewBox="0 0 12 8"
-              >
-                <path 
-                  d="M1 1L6 6L11 1" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round"
                 />
-              </svg>
-            </h2>
-          </button>
-          {openSections.errors && (
-            <div className={styles.errorList}>
-              {mockErrors.map((error) => (
-                <div key={error.id} className={styles.errorItem}>
-                  <div className={styles.errorHeader}>
-                    <div className={styles.errorMeta}>
-                      <span className={clsx(styles.errorLevel, styles[error.level])}>
-                        {error.level}
-                      </span>
-                      <span className={styles.errorService}>{error.service}</span>
-                    </div>
-                    <span className={styles.errorTime}>{error.timestamp}</span>
-                  </div>
-                  <div className={styles.errorContent}>
-                    <div className={styles.errorMessage}>{error.message}</div>
-                    <div className={styles.errorDetails}>{error.details}</div>
-                  </div>
-                </div>
               ))}
             </div>
           )}
-        </section>
+
+          {activeTab === 'errors' && (
+            <div className={styles.errorsTab}>
+              {mockErrorData.map((error) => (
+                <ErrorCard
+                  key={error.id}
+                  {...error}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

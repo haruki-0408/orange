@@ -2,22 +2,32 @@ import React from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { Category } from '@/features/workflow/types/types';
+import clsx from 'clsx';
 
 interface Props {
   title: string;
   onStart: () => void;
   onTitleChange: (title: string) => void;
   categories: Category[];
+  progress?: {
+    percentage: number;
+    status: 'idle' | 'processing' | 'success' | 'error';
+  };
 }
 
-
-export const Header: FCX<Props> = ({ title, onStart, onTitleChange, categories }) => {
+export const Header: FCX<Props> = ({ 
+  title, 
+  onStart, 
+  onTitleChange, 
+  categories,
+  progress = { percentage: 0, status: 'idle' }
+}) => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.titleSection}>
           <div className={styles.mainTitle}>
-            <h1>嘘論文生成器</h1>
+            <h1>Fake Thesis Generator</h1>
             <div className={styles.statusBadge}>
               <span className={styles.dot} />
               System Active
@@ -26,7 +36,7 @@ export const Header: FCX<Props> = ({ title, onStart, onTitleChange, categories }
           <p className={styles.description}>
             イベント駆動型サーバーレスアプリケーション
             <span className={styles.divider}>/</span>
-            処理の可視化と透明性の実現
+            処理の可視化と透明性を重視したデモンストレーションアプリ
           </p>
         </div>
 
@@ -73,7 +83,36 @@ export const Header: FCX<Props> = ({ title, onStart, onTitleChange, categories }
             </button>
           </div>
         </div>
+
+        {/* プログレスバー */}
+        <div className={clsx(
+          styles.progressWrapper,
+          progress.status !== 'idle' && styles.active
+        )}>
+          <div className={styles.progressContainer}>
+            <div 
+              className={clsx(
+                styles.progressBar,
+                styles[progress.status]
+              )}
+              style={{ 
+                '--progress': `${progress.percentage}%` 
+              } as React.CSSProperties}
+            />
+          </div>
+          <div className={styles.progressInfo}>
+            <span className={styles.percentage}>{progress.percentage}</span>
+            <span className={clsx(
+              styles.status,
+              styles[progress.status]
+            )}>
+              {progress.status}
+            </span>
+          </div>
+        </div>
       </div>
     </header>
   );
-}; 
+};
+
+export default Header; 

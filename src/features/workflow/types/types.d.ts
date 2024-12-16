@@ -41,7 +41,7 @@ export interface TraceData {
   duration: number;
   startTime: string;
   status: 'success' | 'error' | 'throttle' | 'fault';
-  serviceType: string;
+  serviceType: ServiceType;
   details: {
     requestId?: string;
     resourceName?: string;
@@ -50,9 +50,66 @@ export interface TraceData {
     coldStart?: boolean;
   };
   subsegments?: TraceData[];
-} 
+}
 
 export interface Category {
   category_type_en: string;
   category_type_jp: string;
+}
+
+export interface MetricData {
+  id: string;
+  name: string;
+  value: number;
+  unit: string;
+  trend: 'up' | 'down' | 'stable';
+  change?: number;
+}
+
+export interface MetricsData {
+  summary: {
+    totalDuration: number;
+    totalServices: number;
+    estimatedCost: number;
+    successRate: number;
+  };
+  performance: {
+    latency: MetricData[];
+    memory: MetricData[];
+    coldStarts: {
+      total: number;
+      percentage: number;
+      trend: 'up' | 'down' | 'stable';
+      change: number;
+    };
+  };
+  resources: {
+    lambda: {
+      invocations: number;
+      errors: number;
+      throttles: number;
+      duration: {
+        average: number;
+        p95: number;
+      };
+    };
+    apiGateway: {
+      requests: number;
+      errors: number;
+      latency: {
+        average: number;
+        p95: number;
+      };
+    };
+    dynamoDB: {
+      readCapacity: {
+        consumed: number;
+        provisioned: number;
+      };
+      writeCapacity: {
+        consumed: number;
+        provisioned: number;
+      };
+    };
+  };
 }
