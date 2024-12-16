@@ -73,7 +73,7 @@ export const initialEdges: Edge[] = [
     type: "custom",
     sourceHandle: "source-bottom",
     targetHandle: "target-top",
-    data: { targetNodeStatus: "ready" }
+    data: { targetNodeStatus: "success" }
   },
   {
     id: "e-choice-fix",

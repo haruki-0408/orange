@@ -5,7 +5,7 @@ export const initialNodes: Node[] = [
   {
     id: "start",
     type: "custom",
-    position: { x: 700, y: 0 },
+    position: { x: 600, y: 0 },
     data: {
       title: "Start",
       description: "Workflow Start",
@@ -19,7 +19,7 @@ export const initialNodes: Node[] = [
   {
     id: "api-gateway",
     type: "custom",
-    position: { x: 700, y: 400 },
+    position: { x: 600, y: 400 },
     data: {
       title: "Thesis API",
       description: "API Gateway Endpoint",
@@ -44,13 +44,13 @@ export const initialNodes: Node[] = [
       label: "Thesis Generation Workflow",
       logs: "Main workflow orchestration\nCoordinating thesis generation process"
     },
-    style: { width: 1600, height: 2400 },
+    style: { width: 1500, height: 2400 },
   },
   // Format Lambda
   {
     id: "format-lambda",
     type: "custom",
-    position: { x: 200, y: 100 },
+    position: { x: 600, y: 100 },
     data: {
       title: "Format Retrieval",
       description: "Get thesis format",
@@ -72,7 +72,7 @@ export const initialNodes: Node[] = [
   {
     id: "prompt-lambda",
     type: "custom",
-    position: { x: 200, y: 500 },
+    position: { x: 600, y: 500 },
     data: {
       title: "Prompt Generation",
       description: "Generate AI prompt",
@@ -94,7 +94,7 @@ export const initialNodes: Node[] = [
   {
     id: "callback-queue",
     type: "custom",
-    position: { x: 200, y: 900 },
+    position: { x: 600, y: 900 },
     data: {
       title: "Callback Queue",
       description: "Sub-workflow trigger",
@@ -116,12 +116,12 @@ export const initialNodes: Node[] = [
   {
     id: "sub-workflow",
     type: "subGroup",
-    position: { x: 500, y: 1200 },
+    position: { x: 1600, y: 400 },
     data: { 
       label: "Thesis Generation Sub-Workflow",
       logs: "Sub-workflow for AI content generation\nHandling thesis content creation and validation"
     },
-    style: { width: 1000, height: 600 },
+    style: { width: 1400, height: 1800 },
     parentNode: "main-workflow",
     extent: "parent",
   },
@@ -129,7 +129,7 @@ export const initialNodes: Node[] = [
   {
     id: "ai-request-lambda",
     type: "custom",
-    position: { x: 150, y: 150 },
+    position: { x: 300, y: 150 },
     data: {
       title: "AI Request",
       description: "Generate thesis content",
@@ -151,7 +151,7 @@ export const initialNodes: Node[] = [
   {
     id: "validation-lambda",
     type: "custom",
-    position: { x: 450, y: 150 },
+    position: { x: 300, y: 550 },
     data: {
       title: "Schema Validation",
       description: "Validate thesis data",
@@ -173,7 +173,7 @@ export const initialNodes: Node[] = [
   {
     id: "validation-choice",
     type: "choice",
-    position: { x: 450, y: 350 },
+    position: { x: 360, y: 1000 },
     data: {
       condition: "Schema\nValidation",
       logs: "Choice State\nCondition: Schema validation result\nRouting based on validation outcome"
@@ -185,7 +185,7 @@ export const initialNodes: Node[] = [
   {
     id: "callback-success",
     type: "custom",
-    position: { x: 150, y: 450 },
+    position: { x: 300, y: 1500 },
     data: {
       title: "Success Callback",
       description: "Return task token",
@@ -207,7 +207,7 @@ export const initialNodes: Node[] = [
   {
     id: "data-fix",
     type: "custom",
-    position: { x: 750, y: 350 },
+    position: { x: 850, y: 978 },
     data: {
       title: "Data Fix",
       description: "Fix thesis data",
@@ -229,7 +229,7 @@ export const initialNodes: Node[] = [
   {
     id: "formula-gen",
     type: "custom",
-    position: { x: 200, y: 1400 },
+    position: { x: 100, y: 1500 },
     data: {
       title: "Formula Generator",
       description: "Generate formula images",
@@ -251,7 +251,7 @@ export const initialNodes: Node[] = [
   {
     id: "table-gen",
     type: "custom",
-    position: { x: 500, y: 1400 },
+    position: { x: 600, y: 1500 },
     data: {
       title: "Table Generator",
       description: "Generate table images",
@@ -273,7 +273,7 @@ export const initialNodes: Node[] = [
   {
     id: "graph-gen",
     type: "custom",
-    position: { x: 800, y: 1400 },
+    position: { x: 1100, y: 1500 },
     data: {
       title: "Graph Generator",
       description: "Generate graph images",
@@ -295,7 +295,7 @@ export const initialNodes: Node[] = [
   {
     id: "pdf-format",
     type: "custom",
-    position: { x: 500, y: 1800 },
+    position: { x: 400, y: 2000 },
     data: {
       title: "PDF Formatter",
       description: "Format thesis as PDF",
@@ -317,7 +317,7 @@ export const initialNodes: Node[] = [
   {
     id: "thesis-bucket",
     type: "custom",
-    position: { x: 500, y: 2100 },
+    position: { x: 900, y: 2000 },
     data: {
       title: "Thesis Bucket",
       description: "Store generated thesis",
@@ -339,7 +339,7 @@ export const initialNodes: Node[] = [
   {
     id: "end",
     type: "custom",
-    position: { x: 600, y: 2800 },
+    position: { x: 600, y: 3300 },
     data: {
       title: "End",
       description: "Workflow End",

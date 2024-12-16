@@ -8,6 +8,7 @@ export const ChoiceNode: FCX<NodeProps> = memo(({ data }) => {
   return (
     <div className={styles.choiceNodeWrapper}>
       <Handle
+        id="target-top"
         type="target"
         position={Position.Top}
         className={styles.handle}
@@ -34,6 +35,7 @@ export const ChoiceNode: FCX<NodeProps> = memo(({ data }) => {
       </div>
 
       <Handle
+        id="source-right"
         type="source"
         position={Position.Right}
         className={styles.handle}
@@ -41,6 +43,7 @@ export const ChoiceNode: FCX<NodeProps> = memo(({ data }) => {
       />
 
       <Handle
+        id="source-bottom"
         type="source"
         position={Position.Bottom}
         className={styles.handle}
