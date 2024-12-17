@@ -27,10 +27,9 @@ import { mockTraceData } from "../const/mockTraceData";
 import { Header } from '../components/Header';
 import { Category } from "../types/types";
 import { TerminalNode } from './TerminalNode';
-import { ThemeProvider } from '../contexts/ThemeContext';
-import { ThemeToggle } from './ThemeToggle';
+import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
 import '../styles/theme.scss';
-
+import { BackgroundVariant } from "reactflow";
 interface Props {
   className?: string;
   categories: Category[];
@@ -56,7 +55,7 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [thesisTitle, setThesisTitle] = useState('');
-
+  const { theme, toggleTheme } = useTheme();
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
@@ -92,8 +91,8 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
   // ボタンの幅を定数として定義
   const TOGGLE_BUTTON_WIDTH = 24;  // px
 
+
   return (
-    <ThemeProvider>
       <div className={`${className} w-full h-full`}>
         <Header 
           title={thesisTitle}
@@ -112,7 +111,7 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
               height: "calc(100vh - 100px)",
               transition: "width 0.3s ease",
               position: "relative",
-              background: "linear-gradient(180deg, rgba(13, 13, 15, 0.98), rgba(17, 17, 21, 0.95))",
+              background: theme === 'dark' ? "linear-gradient(180deg, rgba(14, 14, 20, 0.85), rgba(22, 22, 32, 0.82))" : "linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.95))",
             }}>
               <ReactFlow
                 nodes={nodes}
@@ -136,38 +135,35 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
                   maxZoom: 1
                 }}
                 defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
-                style={{
-                  background: "transparent",
-                  backgroundImage: `
-                    radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
-                    radial-gradient(circle at 0% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
-                    radial-gradient(circle at 100% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%)
-                  `,
-                }}
                 className="react-flow-wrapper"
               >
                 <Controls 
                   showInteractive={false} 
                   className="react-flow-controls"
+                  color={theme === 'dark' ? "#06b6d4" : "#2563eb"}
                 />
                 <MiniMap
                   style={{
-                    backgroundColor: "rgba(13, 13, 15, 0.8)",
-                    border: "1px solid rgba(6, 182, 212, 0.2)",
+                    backgroundColor: theme === 'dark' ? "rgba(13, 13, 15, 0.98)" : "#ffffff",
+                    border: theme === 'dark' ? "1px solid rgba(6, 182, 212, 0.15)" : "1px solid rgba(37, 99, 235, 0.1)", 
                     borderRadius: "8px",
+                    boxShadow: theme === 'dark' ? "0 4px 20px rgba(0, 0, 0, 0.2)" : "0 4px 20px rgba(0, 0, 0, 0.05)"
                   }}
                   className="react-flow-minimap"
-                  maskColor="rgba(6, 182, 212, 0.1)"
+                  maskColor={theme === 'dark' ? "rgba(6, 182, 212, 0.08)" : "rgba(37, 99, 235, 0.05)"}
                   nodeColor={(n) => {
-                    if (n.id === selectedNodeId) return "#06b6d4";
-                    return "rgba(255, 255, 255, 0.3)";
+                    if (n.id === selectedNodeId) {
+                      return theme === 'dark' ? "#06b6d4" : "#2563eb";
+                    }
+                    return theme === 'dark' ? "rgba(255, 255, 255, 0.1)" : "rgba(37, 99, 235, 0.1)";
                   }}
                 />
                 <Background 
                   gap={20} 
                   size={1} 
-                  color="rgba(6, 182, 212, 0.1)" 
+                  color={theme === 'dark' ? 'rgba(0, 0, 0, 0.2)' : '#2563eb0d'} 
                   className="react-flow-background"
+                  variant={BackgroundVariant.Lines}
                 />
               </ReactFlow>
             </div>
@@ -186,8 +182,6 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
             </div>
           </div>
         </ReactFlowProvider>
-        <ThemeToggle />
       </div>
-    </ThemeProvider>
   );
 };

@@ -23,7 +23,9 @@ export const ErrorCard: FCX<Props> = ({
   <div className={clsx(styles.errorItem, styles[level], className)}>
     <div className={styles.errorHeader}>
       <div className={styles.errorInfo}>
-        <span className={styles.errorLevel}>{level}</span>
+        <span className={clsx(styles.errorLevel, styles[level])}>
+          {level}
+        </span>
         <time>{new Date(timestamp).toLocaleTimeString()}</time>
       </div>
       <span className={styles.errorService}>{service}</span>

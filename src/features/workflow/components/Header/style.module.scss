@@ -1,5 +1,5 @@
 .header {
-  background: linear-gradient(180deg, rgba(13, 13, 15, 0.98) 0%, rgba(17, 17, 21, 0.97) 100%);
+  background: var(--bg-header);
   position: relative;
   padding: 0.5rem 0;
   overflow: hidden;
@@ -13,9 +13,9 @@
     height: 1px;
     background: linear-gradient(90deg, 
       transparent,
-      rgba(6, 182, 212, 0.3) 20%,
-      rgba(6, 182, 212, 0.5) 50%,
-      rgba(6, 182, 212, 0.3) 80%,
+      var(--accent-gradient-start) 20%,
+      var(--accent-gradient-middle) 50%,
+      var(--accent-gradient-end) 80%,
       transparent
     );
     filter: blur(1px);
@@ -30,7 +30,7 @@
     height: 150px;
     background: radial-gradient(
       circle at 50% 0%,
-      rgba(6, 182, 212, 0.15),
+      var(--accent-glow),
       transparent 70%
     );
     opacity: 0.5;
@@ -53,13 +53,14 @@
 .mainTitle {
   display: flex;
   align-items: center;
+  width: 100%;
   gap: 1rem;
   margin-bottom: 0.5rem;
 
   h1 {
     font-size: 1.75rem;
     font-weight: 700;
-    background: linear-gradient(to right, #06b6d4, #0891b2, #06b6d4);
+    background: var(--title-gradient);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -69,35 +70,39 @@
   }
 }
 
+.themeToggleWrapper { 
+  margin-left: auto;
+}
+
 .statusBadge {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.25rem 0.75rem;
-  background: rgba(6, 182, 212, 0.07);
-  border: 1px solid rgba(6, 182, 212, 0.2);
+  background: var(--status-badge-bg);
+  border: 1px solid var(--status-badge-border);
   border-radius: 9999px;
   font-size: 0.75rem;
-  color: #10b981;
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+  color: var(--status-badge-text);
+  box-shadow: var(--status-badge-shadow);
   
   .dot {
     width: 6px;
     height: 6px;
-    background-color: #10b981;
+    background-color: var(--status-dot-color);
     border-radius: 50%;
     animation: pulse 2s infinite;
-    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+    box-shadow: var(--status-dot-shadow);
   }
 }
 
 .description {
-  color: #9ca3af;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   
   .divider {
     margin: 0 0.75rem;
-    color: #4b5563;
+    color: var(--text-divider);
   }
 }
 
@@ -105,38 +110,34 @@
   margin-bottom: 1.5rem;
   .inputGroup {
     position: relative;
-    background: rgba(6, 182, 212, 0.02);
+    background: var(--input-group-bg);
     padding: 1rem;
     border-radius: 0.75rem;
     display: flex;
     gap: 1rem;
-    box-shadow: 
-      0 4px 20px rgba(0, 0, 0, 0.2),
-      0 0 0 1px rgba(6, 182, 212, 0.1);
+    box-shadow: var(--input-group-shadow);
   }
 
   .input, .select {
     flex: 2;
-    background: rgba(13, 13, 15, 0.7);
-    border: 1px solid rgba(6, 182, 212, 0.2);
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
     backdrop-filter: blur(10px);
     padding: 0.625rem 1rem;
     border-radius: 0.5rem;
-    color: white;
+    color: var(--text-primary);
     font-size: 0.875rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:focus {
       outline: none;
-      border-color: rgba(6, 182, 212, 0.5);
-      box-shadow: 
-        0 0 0 1px rgba(6, 182, 212, 0.1),
-        0 0 20px rgba(6, 182, 212, 0.2);
-      background: rgba(13, 13, 15, 0.9);
+      border-color: var(--input-focus-border);
+      box-shadow: var(--input-focus-shadow);
+      background: var(--input-focus-bg);
     }
 
     &::placeholder {
-      color: #6b7280;
+      color: var(--text-placeholder);
     }
   }
 
@@ -145,16 +146,14 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 1.25rem;
-    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    background: var(--button-gradient);
     border-radius: 0.5rem;
-    color: white;
+    color: var(--button-text);
     font-size: 0.875rem;
     font-weight: 500;
     transition: all 0.2s;
     white-space: nowrap;
-    box-shadow: 
-      0 0 20px rgba(6, 182, 212, 0.2),
-      0 0 0 1px rgba(6, 182, 212, 0.1);
+    box-shadow: var(--button-shadow);
     position: relative;
     overflow: hidden;
 
@@ -165,20 +164,13 @@
       left: -100%;
       width: 200%;
       height: 100%;
-      background: linear-gradient(
-        115deg,
-        transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent
-      );
+      background: var(--button-shine);
       transition: 0.5s;
     }
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 
-        0 0 30px rgba(6, 182, 212, 0.3),
-        0 0 0 1px rgba(6, 182, 212, 0.2);
+      box-shadow: var(--button-hover-shadow);
 
       &::before {
         left: 100%;
@@ -188,7 +180,7 @@
     .icon {
       width: 1rem;
       height: 1rem;
-      filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.5));
+      filter: var(--button-icon-shadow);
     }
   }
 }
@@ -210,11 +202,7 @@
   left: 0;
   width: 100%;
   height: 40px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(13, 13, 15, 0.95)
-  );
+  background: var(--progress-wrapper-bg);
   display: flex;
   align-items: center;
   padding: 0 24px;
@@ -233,12 +221,10 @@
   flex: 1;
   position: relative;
   height: 4px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--progress-bg);
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 
-    0 0 0 1px rgba(6, 182, 212, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--progress-shadow);
 }
 
 .progressBar {
@@ -256,12 +242,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      #06b6d4,
-      #0ea5e9,
-      #06b6d4
-    );
+    background: var(--progress-gradient);
     background-size: 200% 100%;
     animation: gradientShift 2s linear infinite;
   }
@@ -280,35 +261,19 @@
       right: 0;
       width: 40px;
       height: 100%;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2)
-      );
+      background: var(--progress-shine);
       filter: blur(2px);
       animation: shimmer 1.5s ease-in-out infinite;
     }
   }
 
   &.success::before {
-    background: linear-gradient(
-      90deg,
-      #10b981,
-      #34d399,
-      #10b981
-    );
-    background-size: 200% 100%;
+    background: var(--progress-success-gradient);
     animation: successPulse 1s ease-out forwards;
   }
 
   &.error::before {
-    background: linear-gradient(
-      90deg,
-      #ef4444,
-      #f87171,
-      #ef4444
-    );
-    background-size: 200% 100%;
+    background: var(--progress-error-gradient);
     animation: errorShake 0.5s ease-in-out;
   }
 }
@@ -324,8 +289,8 @@
     font-family: 'Geist Mono', monospace;
     font-size: 1rem;
     font-weight: 600;
-    color: #06b6d4;
-    text-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    color: var(--progress-percentage-color);
+    text-shadow: var(--progress-percentage-shadow);
     min-width: 48px;
     position: relative;
 
@@ -348,22 +313,22 @@
     overflow: hidden;
 
     &.processing {
-      background: rgba(6, 182, 212, 0.1);
-      color: #06b6d4;
-      border: 1px solid rgba(6, 182, 212, 0.2);
+      background: var(--progress-status-processing);
+      border: 1px solid var(--progress-status-processing-border);
+      color: var(--progress-status-processing-color);
       animation: statusPulse 2s infinite;
     }
 
     &.success {
-      background: rgba(16, 185, 129, 0.1);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.2);
+      background: var(--progress-status-success);
+      border: 1px solid var(--progress-status-success-border);
+      color: var(--progress-status-success-color);
     }
 
     &.error {
-      background: rgba(239, 68, 68, 0.1);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.2);
+      background: var(--progress-status-error);
+      border: 1px solid var(--progress-status-error-border);
+      color: var(--progress-status-error-color);
     }
   }
 }

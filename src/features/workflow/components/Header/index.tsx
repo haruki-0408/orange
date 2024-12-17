@@ -3,7 +3,7 @@ import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { Category } from '@/features/workflow/types/types';
 import clsx from 'clsx';
-
+import { ThemeToggle } from '../ThemeToggle';
 interface Props {
   title: string;
   onStart: () => void;
@@ -31,6 +31,9 @@ export const Header: FCX<Props> = ({
             <div className={styles.statusBadge}>
               <span className={styles.dot} />
               System Active
+            </div>
+            <div className={styles.themeToggleWrapper}>
+              <ThemeToggle />
             </div>
           </div>
           <p className={styles.description}>

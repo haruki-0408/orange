@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Workflow } from "@/features/workflow/components";
 import { Room } from "@/features/room/components";
 import { Category } from "@/features/workflow/types/types";
+import { ThemeProvider } from "@/features/workflow/contexts/ThemeContext";
 
 interface Props {
   initialCategories: Category[];
@@ -59,6 +60,7 @@ export default function WorkflowClient({ initialCategories }: Props) {
               Progress: {progress}
             </div>
           )}
+          <ThemeProvider>
           <div className="relative max-w-[1024px] mx-auto">
             <Workflow
               className="w-full h-full my-4"
@@ -67,7 +69,9 @@ export default function WorkflowClient({ initialCategories }: Props) {
               categories={initialCategories}
             />
           </div>
+          </ThemeProvider>
         </MultiplayerLayer>
+        
       </div>
     </Room>
   );

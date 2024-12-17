@@ -2,92 +2,37 @@
   position: relative;
   display: flex;
   align-items: stretch;
-  background: rgba(17, 17, 21, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--timeline-card-bg);
+  border: 1px solid var(--timeline-card-border);
   border-radius: 12px;
   margin-bottom: 0.75rem;
   cursor: pointer;
   transition: all 0.2s ease;
   overflow: hidden;
-  box-shadow: 
-    0 1px 2px rgba(0, 0, 0, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.1);
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    padding: 1px;
-    background: linear-gradient(
-      to bottom right,
-      rgba(255, 255, 255, 0.15),
-      rgba(255, 255, 255, 0.03)
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
 
   &:hover {
-    background: rgba(17, 17, 21, 0.5);
-    transform: translateY(-1px);
+    background: var(--timeline-card-hover-bg);
+    border-color: var(--timeline-card-hover-border);
     box-shadow: 
-      0 2px 4px rgba(0, 0, 0, 0.1),
-      0 6px 16px rgba(0, 0, 0, 0.1);
+      0 0 0 1px var(--timeline-card-hover-border),
+      0 0 0 4px var(--timeline-card-hover-glow);
   }
 
   &.active {
-    background: rgba(6, 182, 212, 0.08);
-    border-color: rgba(6, 182, 212, 0.3);
+    background: var(--timeline-card-active-bg);
+    border-color: var(--timeline-card-active-border);
     box-shadow: 
-      0 0 0 1px rgba(6, 182, 212, 0.2),
-      0 2px 4px rgba(0, 0, 0, 0.1),
-      0 6px 16px rgba(0, 0, 0, 0.1);
-
-    &::after {
-      background: linear-gradient(
-        to bottom right,
-        rgba(6, 182, 212, 0.3),
-        rgba(6, 182, 212, 0.1)
-      );
+      0 0 0 1px var(--timeline-card-active-border),
+      inset 0 0 20px rgba(0, 0, 0, 0.05);
+    
+    &:hover {
+      background: var(--timeline-card-active-hover-bg);
+      border-color: var(--timeline-card-active-border);
+      box-shadow: 
+        0 0 0 1px var(--timeline-card-active-border),
+        0 0 0 4px var(--timeline-card-active-hover-glow),
+        inset 0 0 24px rgba(0, 0, 0, 0.08);
     }
-  }
-}
-
-.status {
-  width: 4px;
-  display: flex;
-  align-items: stretch;
-  padding: 4px 0;
-  margin: 4px 0 4px 4px;
-}
-
-.statusIndicator {
-  width: 100%;
-  border-radius: 2px;
-  transition: all 0.2s ease;
-
-  &.success {
-    background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
-  }
-
-  &.error {
-    background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
-    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
-  }
-
-  &.throttle {
-    background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
-  }
-
-  &.fault {
-    background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-    box-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
   }
 }
 
@@ -114,25 +59,16 @@
 .serviceName {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #e2e8f0;
+  color: var(--timeline-service-name);
   letter-spacing: -0.01em;
 }
 
 .serviceType {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--timeline-service-type);
   display: flex;
   align-items: center;
   gap: 1rem;
-
-  &::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    background: currentColor;
-    border-radius: 50%;
-    opacity: 0.5;
-  }
 }
 
 .metrics {
@@ -146,102 +82,34 @@
   align-items: baseline;
   gap: 0.25rem;
   padding: 0.375rem 0.75rem;
-  background: rgba(6, 182, 212, 0.1);
-  border: 1px solid rgba(6, 182, 212, 0.2);
+  background: var(--timeline-duration-bg);
+  border: 1px solid var(--timeline-duration-border);
   border-radius: 6px;
-  box-shadow: 
-    0 1px 2px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   .durationValue {
     font-family: 'Geist Mono', monospace;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #06b6d4;
+    color: var(--timeline-duration-text);
     letter-spacing: -0.01em;
   }
 
   .durationUnit {
     font-family: 'Geist Mono', monospace;
     font-size: 0.75rem;
-    color: rgba(6, 182, 212, 0.8);
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      to right,
-      rgba(6, 182, 212, 0.1),
-      transparent
-    );
-    opacity: 0.5;
-    pointer-events: none;
+    color: var(--timeline-duration-text);
+    opacity: 0.8;
   }
 }
 
 .time {
   font-family: 'Geist Mono', monospace;
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--timeline-time-color);
   padding: 0.375rem 0.75rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--timeline-time-bg);
+  border: 1px solid var(--timeline-time-border);
   border-radius: 6px;
-}
-
-.statusInfo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.statusBadge {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  letter-spacing: 0.02em;
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-
-  &::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-
-  &.success {
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-  }
-
-  &.error {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-  }
-
-  &.throttle {
-    color: #f59e0b;
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.2);
-  }
-
-  &.fault {
-    color: #dc2626;
-    background: rgba(220, 38, 38, 0.1);
-    border: 1px solid rgba(220, 38, 38, 0.2);
-  }
 }
 
 .details {
@@ -249,10 +117,9 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--timeline-details-bg);
+  border: 1px solid var(--timeline-details-border);
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .detailItem {
@@ -262,10 +129,9 @@
 
   .detailLabel {
     font-size: 0.75rem;
-    color: #64748b;
+    color: var(--timeline-details-label);
     text-transform: uppercase;
     letter-spacing: 0.02em;
-    font-weight: 500;
   }
 
   .detailValue {
@@ -273,38 +139,42 @@
     font-size: 0.75rem;
     padding: 0.25rem 0.75rem;
     border-radius: 4px;
-    box-shadow: 
-      0 1px 2px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    background: var(--timeline-details-value-bg);
+    border: 1px solid var(--timeline-details-value-border);
+    color: var(--timeline-details-value-text);
+  }
+}
+
+.status {
+  width: 4px;
+  display: flex;
+  align-items: stretch;
+  padding: 4px 0;
+  margin: 4px 0 4px 4px;
+}
+
+.statusIndicator {
+  width: 100%;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+
+  &.success {
+    background: var(--timeline-status-success);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
   }
 
-  &.requestId .detailValue {
-    color: #06b6d4;
-    background: rgba(6, 182, 212, 0.15);
-    border: 1px solid rgba(6, 182, 212, 0.25);
+  &.error {
+    background: var(--timeline-status-error);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
   }
 
-  &.memoryUsed .detailValue {
-    color: #8b5cf6;
-    background: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(139, 92, 246, 0.25);
+  &.throttle {
+    background: var(--timeline-status-throttle);
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
   }
 
-  &.coldStart .detailValue {
-    color: #f59e0b;
-    background: rgba(245, 158, 11, 0.15);
-    border: 1px solid rgba(245, 158, 11, 0.25);
-  }
-
-  &.errorMessage .detailValue {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.25);
-  }
-
-  &.resourceName .detailValue {
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.25);
+  &.fault {
+    background: var(--timeline-status-fault);
+    box-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
   }
 } 

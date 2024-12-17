@@ -5,15 +5,15 @@
     --bg-secondary: #f8fafc;
     --bg-tertiary: #f1f5f9;
     
-    --text-primary: #0f172a;
+    --text-primary: #1e293b;
     --text-secondary: #334155;
     --text-tertiary: #64748b;
     
-    --border-primary: rgba(0, 0, 0, 0.1);
-    --border-secondary: rgba(0, 0, 0, 0.05);
+    --border-primary: rgba(0, 0, 0, 0.08);
+    --border-secondary: rgba(0, 0, 0, 0.04);
     
-    --accent-primary: #0284c7;
-    --accent-secondary: #0ea5e9;
+    --accent-primary: #2563eb;
+    --accent-secondary: #3b82f6;
     
     --success-primary: #059669;
     --success-secondary: rgba(5, 150, 105, 0.1);
@@ -32,9 +32,201 @@
     --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     
     --theme-toggle-bg: #ffffff;
-    --theme-toggle-border: rgba(0, 0, 0, 0.1);
-    --theme-toggle-icon: #64748b;
-    --theme-toggle-hover-bg: #f8fafc;
+    --theme-toggle-border: rgba(37, 99, 235, 0.15);
+    --theme-toggle-icon: #2563eb;
+    --theme-toggle-hover-bg: rgba(37, 99, 235, 0.04);
+    
+    // Header specific
+    --bg-header: #ffffff;
+    --accent-gradient-start: rgba(37, 99, 235, 0.2);
+    --accent-gradient-middle: rgba(59, 130, 246, 0.3);
+    --accent-gradient-end: rgba(37, 99, 235, 0.2);
+    --accent-glow: rgba(37, 99, 235, 0.08);
+    --title-gradient: linear-gradient(to right, #1d4ed8, #2563eb, #1d4ed8);
+    
+    --status-badge-bg: #ffffff;
+    --status-badge-border: rgba(37, 99, 235, 0.2);
+    --status-badge-text: #059669;
+    --status-badge-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
+    --status-dot-color: #059669;
+    --status-dot-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+    
+    --text-divider: #94a3b8;
+    
+    --input-group-bg: rgba(37, 99, 235, 0.03);
+    --input-group-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(37, 99, 235, 0.08);
+    --input-bg: #ffffff;
+    --input-border: rgba(37, 99, 235, 0.15);
+    --input-focus-border: rgba(37, 99, 235, 0.3);
+    --input-focus-shadow: 0 0 0 1px rgba(37, 99, 235, 0.1), 0 0 20px rgba(37, 99, 235, 0.1);
+    --input-focus-bg: #ffffff;
+    --text-placeholder: #94a3b8;
+    
+    --button-gradient: linear-gradient(135deg, #2563eb, #1d4ed8);
+    --button-text: #ffffff;
+    --button-shadow: 0 0 20px rgba(37, 99, 235, 0.15), 0 0 0 1px rgba(37, 99, 235, 0.1);
+    --button-hover-shadow: 0 0 30px rgba(37, 99, 235, 0.2), 0 0 0 1px rgba(37, 99, 235, 0.15);
+    --button-shine: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    --button-icon-shadow: drop-shadow(0 0 8px rgba(37, 99, 235, 0.3));
+    
+    // プログレスバー
+    --progress-wrapper-bg: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(241, 245, 249, 0.95)
+    );
+    --progress-bg: rgba(37, 99, 235, 0.1);
+    --progress-gradient: linear-gradient(90deg, #2563eb, #3b82f6, #2563eb);
+    --progress-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2), 0 4px 12px rgba(37, 99, 235, 0.1);
+    --progress-shine: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+    
+    --progress-success-gradient: linear-gradient(90deg, #2563eb, #3b82f6, #2563eb);
+    --progress-error-gradient: linear-gradient(90deg, #ef4444, #f87171, #ef4444);
+    
+    --progress-percentage-color: #2563eb;
+    --progress-percentage-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+    
+    --progress-status-processing: rgba(37, 99, 235, 0.1);
+    --progress-status-processing-border: rgba(37, 99, 235, 0.2);
+    --progress-status-processing-color: #2563eb;
+    
+    --progress-status-success: rgba(16, 185, 129, 0.1);
+    --progress-status-success-border: rgba(16, 185, 129, 0.2);
+    --progress-status-success-color: #10b981;
+    
+    --progress-status-error: rgba(239, 68, 68, 0.1);
+    --progress-status-error-border: rgba(239, 68, 68, 0.2);
+    --progress-status-error-color: #ef4444;
+    
+    // TracesDashboard
+    --traces-bg: #ffffff;
+    --traces-border: rgba(37, 99, 235, 0.1);
+    --traces-backdrop-blur: 20px;
+    --traces-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+    --traces-tab-bg: #f8fafc;
+    --traces-tab-hover: rgba(37, 99, 235, 0.05);
+    --traces-tab-active: #2563eb;
+    --traces-tab-text: #64748b;
+    --traces-tab-text-active: #2563eb;
+    --traces-tab-border: rgba(37, 99, 235, 0.1);
+
+    --traces-workflow-id-bg: rgba(37, 99, 235, 0.05);
+    --traces-workflow-id-text: #2563eb;
+    --traces-workflow-id-border: rgba(37, 99, 235, 0.1);
+
+    --traces-stats-bg: #ffffff;
+    --traces-stats-border: rgba(37, 99, 235, 0.1);
+    --traces-stats-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --traces-stats-value: #1e293b;
+    --traces-stats-label: #64748b;
+
+    --traces-section-title: #1e293b;
+    --traces-section-border: #2563eb;
+
+    // MetricCard
+    --metric-card-bg: #ffffff;
+    --metric-card-border: rgba(37, 99, 235, 0.1);
+    --metric-card-title: #64748b;
+    --metric-card-value: #1e293b;
+    --metric-card-unit: #64748b;
+    
+    --trend-up-color: #10b981;
+    --trend-up-bg: rgba(16, 185, 129, 0.1);
+    --trend-down-color: #ef4444;
+    --trend-down-bg: rgba(239, 68, 68, 0.1);
+    --trend-stable-color: #64748b;
+    --trend-stable-bg: rgba(100, 116, 139, 0.1);
+
+    // ErrorCard
+    --error-card-bg: #ffffff;
+    --error-card-border: rgba(37, 99, 235, 0.1);
+    --error-card-hover-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    --error-card-message: #1e293b;
+    --error-card-details: #64748b;
+    --error-card-service: #64748b;
+    --error-card-service-bg: rgba(37, 99, 235, 0.05);
+    
+    --error-gradient-start: rgba(37, 99, 235, 0.2);
+    --error-gradient-end: rgba(37, 99, 235, 0.05);
+    
+    --error-level-error-gradient: linear-gradient(to bottom, #ef4444, rgba(239, 68, 68, 0.1));
+    --error-level-warning-gradient: linear-gradient(to bottom, #f59e0b, rgba(245, 158, 11, 0.1));
+    --error-level-info-gradient: linear-gradient(to bottom, #2563eb, rgba(37, 99, 235, 0.1));
+    
+    --error-level-error-bg: rgba(239, 68, 68, 0.1);
+    --error-level-error-color: #dc2626;
+    --error-level-error-border: rgba(239, 68, 68, 0.2);
+    
+    --error-level-warning-bg: rgba(245, 158, 11, 0.1);
+    --error-level-warning-color: #d97706;
+    --error-level-warning-border: rgba(245, 158, 11, 0.2);
+    
+    --error-level-info-bg: rgba(37, 99, 235, 0.1);
+    --error-level-info-color: #2563eb;
+    --error-level-info-border: rgba(37, 99, 235, 0.2);
+
+    // TimelineCard
+    --timeline-service-name: #1e293b;
+    --timeline-service-type: #64748b;
+    --timeline-time: #64748b;
+    
+    --timeline-duration-bg: rgba(37, 99, 235, 0.12);
+    --timeline-duration-border: rgba(37, 99, 235, 0.25);
+    --timeline-duration-text: #2563eb;
+    
+    --timeline-details-bg: rgba(37, 99, 235, 0.03);
+    --timeline-details-border: rgba(37, 99, 235, 0.15);
+    --timeline-details-label: #64748b;
+    --timeline-details-value-bg: rgba(37, 99, 235, 0.08);
+    --timeline-details-value-border: rgba(37, 99, 235, 0.2);
+    --timeline-details-value-text: #2563eb;
+    
+    --timeline-time-bg: rgba(37, 99, 235, 0.05);
+    --timeline-time-border: rgba(37, 99, 235, 0.1);
+    --timeline-time-color: #2563eb;
+    
+    --timeline-status-success: #10b981;
+    --timeline-status-error: #ef4444;
+    --timeline-status-throttle: #f59e0b;
+    --timeline-status-fault: #dc2626;
+    
+    --timeline-time-bg: rgba(37, 99, 235, 0.05);
+    --timeline-time-border: rgba(37, 99, 235, 0.1);
+    --timeline-time-color: #2563eb;
+
+    // ErrorCard
+    --error-info-time: #64748b;
+    --error-info-time-bg: rgba(37, 99, 235, 0.05);
+    --error-info-time-border: rgba(37, 99, 235, 0.1);
+    
+    --error-service-text: #64748b;
+    --error-service-bg: rgba(37, 99, 235, 0.05);
+    --error-service-border: rgba(37, 99, 235, 0.1);
+
+    // TimelineCard
+    --timeline-card-bg: #ffffff;
+    --timeline-card-border: rgba(37, 99, 235, 0.15);
+    --timeline-card-hover-bg: rgba(37, 99, 235, 0.04);
+    --timeline-card-hover-border: rgba(37, 99, 235, 0.25);
+    --timeline-card-active-bg: rgba(37, 99, 235, 0.05);
+    --timeline-card-active-hover-bg: rgba(37, 99, 235, 0.08);
+    --timeline-card-active-border: rgba(37, 99, 235, 0.3);
+    --timeline-card-hover-glow: rgba(37, 99, 235, 0.08);
+    --timeline-card-active-hover-glow: rgba(37, 99, 235, 0.12);
+
+    // TerminalNode
+    --terminal-node-bg: #ffffff;
+    --terminal-node-border: rgba(37, 99, 235, 0.1);
+    --terminal-node-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    
+    --terminal-node-title: #1e293b;
+    --terminal-node-subtitle: #64748b;
+    
+    --terminal-node-input-bg: rgba(37, 99, 235, 0.05);
+    --terminal-node-input-border: rgba(37, 99, 235, 0.1);
+    --terminal-node-input-text: #1e293b;
+    --terminal-node-input-placeholder: #94a3b8;
   }
 
   // Dark theme
@@ -73,5 +265,192 @@
     --theme-toggle-border: rgba(255, 255, 255, 0.1);
     --theme-toggle-icon: #e2e8f0;
     --theme-toggle-hover-bg: rgba(255, 255, 255, 0.1);
+    
+    // Header specific
+    --bg-header: rgba(13, 13, 15, 0.98);
+    --accent-gradient-start: rgba(6, 182, 212, 0.3);
+    --accent-gradient-middle: rgba(238, 246, 247, 0.5);
+    --accent-gradient-end: rgba(6, 182, 212, 0.3);
+    --accent-glow: rgba(6, 182, 212, 0.15);
+    --title-gradient: linear-gradient(to right, #06b6d4, #0891b2, #06b6d4);
+    
+    --status-badge-bg: rgba(6, 182, 212, 0.07);
+    --status-badge-border: rgba(6, 182, 212, 0.2);
+    --status-badge-text: #10b981;
+    --status-badge-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+    --status-dot-color: #10b981;
+    --status-dot-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+    
+    --text-divider: #4b5563;
+    
+    --input-group-bg: rgba(6, 182, 212, 0.02);
+    --input-group-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(6, 182, 212, 0.1);
+    --input-bg: rgba(13, 13, 15, 0.7);
+    --input-border: rgba(6, 182, 212, 0.2);
+    --input-focus-border: rgba(6, 182, 212, 0.5);
+    --input-focus-shadow: 0 0 0 1px rgba(6, 182, 212, 0.1), 0 0 20px rgba(6, 182, 212, 0.2);
+    --input-focus-bg: rgba(13, 13, 15, 0.9);
+    --text-placeholder: #6b7280;
+    
+    --button-gradient: linear-gradient(135deg, #06b6d4, #0891b2);
+    --button-text: #ffffff;
+    --button-shadow: 0 0 20px rgba(6, 182, 212, 0.2), 0 0 0 1px rgba(6, 182, 212, 0.1);
+    --button-hover-shadow: 0 0 30px rgba(6, 182, 212, 0.3), 0 0 0 1px rgba(6, 182, 212, 0.2);
+    --button-shine: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    --button-icon-shadow: drop-shadow(0 0 8px rgba(6, 182, 212, 0.5));
+    
+    // プログレスバー
+    --progress-wrapper-bg: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(13, 13, 15, 0.95)
+    );
+    --progress-bg: rgba(255, 255, 255, 0.05);
+    --progress-gradient: linear-gradient(90deg, #06b6d4, #0ea5e9, #06b6d4);
+    --progress-shadow: 0 0 0 1px rgba(6, 182, 212, 0.1), 0 4px 12px rgba(0, 0, 0, 0.2);
+    --progress-shine: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2));
+    
+    --progress-success-gradient: linear-gradient(90deg, #10b981, #34d399, #10b981);
+    --progress-error-gradient: linear-gradient(90deg, #ef4444, #f87171, #ef4444);
+    
+    --progress-percentage-color: #06b6d4;
+    --progress-percentage-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    
+    --progress-status-processing: rgba(6, 182, 212, 0.1);
+    --progress-status-processing-border: rgba(6, 182, 212, 0.2);
+    --progress-status-processing-color: #06b6d4;
+    
+    --progress-status-success: rgba(16, 185, 129, 0.1);
+    --progress-status-success-border: rgba(16, 185, 129, 0.2);
+    --progress-status-success-color: #10b981;
+    
+    --progress-status-error: rgba(239, 68, 68, 0.1);
+    --progress-status-error-border: rgba(239, 68, 68, 0.2);
+    --progress-status-error-color: #ef4444;
+    
+    // TracesDashboard
+    --traces-bg: rgba(13, 13, 15, 0.98);
+    --traces-border: rgba(6, 182, 212, 0.15);
+    --traces-backdrop-blur: 20px;
+    --traces-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+    --traces-tab-bg: rgba(17, 17, 21, 0.4);
+    --traces-tab-hover: rgba(255, 255, 255, 0.05);
+    --traces-tab-active: #06b6d4;
+    --traces-tab-text: #94a3b8;
+    --traces-tab-text-active: #06b6d4;
+    --traces-tab-border: rgba(255, 255, 255, 0.1);
+
+    --traces-workflow-id-bg: rgba(6, 182, 212, 0.1);
+    --traces-workflow-id-text: #06b6d4;
+    --traces-workflow-id-border: rgba(6, 182, 212, 0.2);
+
+    --traces-stats-bg: rgba(17, 17, 21, 0.4);
+    --traces-stats-border: rgba(6, 181, 212, 0.554);
+    --traces-stats-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --traces-stats-value: #e2e8f0;
+    --traces-stats-label: #94a3b8;
+
+    --traces-section-title: #e2e8f0;
+    --traces-section-border: #06b6d4;
+
+    // MetricCard
+    --metric-card-bg: rgba(255, 255, 255, 0.03);
+    --metric-card-border: rgba(6, 182, 212, 0.1);
+    --metric-card-title: #94a3b8;
+    --metric-card-value: #e2e8f0;
+    --metric-card-unit: #94a3b8;
+    
+    --trend-up-color: #10b981;
+    --trend-up-bg: rgba(16, 185, 129, 0.1);
+    --trend-down-color: #ef4444;
+    --trend-down-bg: rgba(239, 68, 68, 0.1);
+    --trend-stable-color: #94a3b8;
+    --trend-stable-bg: rgba(148, 163, 184, 0.1);
+
+    // ErrorCard
+    --error-card-bg: rgba(17, 17, 21, 0.4);
+    --error-card-border: rgba(255, 255, 255, 0.1);
+    --error-card-message: rgba(255, 255, 255, 0.9);
+    --error-card-details: rgba(255, 255, 255, 0.6);
+    --error-card-service: rgba(255, 255, 255, 0.7);
+    --error-card-service-bg: rgba(255, 255, 255, 0.08);
+    
+    --error-gradient-start: rgba(6, 182, 212, 0.4);
+    --error-gradient-end: transparent;
+    
+    --error-level-error-gradient: linear-gradient(to bottom, #ef4444, transparent);
+    --error-level-warning-gradient: linear-gradient(to bottom, #f59e0b, transparent);
+    --error-level-info-gradient: linear-gradient(to bottom, #06b6d4, transparent);
+    
+    --error-level-error-bg: rgba(239, 68, 68, 0.25);
+    --error-level-error-color: #fee2e2;
+    --error-level-error-border: rgba(239, 68, 68, 0.5);
+    
+    --error-level-warning-bg: rgba(245, 158, 11, 0.25);
+    --error-level-warning-color: #fef3c7;
+    --error-level-warning-border: rgba(245, 158, 11, 0.5);
+    
+    --error-level-info-bg: rgba(6, 182, 212, 0.25);
+    --error-level-info-color: #cffafe;
+    --error-level-info-border: rgba(6, 182, 212, 0.5);
+
+    // TimelineCard
+    --timeline-service-name: #e2e8f0;
+    --timeline-service-type: #94a3b8;
+    --timeline-time: #94a3b8;
+    
+    --timeline-duration-bg: rgba(6, 182, 212, 0.2);
+    --timeline-duration-border: rgba(6, 182, 212, 0.3);
+    --timeline-duration-text: #22d3ee;
+    
+    --timeline-details-bg: rgba(6, 182, 212, 0.05);
+    --timeline-details-border: rgba(6, 182, 212, 0.2);
+    --timeline-details-label: #94a3b8;
+    --timeline-details-value-bg: rgba(6, 182, 212, 0.15);
+    --timeline-details-value-border: rgba(6, 182, 212, 0.25);
+    --timeline-details-value-text: #22d3ee;
+    
+    --timeline-status-success: #34d399;
+    --timeline-status-error: #f87171;
+    --timeline-status-throttle: #fbbf24;
+    --timeline-status-fault: #ef4444;
+    
+    --timeline-time-bg: rgba(255, 255, 255, 0.08);
+    --timeline-time-border: rgba(255, 255, 255, 0.12);
+    --timeline-time-color: #e2e8f0;
+
+    // ErrorCard
+    --error-info-time: rgba(255, 255, 255, 0.9);
+    --error-info-time-bg: rgba(255, 255, 255, 0.1);
+    --error-info-time-border: rgba(255, 255, 255, 0.2);
+    
+    --error-service-text: rgba(255, 255, 255, 0.9);
+    --error-service-bg: rgba(255, 255, 255, 0.1);
+    --error-service-border: rgba(255, 255, 255, 0.2);
+
+    // TimelineCard
+    --timeline-card-bg: rgba(17, 17, 21, 0.4);
+    --timeline-card-border: rgba(6, 182, 212, 0.2);
+    --timeline-card-hover-bg: rgba(6, 182, 212, 0.08);
+    --timeline-card-hover-border: rgba(6, 182, 212, 0.3);
+    --timeline-card-active-bg: rgba(6, 182, 212, 0.15);
+    --timeline-card-active-hover-bg: rgba(6, 182, 212, 0.2);
+    --timeline-card-active-border: rgba(6, 182, 212, 0.3);
+    --timeline-card-hover-glow: rgba(6, 182, 212, 0.08);
+    --timeline-card-active-hover-glow: rgba(6, 182, 212, 0.12);
+
+    // TerminalNode
+    --terminal-node-bg: rgba(17, 17, 21, 0.4);
+    --terminal-node-border: rgba(6, 182, 212, 0.15);
+    --terminal-node-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    
+    --terminal-node-title: #e2e8f0;
+    --terminal-node-subtitle: #94a3b8;
+    
+    --terminal-node-input-bg: rgba(255, 255, 255, 0.05);
+    --terminal-node-input-border: rgba(6, 182, 212, 0.2);
+    --terminal-node-input-text: #e2e8f0;
+    --terminal-node-input-placeholder: #64748b;
   }
 } 

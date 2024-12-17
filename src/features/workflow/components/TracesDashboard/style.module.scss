@@ -7,12 +7,10 @@
 .dashboard {
   flex: 1;
   height: 100%;
-  background: linear-gradient(180deg, 
-    rgba(13, 13, 15, 0.98) 0%,
-    rgba(17, 17, 21, 0.95) 100%
-  );
-  border-left: 1px solid rgba(6, 182, 212, 0.15);
-  backdrop-filter: blur(20px);
+  background: var(--traces-bg);
+  border-left: 1px solid var(--traces-border);
+  backdrop-filter: blur(var(--traces-backdrop-blur));
+  box-shadow: var(--traces-shadow);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -20,10 +18,10 @@
 
 .overview {
   padding: 24px;
-  border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+  border-bottom: 1px solid var(--traces-border);
   background: linear-gradient(
     180deg,
-    rgba(6, 182, 212, 0.05) 0%,
+    var(--traces-tab-bg) 0%,
     transparent 100%
   );
 }
@@ -34,7 +32,7 @@
   h2 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #e2e8f0;
+    color: var(--traces-section-title);
     margin-bottom: 8px;
     letter-spacing: -0.02em;
   }
@@ -46,15 +44,16 @@
   gap: 8px;
   
   span {
-    color: #94a3b8;
+    color: var(--text-tertiary);
     font-size: 0.875rem;
   }
   
   code {
     font-family: 'Geist Mono', monospace;
     font-size: 0.875rem;
-    color: #06b6d4;
-    background: rgba(6, 182, 212, 0.1);
+    color: var(--traces-workflow-id-text);
+    background: var(--traces-workflow-id-bg);
+    border: 1px solid var(--traces-workflow-id-border);
     padding: 4px 8px;
     border-radius: 4px;
   }
@@ -68,8 +67,9 @@
 .statItem {
   flex: 1;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(6, 182, 212, 0.1);
+  background: var(--traces-stats-bg);
+  border: 1px solid var(--traces-stats-border);
+  box-shadow: var(--traces-stats-shadow);
   border-radius: 8px;
   text-align: center;
 }
@@ -77,13 +77,13 @@
 .statValue {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #e2e8f0;
+  color: var(--traces-stats-value);
   margin-bottom: 4px;
 }
 
 .statLabel {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--traces-stats-label);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -91,13 +91,13 @@
 .tabNav {
   display: flex;
   padding: 0 24px;
-  border-bottom: 1px solid rgba(6, 182, 212, 0.1);
-  background: rgba(13, 13, 15, 0.5);
+  border-bottom: 1px solid var(--traces-tab-border);
+  background: var(--traces-tab-bg);
 }
 
 .tabButton {
   padding: 16px 24px;
-  color: #94a3b8;
+  color: var(--traces-tab-text);
   font-size: 0.875rem;
   font-weight: 500;
   display: flex;
@@ -105,6 +105,7 @@
   gap: 8px;
   position: relative;
   transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
 
   &::after {
     content: '';
@@ -120,10 +121,12 @@
 
   &:hover {
     color: #e2e8f0;
+    background: var(--traces-tab-hover);
   }
 
   &.active {
-    color: #06b6d4;
+    color: var(--traces-tab-text-active);
+    border-color: var(--traces-tab-active);
 
     &::after {
       transform: scaleX(1);
@@ -518,21 +521,24 @@
   }
 
   .toggleButton {
-    background: #1a1a1a;
+    background: var(--traces-tab-bg);
     padding: 8px;
     border-radius: 6px 0 0 6px;
-    border: none;
+    border: 1px solid var(--traces-border);
+    border-right: none;
     cursor: pointer;
-    color: #fff;
-    transition: background-color 0.2s;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
     width: 24px;
     height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: var(--traces-shadow);
 
     &:hover {
-      background: #2d2d2d;
+      background: var(--traces-tab-hover);
+      color: var(--text-primary);
     }
 
     &::before,
@@ -704,10 +710,10 @@
 .sectionTitle {
   font-size: 1rem;
   font-weight: 600;
-  color: #e2e8f0;
+  color: var(--traces-section-title);
   margin-bottom: 1rem;
   padding-left: 0.5rem;
-  border-left: 2px solid #06b6d4;
+  border-left: 2px solid var(--traces-section-border);
 }
 
 .metricGrid {

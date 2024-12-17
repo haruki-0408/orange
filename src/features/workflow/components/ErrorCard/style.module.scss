@@ -1,34 +1,41 @@
 .errorItem {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--error-card-bg);
+  border: 1px solid var(--error-card-border);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
   position: relative;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--error-card-hover-shadow);
+  }
 
   &::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    width: 2px;
+    left: -1px;
+    border-radius: 8px;
+    width: 3px;
     height: 100%;
     background: linear-gradient(to bottom,
-      rgba(6, 182, 212, 0.4),
-      transparent
+      var(--error-gradient-start),
+      var(--error-gradient-end)
     );
   }
 
   &.error::before {
-    background: linear-gradient(to bottom, #ef4444, transparent);
+    background: var(--error-level-error-gradient);
   }
 
   &.warning::before {
-    background: linear-gradient(to bottom, #f59e0b, transparent);
+    background: var(--error-level-warning-gradient);
   }
 
   &.info::before {
-    background: linear-gradient(to bottom, #06b6d4, transparent);
+    background: var(--error-level-info-gradient);
   }
 }
 
@@ -43,6 +50,16 @@
   display: flex;
   align-items: center;
   gap: 8px;
+
+  time {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--error-info-time);
+    background: var(--error-info-time-bg);
+    border: 1px solid var(--error-info-time-border);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
 }
 
 .errorLevel {
@@ -54,28 +71,29 @@
   letter-spacing: 0.02em;
 
   &.error {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    background: var(--error-level-error-bg);
+    color: var(--error-level-error-color);
+    border: 1px solid var(--error-level-error-border);
   }
 
   &.warning {
-    background: rgba(245, 158, 11, 0.1);
-    color: #f59e0b;
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    background: var(--error-level-warning-bg);
+    color: var(--error-level-warning-color);
+    border: 1px solid var(--error-level-warning-border);
   }
 
   &.info {
-    background: rgba(6, 182, 212, 0.1);
-    color: #06b6d4;
-    border: 1px solid rgba(6, 182, 212, 0.2);
+    background: var(--error-level-info-bg);
+    color: var(--error-level-info-color);
+    border: 1px solid var(--error-level-info-border);
   }
 }
 
 .errorService {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.75rem;
+  color: var(--error-service-text);
+  background: var(--error-service-bg);
+  border: 1px solid var(--error-service-border);
   padding: 2px 6px;
   border-radius: 4px;
   letter-spacing: 0.02em;
@@ -83,13 +101,14 @@
 
 .errorMessage {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--error-card-message);
   margin-bottom: 4px;
   font-weight: 500;
 }
 
 .errorDetails {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--error-card-details);
   line-height: 1.4;
+  font-family: 'Geist Mono', monospace;
 } 
