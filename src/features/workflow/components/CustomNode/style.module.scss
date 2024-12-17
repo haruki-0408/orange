@@ -13,100 +13,36 @@
 .customNode {
   padding: 16px;
   border-radius: 12px;
-  background: #fff;
+  background: var(--custom-node-bg);
   border: 2px solid transparent;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--custom-node-shadow);
   transition: all 0.3s ease;
   position: relative;
 
   &.ready {
-    background: linear-gradient(to right bottom, #fff, #F9FAFB);
+    background: linear-gradient(to right bottom, var(--custom-node-bg), var(--bg-secondary));
   }
 
   &.progress {
-    background: linear-gradient(to right bottom, #fff, #EFF6FF);
+    background: linear-gradient(to right bottom, var(--custom-node-bg), var(--accent-secondary));
     animation: pulseNode 2s infinite;
   }
 
   &.success {
-    background: linear-gradient(to right bottom, #fff, #ECFDF5);
+    background: linear-gradient(to right bottom, var(--custom-node-bg), var(--success-secondary));
   }
 
   &.failed {
-    background: linear-gradient(to right bottom, #fff, #FEF2F2);
-  }
-
-  &.stopped {
-    filter: grayscale(20%);
-  }
-
-  &.Lambda {
-    border-color: #FF9900;
-    .icon {
-      color: #FF9900;
-      background: rgba(255, 153, 0, 0.1);
-    }
-    .codeBlock {
-      border-color: #FF9900;
-      background: rgba(255, 153, 0, 0.03);
-    }
-  }
-
-  &.SQS {
-    border-color: #e33c3c;
-    .icon {
-      color: #e33c3c;
-      background: rgba(227, 60, 60, 0.1);
-    }
-    .codeBlock {
-      border-color: #e33c3c;
-      background: rgba(227, 60, 60, 0.03);
-    }
-  }
-
-  &.APIGateway {
-    border-color: #8a2be2;
-    .icon {
-      color: #8a2be2;
-      background: rgba(138, 43, 226, 0.1);
-    }
-    .codeBlock {
-      border-color: #8a2be2;
-      background: rgba(138, 43, 226, 0.03);
-    }
-  }
-
-  &.DynamoDB {
-    border-color: #0066cc;
-    .icon {
-      color: #0066cc;
-      background: rgba(0, 102, 204, 0.1);
-    }
-    .codeBlock {
-      border-color: #0066cc;
-      background: rgba(0, 102, 204, 0.03);
-    }
-  }
-
-  &.S3 {
-    border-color: #2e8b57;
-    .icon {
-      color: #2e8b57;
-      background: rgba(46, 139, 87, 0.1);
-    }
-    .codeBlock {
-      border-color: #2e8b57;
-      background: rgba(46, 139, 87, 0.03);
-    }
+    background: linear-gradient(to right bottom, var(--custom-node-bg), var(--error-secondary));
   }
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--custom-node-hover-shadow);
   }
 
   &.highlighted {
-    box-shadow: 0 0 0 2px #6366f1, 0 0 20px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 0 0 2px var(--accent-primary), 0 0 20px var(--accent-glow);
     transform: scale(1.05);
     z-index: 10;
   }
@@ -118,24 +54,6 @@
   gap: 12px;
 }
 
-.icon {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.04);
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  padding: 4px;
-  
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-}
-
 .titleArea {
   flex: 1;
 }
@@ -144,25 +62,25 @@
   margin: 0;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #1F2937;
+  color: var(--custom-node-title);
 }
 
 .description {
   margin: 4px 0 0;
   font-size: 0.85rem;
-  color: #6B7280;
+  color: var(--custom-node-subtitle);
   line-height: 1.4;
 }
 
 .separator {
   margin: 12px 0;
   border: none;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid var(--border-primary);
 }
 
 .toggleButton {
   padding: 6px 12px;
-  border: none;
+  border: 1px solid var(--custom-node-button-border);
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.75rem;
@@ -172,8 +90,8 @@
   margin: 8px auto;
   position: relative;
   overflow: hidden;
-  background: #F3F4F6;
-  color: #374151;
+  background: var(--custom-node-button-bg);
+  color: var(--custom-node-button-text);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -190,8 +108,12 @@
   }
 
   &:hover {
-    background: #E5E7EB;
+    background: var(--custom-node-button-hover-bg);
     transform: translateY(-1px);
+  }
+
+  &:active {
+    background: var(--custom-node-button-active-bg);
   }
 }
 
@@ -202,13 +124,14 @@
   font-family: 'Geist Mono', monospace;
   font-size: 0.85rem;
   line-height: 1.5;
-  background: rgba(0, 0, 0, 0.02);
-  border-left: 3px solid currentColor;
+  background: var(--custom-node-input-bg);
+  border-left: 3px solid var(--custom-node-input-border);
   overflow: hidden;
   max-height: 0;
   opacity: 0;
   transform: scale(0.95);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--custom-node-input-text);
 
   &.open {
     padding: 12px;
@@ -234,49 +157,31 @@
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--custom-node-badge-bg);
+  color: var(--custom-node-badge-text);
+  border: 1px solid var(--custom-node-badge-border);
+  box-shadow: var(--custom-node-shadow);
   z-index: 10;
   
   &.ready {
-    background: linear-gradient(135deg, #6B7280, #9CA3AF);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
   }
   
   &.progress {
-    background: linear-gradient(135deg, #3b82f6, #60A5FA);
+    background: var(--accent-primary);
+    color: var(--text-primary);
     animation: pulse 2s infinite;
   }
   
   &.success {
-    background: linear-gradient(135deg, #10B981, #34D399);
+    background: var(--custom-node-status-success);
+    color: var(--text-primary);
   }
   
   &.failed {
-    background: linear-gradient(135deg, #DC2626, #EF4444);
-  }
-  
-  &.stopped {
-    background: linear-gradient(135deg, #4B5563, #6B7280);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-}
-
-@keyframes pulseNode {
-  0%, 100% {
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
-  }
-  50% {
-    box-shadow: 0 4px 25px rgba(59, 130, 246, 0.25);
+    background: var(--custom-node-status-error);
+    color: var(--text-primary);
   }
 }
 
@@ -292,13 +197,13 @@
 }
 
 .detailLabel {
-  color: #6B7280;
+  color: var(--custom-node-subtitle);
   font-weight: 500;
   min-width: 80px;
 }
 
 .detailValue {
-  color: #111827;
+  color: var(--custom-node-title);
   font-family: 'Geist Mono', monospace;
   font-size: 0.8rem;
 }
@@ -317,45 +222,10 @@
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.75rem;
-  background: rgba(0, 0, 0, 0.03);
-  color: #374151;
+  background: var(--custom-node-input-bg);
+  color: var(--custom-node-input-text);
+  border: 1px solid var(--custom-node-input-border);
   font-family: 'Geist Mono', monospace;
-}
-
-.chipIcon {
-  font-size: 0.9rem;
-}
-
-.indexList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.indexChip {
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: #4B5563;
-  font-family: 'Geist Mono', monospace;
-}
-
-// サービス固有のスタイル
-.Lambda {
-  .detailChip {
-    background: rgba(255, 153, 0, 0.1);
-    color: darken(#FF9900, 10%);
-  }
-}
-
-.DynamoDB {
-  .detailChip {
-    background: rgba(0, 102, 204, 0.1);
-    color: darken(#0066cc, 10%);
-  }
 }
 
 .handle {
@@ -364,5 +234,25 @@
   
   &:hover {
     opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes pulseNode {
+  0%, 100% {
+    box-shadow: var(--custom-node-shadow);
+  }
+  50% {
+    box-shadow: var(--custom-node-hover-shadow);
   }
 }

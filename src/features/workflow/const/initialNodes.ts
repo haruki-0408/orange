@@ -36,8 +36,7 @@ export const initialNodes: Node[] = [
     type: "mainGroup",
     position: { x: 0, y: 800 },
     data: { 
-      label: "Thesis Generation Workflow",
-      logs: "Main workflow orchestration\nCoordinating thesis generation process"
+      label: "Main Workflow",
     },
     style: { width: 1500, height: 2400 },
   },
@@ -113,8 +112,7 @@ export const initialNodes: Node[] = [
     type: "subGroup",
     position: { x: 1600, y: 400 },
     data: { 
-      label: "Thesis Generation Sub-Workflow",
-      logs: "Sub-workflow for AI content generation\nHandling thesis content creation and validation"
+      label: "Sub Workflow",
     },
     style: { width: 1400, height: 1800 },
     parentNode: "main-workflow",

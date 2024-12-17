@@ -12,22 +12,22 @@
   height: 100%;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.98),
-    rgba(249, 250, 251, 0.95)
+    var(--choice-node-bg-start),
+    var(--choice-node-bg-end)
   );
-  border: 2px solid rgba(99, 102, 241, 0.2);
+  border: 2px solid var(--choice-node-border-color);
   box-shadow: 
-    0 4px 20px rgba(99, 102, 241, 0.1),
-    inset 0 0 20px rgba(255, 255, 255, 0.5);
+    0 4px 20px var(--choice-node-shadow),
+    inset 0 0 20px var(--choice-node-inner-glow);
   position: relative;
   transition: all 0.3s ease;
   transform: rotate(45deg);
 
   &:hover {
-    border-color: rgba(99, 102, 241, 0.4);
+    border-color: var(--choice-node-border-hover);
     box-shadow: 
-      0 8px 30px rgba(99, 102, 241, 0.15),
-      inset 0 0 30px rgba(255, 255, 255, 0.7);
+      0 8px 30px var(--choice-node-hover-shadow),
+      inset 0 0 30px var(--choice-node-hover-glow);
   }
 }
 
@@ -50,7 +50,7 @@
 .title {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #4F46E5;
+  color: var(--choice-node-title-color);
   margin-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: 0.02em;
@@ -59,7 +59,7 @@
 .condition {
   font-size: 0.85rem;
   font-weight: 500;
-  color: #1F2937;
+  color: var(--choice-node-condition-color);
   line-height: 1.3;
   text-align: center;
 }
@@ -82,14 +82,14 @@
 .pathLabel {
   font-size: 0.7rem;
   font-weight: 500;
-  color: #6B7280;
+  color: var(--choice-node-label-color);
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
 
 .pathArrow {
   font-size: 1rem;
-  color: #4F46E5;
+  color: var(--choice-node-arrow-color);
   opacity: 0.7;
   transition: transform 0.2s ease;
 
@@ -101,8 +101,8 @@
 .handle {
   width: 10px;
   height: 10px;
-  background: rgba(99, 102, 241, 0.2);
-  border: 2px solid rgba(99, 102, 241, 0.3);
+  background: var(--choice-node-handle-bg);
+  border: 2px solid var(--choice-node-handle-border);
   opacity: 0.4;
   transition: opacity 0.2s;
   pointer-events: none;

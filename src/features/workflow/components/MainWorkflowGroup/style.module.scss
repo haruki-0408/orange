@@ -2,16 +2,16 @@
   padding: 24px;
   background: linear-gradient(
     to bottom right, 
-    rgba(17, 24, 39, 0.02),
-    rgba(17, 24, 39, 0.05)
+    var(--workflow-bg-start),
+    var(--workflow-bg-end)
   );
-  border: 2px solid rgba(17, 24, 39, 0.15);
+  border: 2px solid var(--workflow-border-color);
   border-radius: 16px;
   height: 100%;
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    inset 0 0 20px rgba(255, 255, 255, 0.5);
+    0 4px 6px -1px var(--workflow-shadow),
+    0 2px 4px -1px var(--workflow-shadow-secondary),
+    inset 0 0 20px var(--workflow-inner-glow);
   position: relative;
   overflow: hidden;
   z-index: -1;
@@ -23,7 +23,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(to right, #1F2937, #374151);
+    background: var(--workflow-header-line);
     opacity: 0.8;
   }
 
@@ -36,13 +36,13 @@
       align-items: center;
       gap: 12px;
       padding: 8px 12px;
-      background: rgba(17, 24, 39, 0.05);
+      background: var(--workflow-header-bg);
       border-radius: 8px;
       width: fit-content;
 
       img {
         object-fit: contain;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        filter: drop-shadow(0 2px 4px var(--workflow-header-shadow));
       }
 
       &::after {
@@ -54,8 +54,8 @@
         height: 1px;
         background: linear-gradient(
           to right,
-          rgba(17, 24, 39, 0.1),
-          rgba(17, 24, 39, 0.05)
+          var(--workflow-divider-start),
+          var(--workflow-divider-end)
         );
       }
     }
@@ -63,8 +63,8 @@
     .label {
       font-size: 1.2rem;
       font-weight: 600;
-      color: #1F2937;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      color: var(--workflow-header-text);
+      text-shadow: 0 1px 2px var(--workflow-header-shadow);
       letter-spacing: 0.025em;
     }
   }

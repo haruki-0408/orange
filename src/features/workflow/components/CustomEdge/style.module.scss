@@ -5,97 +5,135 @@
   transition: all 0.3s ease;
 
   &.ready {
-    stroke: #6B7280;
+    stroke: var(--edge-ready-color);
     stroke-dasharray: 6;
-    filter: drop-shadow(0 0 2px rgba(107, 114, 128, 0.2));
-    opacity: 0.7;
+    filter: drop-shadow(0 0 2px var(--edge-ready-glow));
+    opacity: var(--edge-ready-opacity);
   }
 
   &.progress {
-    stroke: #3b82f6;
+    stroke: var(--edge-progress-color);
     stroke-width: 3;
     stroke-dasharray: 8;
-    animation: flowDash 15s linear infinite reverse;
-    filter: drop-shadow(0 0 3px rgba(59, 130, 246, 0.4));
+    animation: flowProgress 15s linear infinite;
+    filter: drop-shadow(0 0 4px var(--edge-progress-glow));
   }
 
   &.success {
-    stroke: #10B981;
+    stroke: var(--edge-success-color);
     stroke-width: 3;
-    filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.3));
+    filter: drop-shadow(0 0 4px var(--edge-success-glow));
+    animation: glowSuccess 2s ease-in-out infinite;
   }
 
   &.failed {
-    stroke: #DC2626;
+    stroke: var(--edge-error-color);
     stroke-width: 3;
+    filter: drop-shadow(0 0 4px var(--edge-error-glow));
     animation: flashError 2s ease-in-out infinite;
-    filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.4));
-  }
-
-  &.stopped {
-    stroke: #4B5563;
-    stroke-dasharray: 4;
-    opacity: 0.5;
   }
 }
 
 .arrow {
-  fill: none;
-  stroke-width: 2;
   transition: all 0.3s ease;
 
   &.ready {
-    fill: #6B7280;
-    stroke: #6B7280;
-    opacity: 0.7;
+    fill: var(--edge-ready-color);
+    stroke: var(--edge-ready-color);
+    opacity: var(--edge-ready-opacity);
   }
 
   &.progress {
-    fill: #3b82f6;
-    stroke: #3b82f6;
-    animation: arrowPulse 2s infinite;
+    fill: var(--edge-progress-secondary);
+    stroke: var(--edge-progress-color);
+    filter: drop-shadow(0 0 2px var(--edge-progress-glow));
+    animation: arrowProgress 2s infinite;
   }
 
   &.success {
-    fill: #10B981;
-    stroke: #10B981;
+    fill: var(--edge-success-secondary);
+    stroke: var(--edge-success-color);
+    filter: drop-shadow(0 0 2px var(--edge-success-glow));
+    animation: arrowSuccess 2s infinite;
   }
 
   &.failed {
-    fill: #DC2626;
-    stroke: #DC2626;
-  }
-
-  &.stopped {
-    fill: #4B5563;
-    stroke: #4B5563;
-    opacity: 0.5;
+    fill: var(--edge-error-secondary);
+    stroke: var(--edge-error-color);
+    filter: drop-shadow(0 0 2px var(--edge-error-glow));
+    animation: arrowError 2s infinite;
   }
 }
 
-@keyframes flowDash {
-  to {
+@keyframes flowProgress {
+  0% {
+    stroke-dashoffset: 0;
+    stroke: var(--edge-progress-color);
+  }
+  50% {
+    stroke: var(--edge-progress-secondary);
+  }
+  100% {
     stroke-dashoffset: -1000;
+    stroke: var(--edge-progress-color);
+  }
+}
+
+@keyframes glowSuccess {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px var(--edge-success-glow));
+    stroke: var(--edge-success-color);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px var(--edge-success-glow));
+    stroke: var(--edge-success-secondary);
   }
 }
 
 @keyframes flashError {
   0%, 100% {
     opacity: 1;
-    filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.4));
+    filter: drop-shadow(0 0 4px var(--edge-error-glow));
+    stroke: var(--edge-error-color);
   }
   50% {
-    opacity: 0.6;
-    filter: drop-shadow(0 0 2px rgba(220, 38, 38, 0.2));
+    opacity: 0.7;
+    filter: drop-shadow(0 0 8px var(--edge-error-glow));
+    stroke: var(--edge-error-secondary);
   }
 }
 
-@keyframes arrowPulse {
+@keyframes arrowProgress {
   0%, 100% {
     transform: scale(1);
+    fill: var(--edge-progress-color);
   }
   50% {
     transform: scale(1.2);
+    fill: var(--edge-progress-secondary);
   }
 }
+
+@keyframes arrowSuccess {
+  0%, 100% {
+    transform: scale(1) translateX(0);
+    fill: var(--edge-success-color);
+  }
+  50% {
+    transform: scale(1.1) translateX(1px);
+    fill: var(--edge-success-secondary);
+  }
+}
+
+@keyframes arrowError {
+  0%, 100% {
+    transform: scale(1) rotate(0);
+    fill: var(--edge-error-color);
+  }
+  50% {
+    transform: scale(1.1) rotate(3deg);
+    fill: var(--edge-error-secondary);
+  }
+}
+  
   
