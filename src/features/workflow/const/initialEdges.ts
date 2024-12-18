@@ -69,7 +69,7 @@ export const initialEdges: Edge[] = [
   {
     id: "e-choice-success",
     source: "validation-choice",
-    target: "callback-success",
+    target: "callback-success-lambda",
     type: "custom",
     sourceHandle: "source-bottom",
     targetHandle: "target-top",
@@ -78,7 +78,7 @@ export const initialEdges: Edge[] = [
   {
     id: "e-choice-fix",
     source: "validation-choice",
-    target: "data-fix",
+    target: "data-fix-lambda",
     type: "custom",
     sourceHandle: "source-right",
     targetHandle: "target-left",
@@ -86,10 +86,19 @@ export const initialEdges: Edge[] = [
   },
   {
     id: "e-fix-validation",
-    source: "data-fix",
+    source: "data-fix-lambda",
     target: "validation-lambda",
     type: "custom",
     sourceHandle: "source-right",
+    targetHandle: "target-right",
+    data: { targetNodeStatus: "ready" }
+  },
+  {
+    id: "e-callback-success-lambda-callback",
+    source: "callback-success-lambda",
+    target: "callback-queue",
+    type: "custom",
+    sourceHandle: "source-left",
     targetHandle: "target-right",
     data: { targetNodeStatus: "ready" }
   },
@@ -97,7 +106,7 @@ export const initialEdges: Edge[] = [
   {
     id: "e-callback-formula",
     source: "callback-queue",
-    target: "formula-gen",
+    target: "formula-gen-lambda",
     type: "custom",
     sourceHandle: "source-bottom",
     targetHandle: "target-top",
@@ -106,7 +115,7 @@ export const initialEdges: Edge[] = [
   {
     id: "e-callback-table",
     source: "callback-queue",
-    target: "table-gen",
+    target: "table-gen-lambda",
     type: "custom",
     sourceHandle: "source-bottom",
     targetHandle: "target-top",
@@ -115,7 +124,7 @@ export const initialEdges: Edge[] = [
   {
     id: "e-callback-graph",
     source: "callback-queue",
-    target: "graph-gen",
+    target: "graph-gen-lambda",
     type: "custom",
     sourceHandle: "source-bottom",
     targetHandle: "target-top",
@@ -124,8 +133,8 @@ export const initialEdges: Edge[] = [
   // PDF生成フロー
   {
     id: "e-formula-pdf",
-    source: "formula-gen",
-    target: "pdf-format",
+    source: "formula-gen-lambda",
+    target: "pdf-format-lambda",
     type: "custom",
     sourceHandle: "source-bottom",
     targetHandle: "target-top",
@@ -133,8 +142,8 @@ export const initialEdges: Edge[] = [
   },
   {
     id: "e-table-pdf",
-    source: "table-gen",
-    target: "pdf-format",
+    source: "table-gen-lambda",
+    target: "pdf-format-lambda",
     type: "custom",
     sourceHandle: "source-bottom",
     targetHandle: "target-top",
@@ -142,8 +151,8 @@ export const initialEdges: Edge[] = [
   },
   {
     id: "e-graph-pdf",
-    source: "graph-gen",
-    target: "pdf-format",
+    source: "graph-gen-lambda",
+    target: "pdf-format-lambda",
     type: "custom",
     sourceHandle: "source-bottom",
     targetHandle: "target-top",
@@ -152,7 +161,7 @@ export const initialEdges: Edge[] = [
   // S3保存フロー
   {
     id: "e-pdf-s3",
-    source: "pdf-format",
+    source: "pdf-format-lambda",
     target: "thesis-bucket",
     type: "custom",
     sourceHandle: "source-right",

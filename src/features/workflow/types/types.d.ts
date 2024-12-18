@@ -1,5 +1,5 @@
 export type ServiceType = 'Lambda' | 'SQS' | 'APIGateway' | 'DynamoDB' | 'S3';
-export type NodeStatusType = 'ready' | 'success' | 'failed' | 'progress';
+export type StateType = 'ready' | 'progress' | 'success' | 'failed' | 'stopped';
 export type ProgressbarStatusType = 'processing' | 'success' | 'error';
 export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'completed' | 'error';
 
@@ -42,10 +42,28 @@ export interface ServiceDetails {
   };
 }
 
+export type WorkflowNodeId = 
+  | 'start'           // 開始ノード
+  | 'api-gateway'     // API Gatewayノード
+  | 'format-lambda'   // 入力フォーマット処理
+  | 'prompt-lambda'   // プロンプト生成
+  | 'callback-queue'  // コールバックキュー
+  | 'ai-request-lambda'      // AI生成処理
+  | 'validation-lambda'      // 検証処理
+  | 'data-fix-lambda'        // データ修正
+  | 'callback-success-lambda'       // コールバック成功
+  | 'formula-gen-lambda'     // 数式生成
+  | 'table-gen-lambda'       // 表生成
+  | 'graph-gen-lambda'       // グラフ生成
+  | 'pdf-format-lambda'      // PDF整形
+  | 'end';            // 終了ノード
+
+export type NotifyStatus = 'success' | 'failed';
+
 export interface ProgressData {
   execution_id: string;
-  status: 'RUNNING' | 'SUCCEEDED' | 'FAILED';
-  state_name: string;
+  status: NotifyStatus;
+  state_name: WorkflowNodeId;
   timestamp: string;
   logs?: string[];
   metrics?: {
@@ -142,7 +160,7 @@ export interface WorkflowNode {
 
 export interface NodeData {
   label: string;
-  status: NodeStatusType;
+  status: StateType;
   logs?: string[];
   metrics?: {
     duration?: number;

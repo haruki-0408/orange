@@ -1,4 +1,5 @@
 import { FCX } from "@/types/types";
+import { StateType } from "@/features/workflow/types/types";
 import React from 'react';
 import { EdgeProps, getSmoothStepPath } from 'reactflow';
 import styles from './style.module.scss';
@@ -24,7 +25,7 @@ export const CustomEdge: FCX<EdgeProps> = ({
     borderRadius: 0,
   });
 
-  const edgeStatus = data?.targetNodeStatus || 'ready';
+  const edgeStatus: StateType = data?.targetNodeStatus || 'ready';
   
   return (
     <>

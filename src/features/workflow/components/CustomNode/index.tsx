@@ -4,13 +4,13 @@ import styles from './style.module.scss';
 import clsx from 'clsx';
 import { FCX } from '@/types/types';
 import Image from 'next/image';
-import { NodeStatusType, ServiceType, ServiceDetails } from '@/features/workflow/types/types';
+import { StateType, ServiceType, ServiceDetails } from '@/features/workflow/types/types';
 
 interface Props {
   title: string;
   description: string;
   icon?: string;
-  status: NodeStatusType;
+  status: StateType;
   logs: string;
   serviceType: ServiceType;
   details: Partial<ServiceDetails[ServiceType]>;

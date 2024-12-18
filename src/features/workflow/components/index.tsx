@@ -107,19 +107,15 @@ export const Workflow: FCX<Props> = ({
 
   // 初期表示時に進行中のワークフローがあれば復元
   useEffect(() => {
-    if (!sessionId) return; // sessionIdが設定されるまで待つ
+    if (!sessionId) return;
 
     const activeWorkflow = getWorkflowBySession(sessionId);
     if (activeWorkflow) {
       setWorkflowId(activeWorkflow.workflowId);
-      setThesisTitle(activeWorkflow.title);
-      setSelectedCategory(activeWorkflow.category);
       setConnectionStatus('connecting');
     } else if (initialHistories.length > 0) {
       const latestHistory = initialHistories[0];
       setWorkflowId(latestHistory.workflow_id);
-      setThesisTitle(latestHistory.title);
-      setSelectedCategory(latestHistory.category);
     }
   }, [initialHistories, sessionId, getWorkflowBySession]);
 
@@ -139,9 +135,17 @@ export const Workflow: FCX<Props> = ({
     }
   }, [shouldShowTraces]);
 
+  // SSEによる進捗監視を設定
+  const { connectionStatus: sseConnectionStatus } = useWorkflowProgress(workflowId);
+
+  // connectionStatusをSSEの状態に同期
+  useEffect(() => {
+    setConnectionStatus(sseConnectionStatus);
+  }, [sseConnectionStatus]);
+
   // 生成開始時の制御を追加
   const handleStartWorkflow = async () => {
-    if (!sessionId) return; // sessionIdが設定されていない場合は処理を中断
+    if (!sessionId) return;
     if (!thesisTitle.trim() || !selectedCategory) {
       alert('論文タイトルとカテゴリを選択してください');
       return;
@@ -163,62 +167,25 @@ export const Workflow: FCX<Props> = ({
       timestamp
     });
 
-    setWorkflowId(newWorkflowId);
-    setConnectionStatus('connecting');
-
-    // 新しい履歴を追加する際にすべての必須フィールドを設定
+    // 新しい履歴を追加
     setHistories(prev => [
       {
         workflow_id: newWorkflowId,
-        title: thesisTitle || 'Untitled',  // デフォルト値を設定
+        title: thesisTitle || 'Untitled',
         category: selectedCategory,
         status: 'processing',
         timestamp
       },
       ...prev
     ]);
+
+    // ワークフローIDを設定してSSE接続を開始
+    setWorkflowId(newWorkflowId);
   };
-
-  // SSE接続の処理
-  useEffect(() => {
-    if (!workflowId || !sessionId) return; // sessionIdのチェックを追加
-
-    // 自分のワークフローでない場合は接続しない
-    if (!isWorkflowOwner(sessionId, workflowId)) {
-      return;
-    }
-
-    const eventSource = new EventSource(`/api/notify/${workflowId}`);
-
-    eventSource.onmessage = async (event) => {
-      const data = JSON.parse(event.data);
-      
-      if (data.status === 'completed' || data.status === 'error') {
-        // 完了または失敗時のみDynamoDBに履歴を保存
-        await createWorkflowHistory({
-          workflow_id: workflowId,
-          title: thesisTitle,
-          category: selectedCategory,
-          timestamp: getJstIsoString()
-        });
-
-        // 進行中のワークフローから削除
-        removeWorkflow(workflowId);
-        setConnectionStatus(data.status === 'completed' ? 'completed' : 'error');
-        eventSource.close();
-      }
-    };
-
-    return () => eventSource.close();
-  }, [workflowId, sessionId, isWorkflowOwner, removeWorkflow, thesisTitle, selectedCategory]);
 
   // ReactFlowの状態をZustandから取得
   const { nodes: zustandNodes, edges: zustandEdges } = useFlowStore();
 
-  // SSEによる進捗監視を設定
-  useWorkflowProgress(workflowId);
-
-  console.log(initialHistories);
   return (
     <div className={`${className} w-full h-full`}>
       <Header 
@@ -237,8 +204,6 @@ export const Workflow: FCX<Props> = ({
           currentWorkflowId={workflowId}
           onSelect={(history) => {
             setWorkflowId(history.workflow_id);
-            setThesisTitle(history.title);
-            setSelectedCategory(history.category);
           }}
           connectionStatus={connectionStatus}
         />

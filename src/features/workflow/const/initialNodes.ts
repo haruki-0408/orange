@@ -176,7 +176,7 @@ export const initialNodes: Node[] = [
   },
   // Success Callback
   {
-    id: "callback-success",
+    id: "callback-success-lambda",
     type: "custom",
     position: { x: 300, y: 1500 },
     data: {
@@ -198,7 +198,7 @@ export const initialNodes: Node[] = [
   },
   // Data Fix
   {
-    id: "data-fix",
+    id: "data-fix-lambda",
     type: "custom",
     position: { x: 850, y: 978 },
     data: {
@@ -220,7 +220,7 @@ export const initialNodes: Node[] = [
   },
   // Parallel Image Generation Nodes
   {
-    id: "formula-gen",
+    id: "formula-gen-lambda",
     type: "custom",
     position: { x: 100, y: 1500 },
     data: {
@@ -242,7 +242,7 @@ export const initialNodes: Node[] = [
   },
   // Table Generator
   {
-    id: "table-gen",
+    id: "table-gen-lambda",
     type: "custom",
     position: { x: 600, y: 1500 },
     data: {
@@ -264,8 +264,8 @@ export const initialNodes: Node[] = [
   },
   // Graph Generator
   {
-    id: "graph-gen",
-    type: "custom",
+    id: "graph-gen-lambda",
+    type: "custom", 
     position: { x: 1100, y: 1500 },
     data: {
       title: "Graph Generator",
@@ -286,7 +286,7 @@ export const initialNodes: Node[] = [
   },
   // PDF Format Lambda
   {
-    id: "pdf-format",
+    id: "pdf-format-lambda",
     type: "custom",
     position: { x: 400, y: 2000 },
     data: {
