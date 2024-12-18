@@ -323,6 +323,77 @@
     
     --sub-workflow-top-line: rgba(79, 70, 229, 0.3);
     --sub-workflow-bottom-line: rgba(79, 70, 229, 0.2);
+
+    // Status Colors - Neutral
+    --status-neutral-bg: rgba(75, 85, 99, 0.1);
+    --status-neutral-border: rgba(75, 85, 99, 0.2);
+    --status-neutral-dot: rgba(75, 85, 99, 0.8);
+    --status-neutral-text: rgba(75, 85, 99, 0.9);
+
+    // Status Colors - Warning (Connecting)
+    --status-warning-bg: rgba(245, 158, 11, 0.1);
+    --status-warning-border: rgba(245, 158, 11, 0.2);
+    --status-warning-dot: rgba(245, 158, 11, 0.8);
+    --status-warning-text: rgba(245, 158, 11, 0.9);
+
+    // Status Colors - Success (Connected)
+    --status-success-bg: rgba(16, 185, 129, 0.1);
+    --status-success-border: rgba(16, 185, 129, 0.2);
+    --status-success-dot: rgba(16, 185, 129, 0.8);
+    --status-success-text: rgba(16, 185, 129, 0.9);
+
+    // Status Colors - Error
+    --status-error-bg: rgba(239, 68, 68, 0.1);
+    --status-error-border: rgba(239, 68, 68, 0.2);
+    --status-error-dot: rgba(239, 68, 68, 0.8);
+    --status-error-text: rgba(239, 68, 68, 0.9);
+
+    // Status Colors - Info (Completed)
+    --status-info-bg: rgba(6, 182, 212, 0.1);
+    --status-info-border: rgba(6, 182, 212, 0.2);
+    --status-info-dot: rgba(6, 182, 212, 0.8);
+    --status-info-text: rgba(6, 182, 212, 0.9);
+
+    // Connection Indicator
+    --connection-indicator-bg: rgba(17, 17, 21, 0.95);
+    --connection-indicator-border: rgba(6, 182, 212, 0.2);
+    --connection-indicator-text: rgba(255, 255, 255, 0.9);
+    --connection-pulse-color: rgba(6, 182, 212, 0.5);
+
+    // Progress Status
+    --progress-status-completed: rgba(6, 182, 212, 0.1);
+    --progress-status-completed-border: rgba(6, 182, 212, 0.3);
+    --progress-status-completed-color: rgba(6, 182, 212, 0.9);
+    --progress-completed-gradient: linear-gradient(90deg, 
+      rgba(6, 182, 212, 0.8),
+      rgba(6, 182, 212, 0.6)
+    );
+
+    // WorkflowHistories
+    --histories-bg: rgba(248, 250, 252, 0.95);
+    --histories-header-bg: rgba(248, 250, 252, 0.98);
+    --histories-card-bg: rgba(255, 255, 255, 0.98);
+    --histories-search-bg: rgba(51, 65, 85, 0.04);
+    --histories-search-focus-bg: rgba(51, 65, 85, 0.02);
+    
+    --histories-border: rgba(51, 65, 85, 0.08);
+    --histories-search-border: rgba(51, 65, 85, 0.08);
+    --histories-search-focus-border: rgba(14, 165, 233, 0.5);
+    
+    --histories-text: rgba(51, 65, 85, 0.95);
+    --histories-text-secondary: rgba(51, 65, 85, 0.75);
+    --histories-text-tertiary: rgba(51, 65, 85, 0.6);
+    
+    --histories-status-processing: #0284c7;
+    --histories-status-completed: #0d9488;
+    --histories-status-error: #dc2626;
+    
+    --histories-category-bg: rgba(14, 165, 233, 0.08);
+    --histories-category-text: #0284c7;
+    
+    --histories-card-shadow: rgba(51, 65, 85, 0.08);
+    --histories-card-active-bg: rgba(14, 165, 233, 0.04);
+    --histories-card-active-border: rgba(14, 165, 233, 0.5);
   }
 
   // Dark theme
@@ -644,5 +715,76 @@
     
     --sub-workflow-top-line: rgba(6, 182, 212, 0.4);
     --sub-workflow-bottom-line: rgba(6, 182, 212, 0.3);
+
+    // Status Colors - Neutral
+    --status-neutral-bg: rgba(75, 85, 99, 0.15);
+    --status-neutral-border: rgba(75, 85, 99, 0.25);
+    --status-neutral-dot: rgba(156, 163, 175, 0.9);
+    --status-neutral-text: rgba(156, 163, 175, 1);
+
+    // Status Colors - Warning
+    --status-warning-bg: rgba(245, 158, 11, 0.15);
+    --status-warning-border: rgba(245, 158, 11, 0.25);
+    --status-warning-dot: rgba(251, 191, 36, 0.9);
+    --status-warning-text: rgba(251, 191, 36, 1);
+
+    // Status Colors - Success
+    --status-success-bg: rgba(16, 185, 129, 0.15);
+    --status-success-border: rgba(16, 185, 129, 0.25);
+    --status-success-dot: rgba(34, 197, 94, 0.9);
+    --status-success-text: rgba(34, 197, 94, 1);
+
+    // Status Colors - Error
+    --status-error-bg: rgba(239, 68, 68, 0.15);
+    --status-error-border: rgba(239, 68, 68, 0.25);
+    --status-error-dot: rgba(248, 113, 113, 0.9);
+    --status-error-text: rgba(248, 113, 113, 1);
+
+    // Status Colors - Info
+    --status-info-bg: rgba(6, 182, 212, 0.15);
+    --status-info-border: rgba(6, 182, 212, 0.25);
+    --status-info-dot: rgba(34, 211, 238, 0.9);
+    --status-info-text: rgba(34, 211, 238, 1);
+
+    // Connection Indicator
+    --connection-indicator-bg: rgba(17, 17, 21, 0.98);
+    --connection-indicator-border: rgba(6, 182, 212, 0.25);
+    --connection-indicator-text: rgba(255, 255, 255, 0.95);
+    --connection-pulse-color: rgba(6, 182, 212, 0.6);
+
+    // Progress Status
+    --progress-status-completed: rgba(6, 182, 212, 0.15);
+    --progress-status-completed-border: rgba(6, 182, 212, 0.35);
+    --progress-status-completed-color: rgba(34, 211, 238, 1);
+    --progress-completed-gradient: linear-gradient(90deg, 
+      rgba(6, 182, 212, 0.9),
+      rgba(6, 182, 212, 0.7)
+    );
+
+    // WorkflowHistories
+    --histories-bg: rgba(17, 17, 21, 0.95);
+    --histories-header-bg: rgba(17, 17, 21, 0.98);
+    --histories-card-bg: rgba(255, 255, 255, 0.03);
+    --histories-search-bg: rgba(255, 255, 255, 0.05);
+    --histories-search-focus-bg: rgba(255, 255, 255, 0.07);
+    
+    --histories-border: rgba(255, 255, 255, 0.06);
+    --histories-search-border: rgba(255, 255, 255, 0.06);
+    --histories-search-focus-border: rgba(6, 182, 212, 0.5);
+    
+    --histories-text: rgba(255, 255, 255, 0.9);
+    --histories-text-secondary: rgba(255, 255, 255, 0.6);
+    --histories-text-tertiary: rgba(255, 255, 255, 0.5);
+    
+    --histories-status-processing: #38bdf8;
+    --histories-status-completed: #34d399;
+    --histories-status-error: #f87171;
+    
+    --histories-category-bg: rgba(6, 182, 212, 0.15);
+    --histories-category-text: #22d3ee;
+    
+    --histories-card-shadow: rgba(0, 0, 0, 0.2);
+    --histories-card-active-bg: rgba(6, 182, 212, 0.1);
+    --histories-card-active-border: rgba(6, 182, 212, 0.5);
   }
 } 

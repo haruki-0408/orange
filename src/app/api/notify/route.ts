@@ -1,5 +1,5 @@
 import { broadcastToWorkflow } from "@/lib/sse/SSEManager";
-import { executionAsyncId } from "async_hooks";
+import { ProgressData } from "@/features/workflow/types/types";
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     // state_name#timestampを分割
     const [stateName, timestamp] = json['state_name#timestamp'].split('#');
     
-    const progress = {
+    const progress: ProgressData = {
       execution_id: json.execution_id,
       status: json.status,
       state_name: stateName,

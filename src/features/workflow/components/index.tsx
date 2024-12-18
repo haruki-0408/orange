@@ -11,30 +11,41 @@ import ReactFlow, {
   ReactFlowProvider,
   NodeTypes,
   EdgeTypes,
-  Node
+  BackgroundVariant
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { CustomEdge } from "../components/CustomEdge";
-import { CustomNode } from "../components/CustomNode";
-import { MainWorkflowGroup } from "../components/MainWorkflowGroup";
-import { SubWorkflowGroup } from "../components/SubWorkflowGroup";
-import { ChoiceNode } from "../components/ChoiceNode";
+import { CustomEdge } from "./CustomEdge";
+import { CustomNode } from "./CustomNode";
+import { MainWorkflowGroup } from "./MainWorkflowGroup";
+import { SubWorkflowGroup } from "./SubWorkflowGroup";
+import { ChoiceNode } from "./ChoiceNode";
 import { initialNodes } from "../const/initialNodes";
 import { initialEdges } from "../const/initialEdges";
 import { FCX } from "@/types/types";
-import { TracesDashboard } from "../components/TracesDashboard";
+import { TracesDashboard } from "./TracesDashboard";
 import { mockTraceData } from "../const/mockTraceData";
-import { Header } from '../components/Header';
-import { Category } from "../types/types";
+import { Header } from './Header';
 import { TerminalNode } from './TerminalNode';
-import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../contexts/ThemeContext';
 import '../styles/theme.scss';
-import { BackgroundVariant } from "reactflow";
+import { 
+  Category, 
+  WorkflowHistory, 
+  ConnectionStatus, 
+  ProgressbarType 
+} from '../types/types';
+import { WorkflowHistories } from './WorkflowHistories';
+import { createWorkflowHistory, updateWorkflowStatus } from '@/app/actions/workflow';
+import { getJstIsoString } from '@/utils/date';
+import { getSessionId } from '@/utils/session';
+import { useWorkflowStore } from '../stores/useWorkflowStore';
+import { useFlowStore } from '../stores/useFlowStore';
+import { useWorkflowProgress } from '../hooks/useWorkflowProgress';
+
 interface Props {
   className?: string;
   categories: Category[];
-  onWorkflowStart?: (workflowId: string) => void;
-  onProgressUpdate?: (progress: string) => void;
+  initialHistories: WorkflowHistory[];
 }
 
 const nodeTypes: NodeTypes = {
@@ -49,73 +60,203 @@ const edgeTypes: EdgeTypes = {
   custom: CustomEdge
 };
 
-export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpdate, categories }) => {
+export const Workflow: FCX<Props> = ({ 
+  className, 
+  categories, 
+  initialHistories 
+}) => {
+  const { theme } = useTheme();
+  const { 
+    addWorkflow, 
+    removeWorkflow, 
+    getWorkflowBySession, 
+    isWorkflowOwner 
+  } = useWorkflowStore();
+  
+  const [sessionId, setSessionId] = useState<string>('');
+  
+  useEffect(() => {
+    setSessionId(getSessionId());
+  }, []);
+
+  const [workflowId, setWorkflowId] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [thesisTitle, setThesisTitle] = useState('');
+  const [histories, setHistories] = useState<WorkflowHistory[]>(
+    initialHistories.filter(
+      (history): history is WorkflowHistory => 
+        typeof history.workflow_id === 'string' && history.workflow_id.length > 0
+    )
+  );
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('disconnected');
+  const [progressBar, setProgressBar] = useState<ProgressbarType>({
+    percentage: 0,
+    status: 'processing'
+  });
+
+  // ReactFlow states
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [thesisTitle, setThesisTitle] = useState('');
-  const { theme, toggleTheme } = useTheme();
+
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
 
+  // 初期表示時に進行中のワークフローがあれば復元
   useEffect(() => {
-    setEdges((eds) =>
-      eds.map((edge) => {
-        const targetNode = nodes.find((node) => node.id === edge.target);
-        if (targetNode) {
-          return {
-            ...edge,
-            data: {
-              ...edge.data,
-              targetNodeStatus: targetNode.data.status
-            }
-          };
-        }
-        return edge;
-      })
-    );
-  }, [nodes]);
+    if (!sessionId) return; // sessionIdが設定されるまで待つ
 
-  const handleStartWorkflow = () => {
-    if (!thesisTitle.trim()) {
-      alert('論文タイトルを入力してください');
+    const activeWorkflow = getWorkflowBySession(sessionId);
+    if (activeWorkflow) {
+      setWorkflowId(activeWorkflow.workflowId);
+      setThesisTitle(activeWorkflow.title);
+      setSelectedCategory(activeWorkflow.category);
+      setConnectionStatus('connecting');
+    } else if (initialHistories.length > 0) {
+      const latestHistory = initialHistories[0];
+      setWorkflowId(latestHistory.workflow_id);
+      setThesisTitle(latestHistory.title);
+      setSelectedCategory(latestHistory.category);
+    }
+  }, [initialHistories, sessionId, getWorkflowBySession]);
+
+  // TracesDashboardの表示制御を修正
+  const shouldShowTraces = connectionStatus === 'completed' || connectionStatus === 'error';
+  const [isTracesVisible, setIsTracesVisible] = useState(false);
+
+  useEffect(() => {
+    if (shouldShowTraces) {
+      setTimeout(() => {
+        setIsTracesVisible(true);
+        setIsSidebarOpen(true);
+      }, 500);
+    } else {
+      setIsTracesVisible(false);
+      setIsSidebarOpen(false);
+    }
+  }, [shouldShowTraces]);
+
+  // 生成開始時の制御を追加
+  const handleStartWorkflow = async () => {
+    if (!sessionId) return; // sessionIdが設定されていない場合は処理を中断
+    if (!thesisTitle.trim() || !selectedCategory) {
+      alert('論文タイトルとカテゴリを選択してください');
       return;
     }
-    const randomWorkflowId = Math.random().toString(36).substring(2, 10);
-    onWorkflowStart?.(randomWorkflowId);
+
+    if (connectionStatus === 'connected' || connectionStatus === 'connecting') {
+      alert('現在処理中です。完了後に新しい生成を開始してください。');
+      return;
+    }
+
+    const newWorkflowId = Math.random().toString(36).substring(2, 10);
+    const timestamp = getJstIsoString();
+
+    // 進行中のワークフローを登録
+    addWorkflow(sessionId, {
+      workflowId: newWorkflowId,
+      title: thesisTitle,
+      category: selectedCategory,
+      timestamp
+    });
+
+    setWorkflowId(newWorkflowId);
+    setConnectionStatus('connecting');
+
+    // 新しい履歴を追加する際にすべての必須フィールドを設定
+    setHistories(prev => [
+      {
+        workflow_id: newWorkflowId,
+        title: thesisTitle || 'Untitled',  // デフォルト値を設定
+        category: selectedCategory,
+        status: 'processing',
+        timestamp
+      },
+      ...prev
+    ]);
   };
 
-  // ボタンの幅を定数として定義
-  const TOGGLE_BUTTON_WIDTH = 24;  // px
+  // SSE接続の処理
+  useEffect(() => {
+    if (!workflowId || !sessionId) return; // sessionIdのチェックを追加
 
+    // 自分のワークフローでない場合は接続しない
+    if (!isWorkflowOwner(sessionId, workflowId)) {
+      return;
+    }
 
+    const eventSource = new EventSource(`/api/notify/${workflowId}`);
+
+    eventSource.onmessage = async (event) => {
+      const data = JSON.parse(event.data);
+      
+      if (data.status === 'completed' || data.status === 'error') {
+        // 完了または失敗時のみDynamoDBに履歴を保存
+        await createWorkflowHistory({
+          workflow_id: workflowId,
+          title: thesisTitle,
+          category: selectedCategory,
+          timestamp: getJstIsoString()
+        });
+
+        // 進行中のワークフローから削除
+        removeWorkflow(workflowId);
+        setConnectionStatus(data.status === 'completed' ? 'completed' : 'error');
+        eventSource.close();
+      }
+    };
+
+    return () => eventSource.close();
+  }, [workflowId, sessionId, isWorkflowOwner, removeWorkflow, thesisTitle, selectedCategory]);
+
+  // ReactFlowの状態をZustandから取得
+  const { nodes: zustandNodes, edges: zustandEdges } = useFlowStore();
+
+  // SSEによる進捗監視を設定
+  useWorkflowProgress(workflowId);
+
+  console.log(initialHistories);
   return (
-      <div className={`${className} w-full h-full`}>
-        <Header 
-          title={thesisTitle}
-          onStart={handleStartWorkflow}
-          onTitleChange={setThesisTitle}
-          categories={categories}
-          progress={{
-            percentage: 50,
-            status: 'processing'
+    <div className={`${className} w-full h-full`}>
+      <Header 
+        title={thesisTitle}
+        onStart={handleStartWorkflow}
+        onTitleChange={setThesisTitle}
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        connectionStatus={connectionStatus}
+        progressBar={progressBar}
+      />
+      <div className="flex w-full">
+        <WorkflowHistories
+          histories={histories}
+          currentWorkflowId={workflowId}
+          onSelect={(history) => {
+            setWorkflowId(history.workflow_id);
+            setThesisTitle(history.title);
+            setSelectedCategory(history.category);
           }}
+          connectionStatus={connectionStatus}
         />
         <ReactFlowProvider>
           <div className="w-full relative flex overflow-hidden">
-            <div style={{ 
-              width: isSidebarOpen ? "60%" : `calc(100% - ${TOGGLE_BUTTON_WIDTH}px)`,
-              height: "calc(100vh - 100px)",
-              transition: "width 0.3s ease",
-              position: "relative",
-              background: theme === 'dark' ? "linear-gradient(180deg, rgba(14, 14, 20, 0.85), rgba(22, 22, 32, 0.82))" : "linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.95))",
-            }}>
+            <div 
+              style={{ 
+                width: isTracesVisible && isSidebarOpen ? "60%" : "100%",
+                height: "calc(100vh - 100px)",
+                transition: "width 0.5s ease",
+                background: theme === 'dark' 
+                  ? "linear-gradient(180deg, rgba(14, 14, 20, 0.85), rgba(22, 22, 32, 0.82))" 
+                  : "linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.95))",
+              }}
+            >
               <ReactFlow
-                nodes={nodes}
-                edges={edges}
+                nodes={zustandNodes}
+                edges={zustandEdges}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
                 onNodesChange={onNodesChange}
@@ -167,21 +308,26 @@ export const Workflow: FCX<Props> = ({ className, onWorkflowStart, onProgressUpd
                 />
               </ReactFlow>
             </div>
-            <div style={{ 
-              width: isSidebarOpen ? "40%" : `${TOGGLE_BUTTON_WIDTH}px`,
-              height: "calc(100vh - 100px)",
-              transition: "width 0.3s ease",
-            }}>
-              <TracesDashboard
-                workflowId="wf-001"
-                traces={mockTraceData}
-                currentNodeId={selectedNodeId || undefined}
-                isOpen={isSidebarOpen}
-                onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-              />
-            </div>
+            {shouldShowTraces && (
+              <div 
+                style={{ 
+                  width: isSidebarOpen ? "40%" : `24px`,
+                  height: "calc(100vh - 100px)",
+                  transition: "width 0.3s ease",
+                }}
+              >
+                <TracesDashboard
+                  workflowId="wf-001"
+                  traces={mockTraceData}
+                  currentNodeId={selectedNodeId || undefined}
+                  isOpen={isSidebarOpen}
+                  onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                />
+              </div>
+            )}
           </div>
         </ReactFlowProvider>
       </div>
+    </div>
   );
 };

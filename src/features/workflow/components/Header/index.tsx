@@ -4,15 +4,17 @@ import styles from './style.module.scss';
 import { Category } from '@/features/workflow/types/types';
 import clsx from 'clsx';
 import { ThemeToggle } from '../ThemeToggle';
+import { ConnectionStatus, ProgressbarType } from '@/features/workflow/types/types';
+
 interface Props {
   title: string;
   onStart: () => void;
   onTitleChange: (title: string) => void;
   categories: Category[];
-  progress?: {
-    percentage: number;
-    status: 'idle' | 'processing' | 'success' | 'error';
-  };
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
+  connectionStatus: ConnectionStatus;
+  progressBar: ProgressbarType;
 }
 
 export const Header: FCX<Props> = ({ 
@@ -20,17 +22,44 @@ export const Header: FCX<Props> = ({
   onStart, 
   onTitleChange, 
   categories,
-  progress = { percentage: 0, status: 'idle' }
+  selectedCategory,
+  onCategoryChange,
+  connectionStatus,
+  progressBar
 }) => {
+  const getStatusDisplay = () => {
+    switch (connectionStatus) {
+      case 'disconnected':
+        return { text: 'System Ready', color: 'neutral' };
+      case 'connecting':
+        return { text: 'Establishing Connection...', color: 'warning' };
+      case 'connected':
+        return { text: 'System Active', color: 'success' };
+      case 'completed':
+        return { text: 'Process Completed', color: 'info' };
+      case 'error':
+        return { text: 'Connection Error', color: 'error' };
+      default:
+        return { text: 'System Status', color: 'neutral' };
+    }
+  };
+
+  const status = getStatusDisplay();
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.titleSection}>
           <div className={styles.mainTitle}>
             <h1>Fake Thesis Generator</h1>
-            <div className={styles.statusBadge}>
-              <span className={styles.dot} />
-              System Active
+            <div className={clsx(styles.statusBadge, styles[status.color])}>
+              <span className={clsx(styles.dot, styles[status.color])} />
+              {status.text}
+              {connectionStatus === 'connecting' && (
+                <div className={styles.loadingDots}>
+                  <span>.</span><span>.</span><span>.</span>
+                </div>
+              )}
             </div>
             <div className={styles.themeToggleWrapper}>
               <ThemeToggle />
@@ -52,7 +81,11 @@ export const Header: FCX<Props> = ({
               placeholder="論文のタイトルを入力"
               className={styles.input}
             />
-            <select className={styles.select} defaultValue="">
+            <select 
+              className={styles.select} 
+              value={selectedCategory}
+              onChange={(e) => onCategoryChange(e.target.value)}
+            >
               <option value="" disabled>カテゴリを選択</option>
               {categories.map(cat => (
                 <option key={cat.category_type_en} value={cat.category_type_en}>
@@ -87,29 +120,30 @@ export const Header: FCX<Props> = ({
           </div>
         </div>
 
-        {/* プログレスバー */}
         <div className={clsx(
           styles.progressWrapper,
-          progress.status !== 'idle' && styles.active
+          (connectionStatus === 'connected' || connectionStatus === 'completed') && styles.active
         )}>
           <div className={styles.progressContainer}>
             <div 
               className={clsx(
                 styles.progressBar,
-                styles[progress.status]
+                styles[progressBar.status],
+                connectionStatus === 'completed' && styles.completed
               )}
               style={{ 
-                '--progress': `${progress.percentage}%` 
+                '--progress': `${progressBar.percentage}%` 
               } as React.CSSProperties}
             />
           </div>
           <div className={styles.progressInfo}>
-            <span className={styles.percentage}>{progress.percentage}</span>
+            <span className={styles.percentage}>{progressBar.percentage}</span>
             <span className={clsx(
               styles.status,
-              styles[progress.status]
+              styles[progressBar.status],
+              connectionStatus === 'completed' && styles.completed
             )}>
-              {progress.status}
+              {connectionStatus === 'completed' ? 'Completed' : progressBar.status}
             </span>
           </div>
         </div>

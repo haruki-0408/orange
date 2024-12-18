@@ -1,3 +1,4 @@
+import { ProgressData } from "@/features/workflow/types/types";
 interface SSEClient {
   workflowId: string;
   controller: ReadableStreamDefaultController;
@@ -8,6 +9,7 @@ const clients: SSEClient[] = [];
 // クライアントを追加
 export function addClient(workflowId: string, controller: ReadableStreamDefaultController) {
   clients.push({ workflowId, controller });
+  console.log("Added client:", workflowId);
 }
 
 // クライアントを削除
@@ -17,11 +19,12 @@ export function removeClient(workflowId: string, controller: ReadableStreamDefau
   );
   if (index !== -1) {
     clients.splice(index, 1);
+    console.log("Removed client:", workflowId);
   }
 }
 
 // 指定されたworkflowIdのクライアントにデータを送信
-export function broadcastToWorkflow(workflowId: string, data: any) {
+export function broadcastToWorkflow(workflowId: string, data: ProgressData) {
   console.log("Broadcasting to workflowId:", workflowId);
 
   const matchedClients = clients.filter((client) => client.workflowId.trim() === workflowId.trim());

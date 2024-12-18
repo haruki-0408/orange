@@ -1,5 +1,12 @@
 export type ServiceType = 'Lambda' | 'SQS' | 'APIGateway' | 'DynamoDB' | 'S3';
-export type StatusType = 'ready' | 'success' | 'failed' | 'progress' | 'stopped';
+export type NodeStatusType = 'ready' | 'success' | 'failed' | 'progress';
+export type ProgressbarStatusType = 'processing' | 'success' | 'error';
+export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'completed' | 'error';
+
+export interface ProgressbarType {
+  percentage: number;
+  status: ProgressbarStatusType;
+}
 
 export interface ServiceDetails {
   Lambda: {
@@ -35,6 +42,19 @@ export interface ServiceDetails {
   };
 }
 
+export interface ProgressData {
+  execution_id: string;
+  status: 'RUNNING' | 'SUCCEEDED' | 'FAILED';
+  state_name: string;
+  timestamp: string;
+  logs?: string[];
+  metrics?: {
+    duration?: number;
+    memory?: number;
+    [key: string]: any;
+  };
+}
+
 export interface TraceData {
   id: string;
   name: string;
@@ -55,15 +75,6 @@ export interface TraceData {
 export interface Category {
   category_type_en: string;
   category_type_jp: string;
-}
-
-export interface MetricData {
-  id: string;
-  name: string;
-  value: number;
-  unit: string;
-  trend: 'up' | 'down' | 'stable';
-  change?: number;
 }
 
 export interface MetricsData {
@@ -113,3 +124,30 @@ export interface MetricsData {
     };
   };
 }
+
+export interface WorkflowHistory {
+  workflow_id: string;
+  title: string;
+  category: string;
+  timestamp: string;
+  status: 'processing' | 'completed' | 'error';
+}
+
+export interface WorkflowNode {
+  id: string;
+  type: string;
+  status: NodeStatus;
+  data: Record<string, any>;
+}
+
+export interface NodeData {
+  label: string;
+  status: NodeStatusType;
+  logs?: string[];
+  metrics?: {
+    duration?: number;
+    memory?: number;
+    [key: string]: any;
+  };
+  timestamp?: string;
+} 
