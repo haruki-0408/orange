@@ -511,3 +511,18 @@
   50% { transform: scale(1.05); }
   100% { transform: scale(1); }
 }
+
+.workflowId {
+  font-family: 'Geist Mono', monospace;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--accent-primary);
+  margin-right: 12px;
+}
+
+.progressInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 12px;
+}

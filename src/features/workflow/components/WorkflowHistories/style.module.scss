@@ -349,3 +349,34 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
+
+.workflowId {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  background: var(--workflow-id-bg);
+  border: 1px solid var(--workflow-id-border);
+  border-radius: 4px;
+  color: var(--workflow-id-text);
+  cursor: pointer;
+  user-select: all;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--workflow-id-hover-bg);
+    border-color: var(--workflow-id-hover-border);
+  }
+}
+
+.details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}

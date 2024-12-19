@@ -158,24 +158,15 @@ export const initialEdges: Edge[] = [
     targetHandle: "target-top",
     data: { targetNodeStatus: "ready" }
   },
-  // S3保存フロー
+  // 終了フロー
   {
-    id: "e-pdf-s3",
+    id: "e-pdf-end",
     source: "pdf-format-lambda",
-    target: "thesis-bucket",
+    target: "end",
     type: "custom",
     sourceHandle: "source-right",
     targetHandle: "target-left",
     data: { targetNodeStatus: "ready" }
   },
-  // 終了フロー
-  {
-    id: "e-s3-end",
-    source: "thesis-bucket",
-    target: "end",
-    type: "custom",
-    sourceHandle: "source-bottom",
-    targetHandle: "target-top",
-    data: { targetNodeStatus: "ready" }
-  }
+  
 ];

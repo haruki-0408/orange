@@ -35,12 +35,10 @@ import {
   ProgressbarType 
 } from '../types/types';
 import { WorkflowHistories } from './WorkflowHistories';
-import { createWorkflowHistory, updateWorkflowStatus } from '@/app/actions/workflow';
-import { getJstIsoString } from '@/utils/date';
-import { getSessionId } from '@/utils/session';
 import { useWorkflowStore } from '../stores/useWorkflowStore';
 import { useFlowStore } from '../stores/useFlowStore';
 import { useWorkflowProgress } from '../hooks/useWorkflowProgress';
+import { SupportingServicesGroup } from './SupportingServicesGroup';
 
 interface Props {
   className?: string;
@@ -53,7 +51,8 @@ const nodeTypes: NodeTypes = {
   mainGroup: MainWorkflowGroup,
   subGroup: SubWorkflowGroup,
   choice: ChoiceNode,
-  terminal: TerminalNode
+  terminal: TerminalNode,
+  supportingGroup: SupportingServicesGroup
 };
 
 const edgeTypes: EdgeTypes = {
@@ -68,26 +67,15 @@ export const Workflow: FCX<Props> = ({
   const { theme } = useTheme();
   const { 
     addWorkflow, 
-    removeWorkflow, 
     getWorkflowBySession, 
-    isWorkflowOwner 
+    generateSessionId 
   } = useWorkflowStore();
   
-  const [sessionId, setSessionId] = useState<string>('');
-  
-  useEffect(() => {
-    setSessionId(getSessionId());
-  }, []);
-
+  const [sessionId] = useState(() => generateSessionId());
   const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [thesisTitle, setThesisTitle] = useState('');
-  const [histories, setHistories] = useState<WorkflowHistory[]>(
-    initialHistories.filter(
-      (history): history is WorkflowHistory => 
-        typeof history.workflow_id === 'string' && history.workflow_id.length > 0
-    )
-  );
+  const [histories, setHistories] = useState<WorkflowHistory[]>(initialHistories);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('disconnected');
   const [progressBar, setProgressBar] = useState<ProgressbarType>({
     percentage: 0,
@@ -105,21 +93,32 @@ export const Workflow: FCX<Props> = ({
     [setEdges]
   );
 
-  // 初期表示時に進行中のワークフローがあれば復元
+  // 進行中のワークフローの復元
   useEffect(() => {
-    if (!sessionId) return;
-
     const activeWorkflow = getWorkflowBySession(sessionId);
+    console.log('activeWorkflow', activeWorkflow);
     if (activeWorkflow) {
       setWorkflowId(activeWorkflow.workflowId);
+      setThesisTitle(activeWorkflow.title);
+      setSelectedCategory(activeWorkflow.category);
       setConnectionStatus('connecting');
-    } else if (initialHistories.length > 0) {
-      const latestHistory = initialHistories[0];
-      setWorkflowId(latestHistory.workflow_id);
-    }
-  }, [initialHistories, sessionId, getWorkflowBySession]);
 
-  // TracesDashboardの表示制御を修正
+      setHistories(prev => {
+        const filteredHistories = prev.filter(
+          history => history.workflow_id !== activeWorkflow.workflowId
+        );
+        return [{
+          workflow_id: activeWorkflow.workflowId,
+          title: activeWorkflow.title,
+          category: activeWorkflow.category,
+          status: 'processing',
+          timestamp: activeWorkflow.timestamp
+        }, ...filteredHistories];
+      });
+    }
+  }, [sessionId, getWorkflowBySession]);
+
+  // TracesDashboardの表示制御
   const shouldShowTraces = connectionStatus === 'completed' || connectionStatus === 'error';
   const [isTracesVisible, setIsTracesVisible] = useState(false);
 
@@ -135,52 +134,34 @@ export const Workflow: FCX<Props> = ({
     }
   }, [shouldShowTraces]);
 
-  // SSEによる進捗監視を設定
+  // SSEによる進捗監視
   const { connectionStatus: sseConnectionStatus } = useWorkflowProgress(workflowId);
 
-  // connectionStatusをSSEの状態に同期
   useEffect(() => {
     setConnectionStatus(sseConnectionStatus);
   }, [sseConnectionStatus]);
 
-  // 生成開始時の制御を追加
+  // ワークフロー生成開始
   const handleStartWorkflow = async () => {
-    if (!sessionId) return;
     if (!thesisTitle.trim() || !selectedCategory) {
       alert('論文タイトルとカテゴリを選択してください');
       return;
     }
 
-    if (connectionStatus === 'connected' || connectionStatus === 'connecting') {
-      alert('現在処理中です。完了後に新しい生成を開始してください。');
+    const newWorkflowId = addWorkflow(thesisTitle, selectedCategory);
+    if (!newWorkflowId) {
+      alert('現在処理中のワークフローがあります。完了後に新しい生成を開始してください。');
       return;
     }
 
-    const newWorkflowId = Math.random().toString(36).substring(2, 10);
-    const timestamp = getJstIsoString();
-
-    // 進行中のワークフローを登録
-    addWorkflow(sessionId, {
-      workflowId: newWorkflowId,
+    setWorkflowId(newWorkflowId);
+    setHistories(prev => [{
+      workflow_id: newWorkflowId,
       title: thesisTitle,
       category: selectedCategory,
-      timestamp
-    });
-
-    // 新しい履歴を追加
-    setHistories(prev => [
-      {
-        workflow_id: newWorkflowId,
-        title: thesisTitle || 'Untitled',
-        category: selectedCategory,
-        status: 'processing',
-        timestamp
-      },
-      ...prev
-    ]);
-
-    // ワークフローIDを設定してSSE接続を開始
-    setWorkflowId(newWorkflowId);
+      status: 'processing',
+      timestamp: new Date().toISOString()
+    }, ...prev]);
   };
 
   // ReactFlowの状態をZustandから取得
@@ -197,6 +178,7 @@ export const Workflow: FCX<Props> = ({
         onCategoryChange={setSelectedCategory}
         connectionStatus={connectionStatus}
         progressBar={progressBar}
+        workflowId={workflowId}
       />
       <div className="flex w-full">
         <WorkflowHistories

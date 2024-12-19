@@ -1,10 +1,10 @@
-import React, { useState, memo } from 'react';
-import { Handle, NodeProps, Position } from 'reactflow';
-import styles from './style.module.scss';
-import clsx from 'clsx';
-import { FCX } from '@/types/types';
-import Image from 'next/image';
-import { StateType, ServiceType, ServiceDetails } from '@/features/workflow/types/types';
+import React, { useState, memo } from "react";
+import { Handle, NodeProps, Position } from "reactflow";
+import styles from "./style.module.scss";
+import clsx from "clsx";
+import { FCX } from "@/types/types";
+import Image from "next/image";
+import { StateType, ServiceType, ServiceDetails } from "@/features/workflow/types/types";
 
 interface Props {
   title: string;
@@ -14,6 +14,7 @@ interface Props {
   logs: string;
   serviceType: ServiceType;
   details: Partial<ServiceDetails[ServiceType]>;
+  isSupporting?: boolean;
 }
 
 export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
@@ -21,8 +22,8 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
 
   const renderServiceDetails = () => {
     switch (data.serviceType) {
-      case 'Lambda':
-        const lambdaDetails = data.details as ServiceDetails['Lambda'];
+      case "Lambda":
+        const lambdaDetails = data.details as ServiceDetails["Lambda"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -46,8 +47,8 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
           </div>
         );
 
-      case 'DynamoDB':
-        const dynamoDetails = data.details as ServiceDetails['DynamoDB'];
+      case "DynamoDB":
+        const dynamoDetails = data.details as ServiceDetails["DynamoDB"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -71,15 +72,17 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
             {dynamoDetails.indexes && (
               <div className={styles.indexList}>
                 {dynamoDetails.indexes.map((index, i) => (
-                  <div key={i} className={styles.indexChip}>{index}</div>
+                  <div key={i} className={styles.indexChip}>
+                    {index}
+                  </div>
                 ))}
               </div>
             )}
           </div>
         );
 
-      case 'SQS':
-        const sqsDetails = data.details as ServiceDetails['SQS'];
+      case "SQS":
+        const sqsDetails = data.details as ServiceDetails["SQS"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -103,8 +106,8 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
           </div>
         );
 
-      case 'APIGateway':
-        const apiDetails = data.details as ServiceDetails['APIGateway'];
+      case "APIGateway":
+        const apiDetails = data.details as ServiceDetails["APIGateway"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -128,8 +131,8 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
           </div>
         );
 
-      case 'S3':
-        const s3Details = data.details as ServiceDetails['S3'];
+      case "S3":
+        const s3Details = data.details as ServiceDetails["S3"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -139,7 +142,7 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
             <div className={styles.detailsRow}>
               <div className={styles.detailChip}>
                 <span className={styles.chipIcon}>📚</span>
-                Versioning: {s3Details.versioning ? 'Enabled' : 'Disabled'}
+                Versioning: {s3Details.versioning ? "Enabled" : "Disabled"}
               </div>
               <div className={styles.detailChip}>
                 <span className={styles.chipIcon}>🔐</span>
@@ -157,60 +160,86 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
 
   // Handleのスタイル
   const handleStyle = {
-    width: '10px',
-    height: '10px',
-    background: '#555',
-    border: '1px solid #333',
+    width: "10px",
+    height: "10px",
+    background: "#555",
+    border: "1px solid #333"
   };
+
+  // 補助ノードの場合は異なるボタンテキストを使用
+  const getDetailsButtonText = () => {
+    if (data.isSupporting) {
+      return {
+        closed: "Show storage details",
+        open: "Hide details"
+      };
+    }
+    return {
+      closed: "View execution details",
+      open: "Hide details"
+    };
+  };
+
+  // 補助ノードの場合はステータスバッジを表示しない
+  const shouldShowStatusBadge = !data.isSupporting;
 
   return (
     <div className={styles.customNodeWrapper}>
-      {/* 上部のHandles */}
-      <Handle
-        id="target-top"
-        type="target"
-        position={Position.Top}
-        style={handleStyle}
-        className={styles.handle}
-      />
-      <Handle
-        id="source-top"
-        type="source"
-        position={Position.Top}
-        style={handleStyle}
-        className={styles.handle}
-      />
+      {!data.isSupporting && (
+        <>
+          {/* 上部のHandles */}
+          <Handle
+            id="target-top"
+            type="target"
+            position={Position.Top}
+            style={handleStyle}
+            className={styles.handle}
+          />
+          <Handle
+            id="source-top"
+            type="source"
+            position={Position.Top}
+            style={handleStyle}
+            className={styles.handle}
+          />
 
-      {/* 左側のHandles */}
-      <Handle
-        id="target-left"
-        type="target"
-        position={Position.Left}
-        style={handleStyle}
-        className={styles.handle}
-      />
-      <Handle
-        id="source-left"
-        type="source"
-        position={Position.Left}
-        style={handleStyle}
-        className={styles.handle}
-      />
+          {/* 左側のHandles */}
+          <Handle
+            id="target-left"
+            type="target"
+            position={Position.Left}
+            style={handleStyle}
+            className={styles.handle}
+          />
+          <Handle
+            id="source-left"
+            type="source"
+            position={Position.Left}
+            style={handleStyle}
+            className={styles.handle}
+          />
+        </>
+      )}
 
-      <div className={clsx(styles.customNode, styles[data.status], styles[data.serviceType])}>
-        <div className={styles.statusIndicator} />
-        <div className={clsx(styles.badge, styles[data.status])}>
-          {data.status}
-        </div>
+      <div
+        className={clsx(
+          styles.customNode,
+          styles[data.serviceType],
+          data.isSupporting && styles.supporting,
+          shouldShowStatusBadge && styles[data.status]
+        )}
+      >
+        {shouldShowStatusBadge && (
+          <>
+            <div className={styles.statusIndicator} />
+            <div className={clsx(styles.badge, styles[data.status])}>{data.status}</div>
+          </>
+        )}
+
         <div className={styles.header}>
           {data.icon && (
             <div className={styles.icon}>
-              <Image
-                src={data.icon}
-                alt={data.serviceType}
-                width={24}
-                height={24}
-              />
+              <Image src={data.icon} alt={data.serviceType} width={24} height={24} />
             </div>
           )}
           <div className={styles.titleArea}>
@@ -220,23 +249,27 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
         </div>
         {renderServiceDetails()}
         <hr className={styles.separator} />
-        <button 
-          className={clsx(styles.toggleButton, isOpen && styles.open)}
+        <button
+          className={clsx(
+            styles.toggleButton,
+            isOpen && styles.open,
+            data.isSupporting && styles.supporting
+          )}
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span>{isOpen ? 'Hide details' : 'View details'}</span>
-          <svg 
-            width="10" 
-            height="6" 
-            viewBox="0 0 10 6" 
-            fill="none" 
+          <span>{isOpen ? getDetailsButtonText().open : getDetailsButtonText().closed}</span>
+          <svg
+            width="10"
+            height="6"
+            viewBox="0 0 10 6"
+            fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path 
-              d="M1 1L5 5L9 1" 
-              stroke="currentColor" 
-              strokeWidth="1.5" 
-              strokeLinecap="round" 
+            <path
+              d="M1 1L5 5L9 1"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
               strokeLinejoin="round"
             />
           </svg>
@@ -246,12 +279,14 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
         </div>
       </div>
 
-      {/* 右側のHandles */}
-      <Handle
-        id="target-right"
-        type="target"
-        position={Position.Right}
-        style={handleStyle}
+      {!data.isSupporting && (
+        <>
+          {/* 右側のHandles */}
+          <Handle
+            id="target-right"
+            type="target"
+            position={Position.Right}
+            style={handleStyle}
         className={styles.handle}
       />
       <Handle
@@ -272,11 +307,13 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
       />
       <Handle
         id="source-bottom"
-        type="source"
-        position={Position.Bottom}
-        style={handleStyle}
-        className={styles.handle}
-      />
+            type="source"
+            position={Position.Bottom}
+            style={handleStyle}
+            className={styles.handle}
+          />
+        </>
+      )}
     </div>
   );
 });

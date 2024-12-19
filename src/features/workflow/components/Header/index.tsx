@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { Category } from '@/features/workflow/types/types';
@@ -15,9 +15,10 @@ interface Props {
   onCategoryChange: (category: string) => void;
   connectionStatus: ConnectionStatus;
   progressBar: ProgressbarType;
+  workflowId?: string | null;
 }
 
-export const Header: FCX<Props> = ({ 
+export const Header: FCX<Props> = memo(({ 
   title, 
   onStart, 
   onTitleChange, 
@@ -25,7 +26,8 @@ export const Header: FCX<Props> = ({
   selectedCategory,
   onCategoryChange,
   connectionStatus,
-  progressBar
+  progressBar,
+  workflowId
 }) => {
   const getStatusDisplay = () => {
     switch (connectionStatus) {
@@ -124,6 +126,9 @@ export const Header: FCX<Props> = ({
           styles.progressWrapper,
           (connectionStatus === 'connected' || connectionStatus === 'completed') && styles.active
         )}>
+          {workflowId && (
+              <span className={styles.workflowId}>ID: {workflowId}</span>
+            )}
           <div className={styles.progressContainer}>
             <div 
               className={clsx(
@@ -150,6 +155,6 @@ export const Header: FCX<Props> = ({
       </div>
     </header>
   );
-};
+});
 
 export default Header; 

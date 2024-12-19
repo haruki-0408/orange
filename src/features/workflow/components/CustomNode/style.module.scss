@@ -46,6 +46,53 @@
     transform: scale(1.05);
     z-index: 10;
   }
+
+  &.supporting {
+    background: var(--supporting-node-bg);
+    border: 1px dashed var(--supporting-node-border);
+    box-shadow: var(--supporting-node-shadow);
+    transform: scale(var(--supporting-node-scale));
+
+    &:hover {
+      background: var(--supporting-node-hover-bg);
+      border-style: solid;
+      border-color: var(--supporting-node-hover-border);
+      box-shadow: var(--supporting-node-hover-shadow);
+      transform: scale(var(--supporting-node-hover-scale));
+    }
+
+    .title {
+      color: var(--supporting-node-title-color);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .description {
+      color: var(--supporting-node-description-color);
+      font-size: 0.8rem;
+    }
+
+    .serviceDetails {
+      background: var(--supporting-node-details-bg);
+      border: 1px solid var(--supporting-node-details-border);
+      color: var(--supporting-node-details-color);
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.75rem;
+    }
+
+    .toggleButton {
+      background: var(--supporting-node-button-bg);
+      border-color: var(--supporting-node-button-border);
+      color: var(--supporting-node-button-color);
+      font-size: 0.7rem;
+
+      &:hover {
+        background: var(--supporting-node-button-hover-bg);
+        color: var(--supporting-node-button-hover-color);
+      }
+    }
+  }
 }
 
 .header {
@@ -115,6 +162,18 @@
   &:active {
     background: var(--custom-node-button-active-bg);
   }
+
+  &.supporting {
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    border-color: var(--border-secondary);
+    font-size: 0.7rem;
+
+    &:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+  }
 }
 
 .codeBlock {
@@ -145,6 +204,13 @@
     display: block;
     white-space: pre-wrap;
     word-break: break-all;
+  }
+
+  &.supporting {
+    background: var(--bg-tertiary);
+    border-left-color: var(--border-secondary);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
   }
 }
 

@@ -394,6 +394,63 @@
     --histories-card-shadow: rgba(51, 65, 85, 0.08);
     --histories-card-active-bg: rgba(14, 165, 233, 0.04);
     --histories-card-active-border: rgba(14, 165, 233, 0.5);
+
+    --workflow-id-bg: rgba(37, 99, 235, 0.05);
+    --workflow-id-border: rgba(37, 99, 235, 0.1);
+    --workflow-id-text: #2563eb;
+    --workflow-id-hover-bg: rgba(37, 99, 235, 0.1);
+    --workflow-id-hover-border: rgba(37, 99, 235, 0.2);
+
+    // Supporting Group - Light Theme
+    --supporting-group-bg-start: rgba(248, 250, 252, 0.7);
+    --supporting-group-bg-end: rgba(241, 245, 249, 0.9);
+    --supporting-group-border: rgba(37, 99, 235, 0.1);
+    --supporting-group-shadow-inner: rgba(37, 99, 235, 0.03);
+    --supporting-group-shadow-outer: rgba(37, 99, 235, 0.05);
+
+    
+    --supporting-header-bg: rgba(37, 99, 235, 0.03);
+    --supporting-header-border: rgba(37, 99, 235, 0.08);
+    --supporting-header-shadow: rgba(37, 99, 235, 0.03);
+    --supporting-icon-shadow: rgba(37, 99, 235, 0.1);
+    --supporting-label-color: rgba(37, 99, 235, 0.8);
+    --supporting-label-shadow: rgba(255, 255, 255, 0.8);
+    
+    --supporting-line-color: rgba(37, 99, 235, 0.1);
+    --supporting-bottom-line-color: rgba(37, 99, 235, 0.05);
+    
+    --supporting-node-bg: linear-gradient(135deg, 
+      rgba(250, 250, 250, 0.95),
+      rgba(245, 245, 245, 0.9)
+    );
+    --supporting-node-border: rgba(148, 163, 184, 0.15);
+    --supporting-node-shadow: 
+      0 4px 6px rgba(148, 163, 184, 0.05),
+      0 8px 24px rgba(148, 163, 184, 0.08);
+    --supporting-node-scale: 0.95;
+    
+    --supporting-node-hover-bg: linear-gradient(135deg, 
+      rgba(252, 252, 252, 0.98),
+      rgba(248, 248, 248, 0.95)
+    );
+    --supporting-node-hover-border: rgba(148, 163, 184, 0.25);
+    --supporting-node-hover-shadow: 
+      0 8px 12px rgba(148, 163, 184, 0.08),
+      0 16px 32px rgba(148, 163, 184, 0.12);
+    --supporting-node-hover-scale: 0.97;
+    
+    --supporting-node-title-color: #475569;
+    --supporting-node-description-color: #64748b;
+    
+    --supporting-node-details-bg: rgba(255, 255, 255, 0.7);
+    --supporting-node-details-border: rgba(148, 163, 184, 0.12);
+    --supporting-node-details-color: #334155;
+    
+    --supporting-node-button-bg: rgba(255, 255, 255, 0.8);
+    --supporting-node-button-border: rgba(148, 163, 184, 0.15);
+    --supporting-node-button-color: #475569;
+    --supporting-node-button-hover-bg: rgba(255, 255, 255, 0.9);
+    --supporting-node-button-hover-color: #334155;
   }
 
   // Dark theme
@@ -786,5 +843,59 @@
     --histories-card-shadow: rgba(0, 0, 0, 0.2);
     --histories-card-active-bg: rgba(6, 182, 212, 0.1);
     --histories-card-active-border: rgba(6, 182, 212, 0.5);
+
+    --workflow-id-bg: rgba(6, 182, 212, 0.1);
+    --workflow-id-border: rgba(6, 182, 212, 0.15);
+    --workflow-id-text: #22d3ee;
+    --workflow-id-hover-bg: rgba(6, 182, 212, 0.15);
+    --workflow-id-hover-border: rgba(6, 182, 212, 0.25);
+
+    // Supporting Group
+    --supporting-group-bg-start: rgba(30, 41, 59, 0.5);
+    --supporting-group-bg-end: rgba(15, 23, 42, 0.3);
+    --supporting-group-border: rgba(148, 163, 184, 0.1);
+    --supporting-group-shadow-inner: rgba(148, 163, 184, 0.05);
+    --supporting-group-shadow-outer: rgba(0, 0, 0, 0.2);
+    
+    --supporting-header-bg: rgba(30, 41, 59, 0.6);
+    --supporting-header-border: rgba(148, 163, 184, 0.1);
+    --supporting-header-shadow: rgba(0, 0, 0, 0.2);
+    --supporting-icon-shadow: rgba(0, 0, 0, 0.2);
+    --supporting-label-color: rgba(148, 163, 184, 0.9);
+    --supporting-label-shadow: rgba(0, 0, 0, 0.3);
+    
+    --supporting-line-color: rgba(148, 163, 184, 0.1);
+    --supporting-bottom-line-color: rgba(148, 163, 184, 0.05);
+    
+    --supporting-node-bg: linear-gradient(135deg,
+      rgba(30, 41, 59, 0.25),
+      rgba(15, 23, 42, 0.2)
+    );
+    --supporting-node-border: rgba(148, 163, 184, 0.15);
+    --supporting-node-shadow: 
+      0 4px 6px rgba(0, 0, 0, 0.15),
+      0 8px 24px rgba(148, 163, 184, 0.08);
+    
+    --supporting-node-hover-bg: linear-gradient(135deg,
+      rgba(30, 41, 59, 0.35),
+      rgba(15, 23, 42, 0.3)
+    );
+    --supporting-node-hover-border: rgba(148, 163, 184, 0.25);
+    --supporting-node-hover-shadow: 
+      0 8px 12px rgba(0, 0, 0, 0.25),
+      0 16px 32px rgba(148, 163, 184, 0.1);
+    
+    --supporting-node-title-color: #cbd5e1;
+    --supporting-node-description-color: #94a3b8;
+    
+    --supporting-node-details-bg: rgba(30, 41, 59, 0.3);
+    --supporting-node-details-border: rgba(148, 163, 184, 0.12);
+    --supporting-node-details-color: #e2e8f0;
+    
+    --supporting-node-button-bg: rgba(30, 41, 59, 0.4);
+    --supporting-node-button-border: rgba(148, 163, 184, 0.15);
+    --supporting-node-button-color: #cbd5e1;
+    --supporting-node-button-hover-bg: rgba(30, 41, 59, 0.5);
+    --supporting-node-button-hover-color: #e2e8f0;
   }
 } 
