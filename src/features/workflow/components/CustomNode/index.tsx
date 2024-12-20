@@ -1,12 +1,14 @@
 import React, { useState, memo } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import { Handle, NodeProps, Position } from "@xyflow/react";
 import styles from "./style.module.scss";
 import clsx from "clsx";
 import { FCX } from "@/types/types";
 import Image from "next/image";
 import { StateType, ServiceType, ServiceDetails } from "@/features/workflow/types/types";
+import { Node } from "@xyflow/react";
 
-interface Props {
+export type CustomNode = Node<
+{
   title: string;
   description: string;
   icon?: string;
@@ -15,15 +17,17 @@ interface Props {
   serviceType: ServiceType;
   details: Partial<ServiceDetails[ServiceType]>;
   isSupporting?: boolean;
-}
+},
+'custom'
+>
 
-export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
+export default function CustomNode(props: NodeProps<CustomNode>) {
   const [isOpen, setIsOpen] = useState(false);
 
   const renderServiceDetails = () => {
-    switch (data.serviceType) {
+    switch (props.data.serviceType) {
       case "Lambda":
-        const lambdaDetails = data.details as ServiceDetails["Lambda"];
+        const lambdaDetails = props.data.details as ServiceDetails["Lambda"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -48,7 +52,7 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
         );
 
       case "DynamoDB":
-        const dynamoDetails = data.details as ServiceDetails["DynamoDB"];
+        const dynamoDetails = props.data.details as ServiceDetails["DynamoDB"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -82,7 +86,7 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
         );
 
       case "SQS":
-        const sqsDetails = data.details as ServiceDetails["SQS"];
+        const sqsDetails = props.data.details as ServiceDetails["SQS"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -107,7 +111,7 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
         );
 
       case "APIGateway":
-        const apiDetails = data.details as ServiceDetails["APIGateway"];
+        const apiDetails = props.data.details as ServiceDetails["APIGateway"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -132,7 +136,7 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
         );
 
       case "S3":
-        const s3Details = data.details as ServiceDetails["S3"];
+        const s3Details = props.data.details as ServiceDetails["S3"];
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
@@ -168,7 +172,7 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
 
   // 補助ノードの場合は異なるボタンテキストを使用
   const getDetailsButtonText = () => {
-    if (data.isSupporting) {
+    if (props.data.isSupporting) {
       return {
         closed: "Show storage details",
         open: "Hide details"
@@ -181,11 +185,11 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
   };
 
   // 補助ノードの場合はステータスバッジを表示しない
-  const shouldShowStatusBadge = !data.isSupporting;
+  const shouldShowStatusBadge = !props.data.isSupporting;
 
   return (
     <div className={styles.customNodeWrapper}>
-      {!data.isSupporting && (
+      {!props.data.isSupporting && (
         <>
           {/* 上部のHandles */}
           <Handle
@@ -224,27 +228,27 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
       <div
         className={clsx(
           styles.customNode,
-          styles[data.serviceType],
-          data.isSupporting && styles.supporting,
-          shouldShowStatusBadge && styles[data.status]
+          styles[props.data.serviceType],
+          props.data.isSupporting && styles.supporting,
+          shouldShowStatusBadge && styles[props.data.status]
         )}
       >
         {shouldShowStatusBadge && (
           <>
             <div className={styles.statusIndicator} />
-            <div className={clsx(styles.badge, styles[data.status])}>{data.status}</div>
+            <div className={clsx(styles.badge, styles[props.data.status])}>{props.data.status}</div>
           </>
         )}
 
         <div className={styles.header}>
-          {data.icon && (
+          {props.data.icon && (
             <div className={styles.icon}>
-              <Image src={data.icon} alt={data.serviceType} width={24} height={24} />
+              <Image src={props.data.icon} alt={props.data.serviceType} width={24} height={24} />
             </div>
           )}
           <div className={styles.titleArea}>
-            <h3 className={styles.title}>{data.title}</h3>
-            <p className={styles.description}>{data.description}</p>
+            <h3 className={styles.title}>{props.data.title}</h3>
+            <p className={styles.description}>{props.data.description}</p>
           </div>
         </div>
         {renderServiceDetails()}
@@ -253,7 +257,7 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
           className={clsx(
             styles.toggleButton,
             isOpen && styles.open,
-            data.isSupporting && styles.supporting
+            props.data.isSupporting && styles.supporting
           )}
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -275,11 +279,11 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
           </svg>
         </button>
         <div className={clsx(styles.codeBlock, isOpen && styles.open)}>
-          <code>{data.logs}</code>
+          <code>{props.data.logs}</code>
         </div>
       </div>
 
-      {!data.isSupporting && (
+      {!props.data.isSupporting && (
         <>
           {/* 右側のHandles */}
           <Handle
@@ -316,6 +320,5 @@ export const CustomNode: FCX<NodeProps<Props>> = memo(({ data }) => {
       )}
     </div>
   );
-});
+}
 
-export default CustomNode;

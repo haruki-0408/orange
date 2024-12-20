@@ -1,4 +1,4 @@
-import { Node } from 'reactflow';
+import { Node } from '@xyflow/react';
 
 export const initialNodes: Node[] = [
   // Start Node
@@ -49,7 +49,7 @@ export const initialNodes: Node[] = [
       label: "Format Services",
     },
     style: { width: 800, height: 400 },
-    parentNode: "main-workflow",
+    parentId: "main-workflow",
     extent: "parent",
   },
   // PDF Service Group
@@ -61,7 +61,7 @@ export const initialNodes: Node[] = [
       label: "PDF Services",
     },
     style: { width: 800, height: 400 },
-    parentNode: "main-workflow",
+    parentId: "main-workflow",
     extent: "parent",
   },
   // Format Lambda
@@ -83,7 +83,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "format-services",
+    parentId: "format-services",
     extent: "parent",
   },
   // DynamoDB
@@ -105,7 +105,7 @@ export const initialNodes: Node[] = [
         sortKey: "timestamp",
       }
     },
-    parentNode: "format-services",
+    parentId: "format-services",
     extent: "parent",
   },
   // Prompt Generation Lambda
@@ -127,7 +127,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "main-workflow",
+    parentId: "main-workflow",
     extent: "parent",
   },
   // Callback Queue
@@ -149,7 +149,7 @@ export const initialNodes: Node[] = [
         delaySeconds: 0
       }
     },
-    parentNode: "main-workflow",
+    parentId: "main-workflow",
     extent: "parent",
   },
   // Sub Workflow Group
@@ -161,7 +161,7 @@ export const initialNodes: Node[] = [
       label: "Sub Workflow",
     },
     style: { width: 1400, height: 1800 },
-    parentNode: "main-workflow",
+    parentId: "main-workflow",
     extent: "parent",
   },
   // AI Request Lambda
@@ -183,7 +183,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "sub-workflow",
+    parentId: "sub-workflow",
     extent: "parent"
   },
   // Validation Lambda
@@ -205,7 +205,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "sub-workflow",
+    parentId: "sub-workflow",
     extent: "parent"
   },
   // Choice Node
@@ -217,7 +217,7 @@ export const initialNodes: Node[] = [
       condition: "Schema\nValidation",
       logs: "Choice State\nCondition: Schema validation result\nRouting based on validation outcome"
     },
-    parentNode: "sub-workflow",
+    parentId: "sub-workflow",
     extent: "parent"
   },
   // Success Callback
@@ -239,7 +239,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "sub-workflow",
+    parentId: "sub-workflow",
     extent: "parent"
   },
   // Data Fix
@@ -261,7 +261,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "sub-workflow",
+    parentId: "sub-workflow",
     extent: "parent"
   },
   // Parallel Image Generation Nodes
@@ -283,7 +283,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "main-workflow",
+    parentId: "main-workflow",
     extent: "parent",
   },
   // Table Generator
@@ -305,7 +305,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "main-workflow",
+    parentId: "main-workflow",
     extent: "parent",
   },
   // Graph Generator
@@ -327,7 +327,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "main-workflow",
+    parentId: "main-workflow",
     extent: "parent",
   },
   // PDF Format Lambda
@@ -349,7 +349,7 @@ export const initialNodes: Node[] = [
         runtime: "Python 3.12"
       }
     },
-    parentNode: "pdf-services",
+    parentId: "pdf-services",
     extent: "parent",
   },
   // S3 Bucket
@@ -372,7 +372,7 @@ export const initialNodes: Node[] = [
         accessControl: "Private"
       }
     },
-    parentNode: "pdf-services",
+    parentId: "pdf-services",
     extent: "parent",
   },
   // End Node

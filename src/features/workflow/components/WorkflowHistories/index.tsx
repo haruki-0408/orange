@@ -4,20 +4,21 @@ import styles from './style.module.scss';
 import { WorkflowHistory, ConnectionStatus } from '@/features/workflow/types/types';
 import clsx from 'clsx';
 import { formatJstDistance } from '@/utils/date';
+import { useSSEStore } from '../../stores/useSSEStore';
 
 interface Props {
   histories: WorkflowHistory[];
   currentWorkflowId: string | null;
   onSelect: (history: WorkflowHistory) => void;
-  connectionStatus: ConnectionStatus;
 }
 
 export const WorkflowHistories: FCX<Props> = memo(({ 
   histories, 
   currentWorkflowId,
   onSelect,
-  connectionStatus
 }) => {
+  const { connectionStatus } = useSSEStore();
+
   // 無効な履歴データをフィルタリング
   const validHistories = histories.filter(
     (history): history is WorkflowHistory & { workflow_id: string } => 

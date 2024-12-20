@@ -1,7 +1,7 @@
 import { FCX } from "@/types/types";
 import { StateType } from "@/features/workflow/types/types";
 import React from 'react';
-import { EdgeProps, getSmoothStepPath } from 'reactflow';
+import { EdgeProps, getSmoothStepPath } from '@xyflow/react';
 import styles from './style.module.scss';
 import clsx from 'clsx';
 

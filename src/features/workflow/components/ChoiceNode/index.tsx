@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Handle, NodeProps, Position } from 'reactflow';
+import { Handle, NodeProps, Position } from '@xyflow/react';
 import styles from './style.module.scss';
 import { FCX } from '@/types/types';
 
@@ -18,7 +18,7 @@ export const ChoiceNode: FCX<NodeProps> = memo(({ data }) => {
         <div className={styles.content}>
           <div className={styles.header}>
             <div className={styles.title}>Condition</div>
-            <div className={styles.condition}>{data.condition}</div>
+            <div className={styles.condition}>{data.condition as string}</div>
           </div>
           <div className={styles.paths}>
             <div className={styles.path}>

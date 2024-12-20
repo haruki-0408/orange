@@ -17,6 +17,7 @@
     "@liveblocks/client": "^2.11.0",
     "@liveblocks/react": "^2.11.0",
     "@tanstack/react-query": "^5.62.8",
+    "@xyflow/react": "^12.3.6",
     "aws-sdk": "^2.1692.0",
     "clsx": "^2.1.1",
     "dagre": "^0.8.5",

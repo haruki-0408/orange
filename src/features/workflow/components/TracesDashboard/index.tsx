@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
-import { useReactFlow, Node } from 'reactflow';
-import { TraceData, MetricData, MetricsData } from '@/features/workflow/types/types';
+import { useReactFlow, Node } from '@xyflow/react';
+import { TraceData, MetricsData } from '@/features/workflow/types/types';
 import clsx from 'clsx';
 import { MetricCard } from '../MetricCard';
 import { ErrorCard } from '../ErrorCard';
@@ -38,8 +38,8 @@ export const TracesDashboard: FCX<Props> = ({
     let absoluteY = node.position.y;
     let currentNode = node;
 
-    while (currentNode.parentNode) {
-      const parentNode = getNode(currentNode.parentNode);
+    while (currentNode.parentId) {
+      const parentNode = getNode(currentNode.parentId);
       if (parentNode) {
         absoluteX += parentNode.position.x;
         absoluteY += parentNode.position.y;

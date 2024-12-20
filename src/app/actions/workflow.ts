@@ -95,4 +95,37 @@ export async function updateWorkflowStatus(workflowId: string, status: 'processi
     console.error('Failed to update workflow status:', error);
     throw new Error('Failed to update status');
   }
+}
+
+// 進行中のワークフローの進捗状況を取得
+export async function getActiveWorkflowProgress(workflowId: string) {
+  try {
+    const result = await dynamodb.query({
+      TableName: process.env.WORKFLOW_PROGRESS_MANAGEMENT_TABLE_NAME!,
+      KeyConditionExpression: 'workflow_id = :workflowId',
+      ExpressionAttributeValues: {
+        ':workflowId': workflowId
+      }
+    }).promise();
+
+    if (!result.Items || result.Items.length === 0) {
+      return [];
+    }
+
+    return result.Items
+      .map(item => {
+        const [state_name, timestamp] = item.sk.split('#');
+        return {
+          workflow_id: item.workflow_id,
+          state_name,
+          timestamp,
+          status: item.status
+        };
+      })
+      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+  } catch (error) {
+    console.error('Failed to fetch workflow progress:', error);
+    return [];
+  }
 } 
