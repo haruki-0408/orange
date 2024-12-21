@@ -1,13 +1,14 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
-
+import { WorkflowStatusType } from '../types/types';
 type ActiveWorkflow = {
   workflowId: string;
-  sessionId: string;
+  sessionId: string;  
   title: string;
   category: string;
   timestamp: string;
+  status: WorkflowStatusType;
 };
 
 interface WorkflowState {
@@ -16,6 +17,7 @@ interface WorkflowState {
   removeWorkflow: (workflowId: string) => void;
   getWorkflowBySession: (sessionId: string) => ActiveWorkflow | undefined;
   hasActiveWorkflow: (sessionId: string) => boolean;
+  isActiveWorkflow: (workflowId: string) => boolean;
   generateSessionId: () => string;
 }
 
@@ -70,7 +72,8 @@ export const useWorkflowStore = create<WorkflowState>()(
             sessionId,
             title,
             category,
-            timestamp
+            timestamp,
+            status: 'PROCESSING' as WorkflowStatusType
           };
           newWorkflows.set(workflowId, newWorkflow);
           sessionStorage.setItem(WORKFLOW_STORAGE_KEY, JSON.stringify([...newWorkflows]));
@@ -99,6 +102,12 @@ export const useWorkflowStore = create<WorkflowState>()(
         const { activeWorkflows } = get();
         return Array.from(activeWorkflows.values())
           .some(workflow => workflow.sessionId === sessionId);
+      },
+
+      isActiveWorkflow: (workflowId: string) => {
+        const workflow = get().activeWorkflows.get(workflowId);
+        console.log('workflow', workflow);
+        return workflow?.status === 'PROCESSING';
       }
     }),
     { name: 'workflow-store' }

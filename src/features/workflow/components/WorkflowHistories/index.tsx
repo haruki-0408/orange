@@ -1,4 +1,4 @@
-import React, { useEffect, memo } from 'react';
+import React, { useEffect, memo, useCallback } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { WorkflowHistory, ConnectionStatus } from '@/features/workflow/types/types';
@@ -19,11 +19,10 @@ export const WorkflowHistories: FCX<Props> = memo(({
 }) => {
   const { connectionStatus } = useSSEStore();
 
-  // 無効な履歴データをフィルタリング
-  const validHistories = histories.filter(
-    (history): history is WorkflowHistory & { workflow_id: string } => 
-      typeof history.workflow_id === 'string' && history.workflow_id.length > 0
-  );
+  // 進行中のワークフローかどうかを判定
+  const isActiveWorkflow = useCallback((history: WorkflowHistory) => {
+    return history.status === 'PROCESSING' && history.workflow_id === currentWorkflowId;
+  }, [currentWorkflowId]);
 
   // ブラウザの戻る/進む操作を検知
   useEffect(() => {
@@ -54,24 +53,9 @@ export const WorkflowHistories: FCX<Props> = memo(({
     };
   }, [connectionStatus]);
 
-  const handleHistorySelect = (history: WorkflowHistory) => {
-    if (
-      (connectionStatus === 'connected' || connectionStatus === 'connecting') &&
-      history.workflow_id !== currentWorkflowId
-    ) {
-      if (confirm('You will lose real-time progress tracking if you switch to another history. Continue?')) {
-        onSelect(history);
-      }
-    } else {
-      onSelect(history);
-    }
-  };
-
   const getStatusBadge = (history: WorkflowHistory) => {
-    const isCurrentWorkflow = history.workflow_id === currentWorkflowId;
-    
-    // SSE接続ステータスバッジ (現在選択中のワークフローのみ)
-    if (isCurrentWorkflow && (connectionStatus === 'connected' || connectionStatus === 'connecting')) {
+    // 進行中のワークフローの場合のみLIVE表示
+    if (isActiveWorkflow(history)) {
       return (
         <div className={clsx(styles.badge, styles.connection)}>
           <span className={styles.dot} />
@@ -80,7 +64,7 @@ export const WorkflowHistories: FCX<Props> = memo(({
       );
     }
 
-    // 通常の進捗ステータスバッジ
+    // それ以外は通常のステータス表示
     return (
       <div className={clsx(styles.badge, styles[history.status])}>
         <span className={styles.dot} />
@@ -89,12 +73,18 @@ export const WorkflowHistories: FCX<Props> = memo(({
     );
   };
 
+  // 履歴選択時の処理
+  const handleHistorySelect = (history: WorkflowHistory) => {
+    // 進行中のワークフロー以外は選択不可
+    onSelect(history);
+  };
+
   return (
     <div className={styles.historiesWrapper}>
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <h3>Workflow Histories</h3>
-          <span className={styles.count}>{validHistories.length} workflows</span>
+          <span className={styles.count}>{histories.length} workflows</span>
         </div>
         <div className={styles.searchBar}>
           <input 
@@ -105,7 +95,7 @@ export const WorkflowHistories: FCX<Props> = memo(({
         </div>
       </div>
       <div className={styles.list}>
-        {validHistories.map((history) => (
+        {histories.map((history) => (
           <button
             key={`history-${history.workflow_id}`}
             className={clsx(

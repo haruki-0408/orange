@@ -40,7 +40,8 @@ export const useSSEStore = create<SSEState>()(
         eventSource.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data) as ProgressData;
-
+            console.log('SSE Message received:', data);
+            
             if (isFirstMessage) {
               isFirstMessage = false;
               set({ connectionStatus: 'connected' });

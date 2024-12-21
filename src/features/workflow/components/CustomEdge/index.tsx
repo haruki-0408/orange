@@ -25,7 +25,7 @@ export const CustomEdge: FCX<EdgeProps> = ({
     borderRadius: 0,
   });
 
-  const edgeStatus: StateType = data?.targetNodeStatus || 'ready';
+  const edgeStatus: StateType = (data as { targetNodeStatus?: StateType })?.targetNodeStatus || 'ready';
   
   return (
     <>

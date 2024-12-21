@@ -1,30 +1,24 @@
 import React, { useCallback } from "react";
-import ReactFlow, {
+import {
+  ReactFlow,
   NodeTypes,
   EdgeTypes,
   Controls,
-  useNodesState,
-  useEdgesState,
   MiniMap,
   Background,
-  BackgroundVariant,
-  useReactFlow,
-  useNodes,
-  useEdges
-} from "reactflow";
-import { initialNodes } from "../../const/initialNodes";
-import { initialEdges } from "../../const/initialEdges";
+  BackgroundVariant
+} from "@xyflow/react";
 import { useWorkflowProgress } from "../../hooks/useWorkflowProgress";
 import { useTheme } from "../../contexts/ThemeContext";
 import styles from "./style.module.scss";
-import { CustomNode } from "../CustomNode";
+import CustomNode from "../CustomNode";
 import { MainWorkflowGroup } from "../MainWorkflowGroup";
 import { SubWorkflowGroup } from "../SubWorkflowGroup";
-import { ChoiceNode } from "../ChoiceNode";
-import { TerminalNode } from "../TerminalNode";
+import ChoiceNode from "../ChoiceNode";
+import TerminalNode from "../TerminalNode";
 import { SupportingServicesGroup } from "../SupportingServicesGroup";
-import { CustomEdge } from "../CustomEdge";
-import { useSSEStore } from '../../stores/useSSEStore';
+import CustomEdge from "../CustomEdge";
+import { FCX } from "@/types/types";
 
 interface Props {
   workflowId: string | null;
@@ -45,18 +39,13 @@ const edgeTypes: EdgeTypes = {
   custom: CustomEdge
 };
 
-export const StepFunctionVisualizer: React.FC<Props> = ({
+export const WorkflowVisualizer: FCX<Props> = ({
   workflowId,
   onNodeClick,
   selectedNodeId,
 }) => {
   const { theme } = useTheme();
-  const [nodes] = useNodesState(initialNodes);
-  const [edges] = useEdgesState(initialEdges);
-
-  // SSEによる進捗監視
-  
-  useWorkflowProgress(workflowId);
+  const { nodes, edges } = useWorkflowProgress(workflowId);
 
   return (
     <div className={styles.visualizer}>
@@ -83,7 +72,6 @@ export const StepFunctionVisualizer: React.FC<Props> = ({
         <Controls
           showInteractive={false}
           className={styles.controls}
-          color={theme === "dark" ? "#06b6d4" : "#2563eb"}
         />
         <MiniMap
           style={{

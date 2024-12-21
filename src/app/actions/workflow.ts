@@ -2,7 +2,7 @@
 
 import { DynamoDB } from 'aws-sdk';
 import { revalidatePath } from 'next/cache';
-import { WorkflowHistory, Category } from '@/features/workflow/types/types';
+import { WorkflowHistory } from '@/features/workflow/types/types';
 
 const dynamodb = new DynamoDB.DocumentClient({
   region: process.env.AWS_REGION,
@@ -97,8 +97,8 @@ export async function updateWorkflowStatus(workflowId: string, status: 'processi
   }
 }
 
-// 進行中のワークフローの進捗状況を取得
-export async function getActiveWorkflowProgress(workflowId: string) {
+// ワークフローの進捗状況を取得
+export async function getWorkflowProgress(workflowId: string) {
   try {
     const result = await dynamodb.query({
       TableName: process.env.WORKFLOW_PROGRESS_MANAGEMENT_TABLE_NAME!,
@@ -114,15 +114,34 @@ export async function getActiveWorkflowProgress(workflowId: string) {
 
     return result.Items
       .map(item => {
-        const [state_name, timestamp] = item.sk.split('#');
-        return {
-          workflow_id: item.workflow_id,
-          state_name,
-          timestamp,
-          status: item.status
-        };
+        
+        try {
+          const [timestamp, order] = item['timestamp#order'].split('#');
+          // JST形式に変換
+          const jstDate = new Date(timestamp);
+          const formattedTimestamp = jstDate.toLocaleString('ja-JP', {
+            year: 'numeric',
+            month: '2-digit', 
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          }).replace(/\//g, '-');
+          return {
+            workflow_id: item.workflow_id,
+            state_name: item.state_name,
+            timestamp: formattedTimestamp,
+            order: parseInt(order),
+            status: item.status
+          };
+        } catch (error) {
+          console.error('Error processing item:', item, error);
+          return null;
+        }
       })
-      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+      .filter((item): item is NonNullable<typeof item> => item !== null)
+      .sort((a, b) => a.order - b.order);
 
   } catch (error) {
     console.error('Failed to fetch workflow progress:', error);

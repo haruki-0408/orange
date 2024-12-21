@@ -1,19 +1,20 @@
 import React from 'react';
-import { Handle, Position } from '@xyflow/react';
+import { Handle, NodeProps, Position } from '@xyflow/react';
 import styles from './style.module.scss';
 import clsx from 'clsx';
-
-interface Props {
-  data: {
+import { Node } from '@xyflow/react';
+export type TerminalNode = Node<
+  {
     type: 'start' | 'end';
-  };
-}
+  },
+  "terminal"
+>;
 
-export const TerminalNode: React.FC<Props> = ({ data }) => {
-  const isStart = data.type === 'start';
+export default function TerminalNode(props: NodeProps<TerminalNode>) {
+  const isStart = props.data.type === 'start';
 
   return (
-    <div className={clsx(styles.terminalNode, styles[data.type])}>
+    <div className={clsx(styles.terminalNode, styles[props.data.type])}>
       <div className={styles.content}>
         <div className={styles.info}>
           <span className={styles.label}>
@@ -32,12 +33,14 @@ export const TerminalNode: React.FC<Props> = ({ data }) => {
       </div>
       {isStart ? (
         <Handle
+          id="source-bottom"
           type="source"
           position={Position.Bottom}
           className={styles.handle}
         />
       ) : (
         <Handle
+          id="target-top"
           type="target"
           position={Position.Top}
           className={styles.handle}
@@ -46,5 +49,3 @@ export const TerminalNode: React.FC<Props> = ({ data }) => {
     </div>
   );
 };
-
-export default TerminalNode; 

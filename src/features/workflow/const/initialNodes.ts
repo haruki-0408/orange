@@ -156,13 +156,13 @@ export const initialNodes: Node[] = [
   {
     id: "sub-workflow",
     type: "subGroup",
-    position: { x: 1600, y: 400 },
+    position: { x: 1750, y: 1000 },
     data: { 
       label: "Sub Workflow",
     },
     style: { width: 1400, height: 1800 },
-    parentId: "main-workflow",
-    extent: "parent",
+    // parentId: "main-workflow",
+    // extent: "parent",
   },
   // AI Request Lambda
   {

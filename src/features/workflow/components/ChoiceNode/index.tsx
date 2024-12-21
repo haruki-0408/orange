@@ -1,9 +1,17 @@
 import React, { memo } from 'react';
 import { Handle, NodeProps, Position } from '@xyflow/react';
 import styles from './style.module.scss';
-import { FCX } from '@/types/types';
+import { Node } from '@xyflow/react';
 
-export const ChoiceNode: FCX<NodeProps> = memo(({ data }) => {
+export type ChoiceNode = Node<
+  {
+    condition: string;
+  },
+  "choice"
+>;
+
+export default function ChoiceNode(props: NodeProps<ChoiceNode>) {
+
   return (
     <div className={styles.choiceNodeWrapper}>
       <Handle
@@ -18,7 +26,7 @@ export const ChoiceNode: FCX<NodeProps> = memo(({ data }) => {
         <div className={styles.content}>
           <div className={styles.header}>
             <div className={styles.title}>Condition</div>
-            <div className={styles.condition}>{data.condition as string}</div>
+            <div className={styles.condition}>{props.data.condition as string}</div>
           </div>
           <div className={styles.paths}>
             <div className={styles.path}>
@@ -50,6 +58,4 @@ export const ChoiceNode: FCX<NodeProps> = memo(({ data }) => {
       />
     </div>
   );
-});
-
-export default ChoiceNode;
+}

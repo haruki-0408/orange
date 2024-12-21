@@ -165,7 +165,7 @@ export const initialEdges: Edge[] = [
     target: "end",
     type: "custom",
     sourceHandle: "source-right",
-    targetHandle: "target-left",
+    targetHandle: "target-top",
     data: { targetNodeStatus: "ready" }
   },
   

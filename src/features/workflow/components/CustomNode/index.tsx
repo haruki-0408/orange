@@ -2,24 +2,23 @@ import React, { useState, memo } from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import styles from "./style.module.scss";
 import clsx from "clsx";
-import { FCX } from "@/types/types";
 import Image from "next/image";
 import { StateType, ServiceType, ServiceDetails } from "@/features/workflow/types/types";
 import { Node } from "@xyflow/react";
 
 export type CustomNode = Node<
-{
-  title: string;
-  description: string;
-  icon?: string;
-  status: StateType;
-  logs: string;
-  serviceType: ServiceType;
-  details: Partial<ServiceDetails[ServiceType]>;
-  isSupporting?: boolean;
-},
-'custom'
->
+  {
+    title: string;
+    description: string;
+    icon?: string;
+    status: StateType;
+    logs: string;
+    serviceType: ServiceType;
+    details: Partial<ServiceDetails[ServiceType]>;
+    isSupporting?: boolean;
+  },
+  "custom"
+>;
 
 export default function CustomNode(props: NodeProps<CustomNode>) {
   const [isOpen, setIsOpen] = useState(false);
@@ -291,26 +290,26 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
             type="target"
             position={Position.Right}
             style={handleStyle}
-        className={styles.handle}
-      />
-      <Handle
-        id="source-right"
-        type="source"
-        position={Position.Right}
-        style={handleStyle}
-        className={styles.handle}
-      />
+            className={styles.handle}
+          />
+          <Handle
+            id="source-right"
+            type="source"
+            position={Position.Right}
+            style={handleStyle}
+            className={styles.handle}
+          />
 
-      {/* 下部のHandles */}
-      <Handle
-        id="target-bottom"
-        type="target"
-        position={Position.Bottom}
-        style={handleStyle}
-        className={styles.handle}
-      />
-      <Handle
-        id="source-bottom"
+          {/* 下部のHandles */}
+          <Handle
+            id="target-bottom"
+            type="target"
+            position={Position.Bottom}
+            style={handleStyle}
+            className={styles.handle}
+          />
+          <Handle
+            id="source-bottom"
             type="source"
             position={Position.Bottom}
             style={handleStyle}
@@ -321,4 +320,3 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
     </div>
   );
 }
-

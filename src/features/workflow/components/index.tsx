@@ -16,10 +16,10 @@ import {
 } from '../types/types';
 import { WorkflowHistories } from './WorkflowHistories';
 import { useWorkflowStore } from '../stores/useWorkflowStore';
-import { StepFunctionVisualizer } from './StepFunctionVisualizer';
+import { WorkflowVisualizer } from './WorkflowVisualizer';
 import { useSSEStore } from '../stores/useSSEStore';
 
-interface Props {
+interface Props { 
   className?: string;
   categories: Category[];
   initialHistories: WorkflowHistory[];
@@ -31,11 +31,7 @@ export const Workflow: FCX<Props> = ({
   initialHistories 
 }) => {
   
-  const { 
-    addWorkflow, 
-    getWorkflowBySession, 
-    generateSessionId 
-  } = useWorkflowStore();
+  const { addWorkflow, getWorkflowBySession, generateSessionId } = useWorkflowStore();
   
   const { connectionStatus } = useSSEStore();
   
@@ -46,7 +42,7 @@ export const Workflow: FCX<Props> = ({
   const [histories, setHistories] = useState<WorkflowHistory[]>(initialHistories);
   const [progressBar, setProgressBar] = useState<ProgressbarType>({
     percentage: 0,
-    status: 'processing'
+    status: 'PROCESSING'
   });
 
   // ReactFlow states
@@ -58,7 +54,7 @@ export const Workflow: FCX<Props> = ({
   // 進行中のワークフローの復元
   useEffect(() => {
     const activeWorkflow = getWorkflowBySession(sessionId);
-    console.log('activeWorkflow', activeWorkflow);
+    // console.log('activeWorkflow', activeWorkflow);
     if (activeWorkflow) {
       setWorkflowId(activeWorkflow.workflowId);
       setThesisTitle(activeWorkflow.title);
@@ -72,7 +68,7 @@ export const Workflow: FCX<Props> = ({
           workflow_id: activeWorkflow.workflowId,
           title: activeWorkflow.title,
           category: activeWorkflow.category,
-          status: 'processing',
+          status: 'PROCESSING',
           timestamp: activeWorkflow.timestamp
         }, ...filteredHistories];
       });
@@ -113,7 +109,7 @@ export const Workflow: FCX<Props> = ({
       workflow_id: newWorkflowId,
       title: thesisTitle,
       category: selectedCategory,
-      status: 'processing',
+      status: 'PROCESSING',
       timestamp: new Date().toISOString()
     }, ...prev]);
   };
@@ -157,7 +153,7 @@ export const Workflow: FCX<Props> = ({
                   : "linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.95))",
               }}
             >
-              <StepFunctionVisualizer
+              <WorkflowVisualizer
                 workflowId={workflowId}
                 onNodeClick={setSelectedNodeId}
                 selectedNodeId={selectedNodeId}

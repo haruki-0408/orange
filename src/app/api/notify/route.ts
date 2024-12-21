@@ -13,13 +13,25 @@ export async function POST(req: NextRequest) {
     }
 
     // state_name#timestampを分割
-    const [stateName, timestamp] = json['state_name#timestamp'].split('#');
-    
+    const [timestamp, order] = json['timestamp#order'].split('#');
+     // JST形式に変換
+     const jstDate = new Date(timestamp);
+     const formattedTimestamp = jstDate.toLocaleString('ja-JP', {
+       year: 'numeric',
+       month: '2-digit', 
+       day: '2-digit',
+       hour: '2-digit',
+       minute: '2-digit',
+       second: '2-digit',
+       hour12: false
+     }).replace(/\//g, '-');
+
     const progress: ProgressData = {
       execution_id: json.execution_id,
       status: json.status,
-      state_name: stateName,
-      timestamp: timestamp
+      order: parseInt(order),
+      state_name: json.state_name,
+      timestamp: formattedTimestamp
     }
 
     broadcastToWorkflow(workflow_id, progress);

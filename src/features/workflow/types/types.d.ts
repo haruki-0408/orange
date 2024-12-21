@@ -1,11 +1,11 @@
 export type ServiceType = 'Lambda' | 'SQS' | 'APIGateway' | 'DynamoDB' | 'S3';
 export type StateType = 'ready' | 'progress' | 'success' | 'failed' | 'stopped';
-export type ProgressbarStatusType = 'processing' | 'success' | 'error';
+export type WorkflowStatusType = 'PROCESSING' | 'SUCCESS' | 'FAILED';
 export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'completed' | 'error';
 
 export interface ProgressbarType {
   percentage: number;
-  status: ProgressbarStatusType;
+  status: WorkflowStatusType;
 }
 
 export interface ServiceDetails {
@@ -63,6 +63,7 @@ export type NotifyStatus = 'success' | 'failed';
 export interface ProgressData {
   execution_id: string;
   status: NotifyStatus;
+  order: number;
   state_name: WorkflowNodeId;
   timestamp: string;
   logs?: string[];
@@ -148,7 +149,7 @@ export interface WorkflowHistory {
   title: string;
   category: string;
   timestamp: string;
-  status: 'processing' | 'completed' | 'error';
+  status: WorkflowStatusType;
 }
 
 export interface WorkflowNode {
