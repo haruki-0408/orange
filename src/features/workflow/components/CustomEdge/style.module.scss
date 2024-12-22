@@ -32,6 +32,14 @@
     filter: drop-shadow(0 0 4px var(--edge-error-glow));
     animation: flashError 2s ease-in-out infinite;
   }
+
+  &.stopped {
+    stroke: var(--edge-stopped-color);
+    stroke-width: 2;
+    stroke-dasharray: 4;
+    filter: drop-shadow(0 0 2px var(--edge-stopped-glow));
+    opacity: 0.5;
+  }
 }
 
 .arrow {
@@ -62,6 +70,13 @@
     stroke: var(--edge-error-color);
     filter: drop-shadow(0 0 2px var(--edge-error-glow));
     animation: arrowError 2s infinite;
+  }
+
+  &.stopped {
+    fill: var(--edge-stopped-secondary);
+    stroke: var(--edge-stopped-color);
+    filter: drop-shadow(0 0 2px var(--edge-stopped-glow));
+    opacity: 0.5;
   }
 }
 

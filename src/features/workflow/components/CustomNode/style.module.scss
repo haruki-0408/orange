@@ -36,6 +36,18 @@
     background: linear-gradient(to right bottom, var(--custom-node-bg), var(--error-secondary));
   }
 
+  &.stopped {
+    background: linear-gradient(to right bottom, var(--custom-node-stopped-bg), var(--custom-node-bg));
+    border: 2px solid var(--custom-node-stopped-border);
+    opacity: 0.8;
+
+    .badge {
+      background: var(--custom-node-badge-stopped-bg);
+      color: var(--custom-node-badge-stopped-text);
+      border-color: var(--custom-node-badge-stopped-border);
+    }
+  }
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: var(--custom-node-hover-shadow);
@@ -248,6 +260,12 @@
   &.failed {
     background: var(--custom-node-status-error);
     color: var(--text-primary);
+  }
+
+  &.stopped {
+    background: var(--custom-node-badge-stopped-bg);
+    color: var(--custom-node-badge-stopped-text);
+    border-color: var(--custom-node-badge-stopped-border);
   }
 }
 

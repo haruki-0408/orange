@@ -451,6 +451,18 @@
     --supporting-node-button-color: #475569;
     --supporting-node-button-hover-bg: rgba(255, 255, 255, 0.9);
     --supporting-node-button-hover-color: #334155;
+
+    // CustomEdge
+    --edge-stopped-color: #94a3b8;
+    --edge-stopped-glow: rgba(148, 163, 184, 0.2);
+    --edge-stopped-secondary: #cbd5e1;
+
+    // CustomNode
+    --custom-node-stopped-bg: rgba(148, 163, 184, 0.1);
+    --custom-node-stopped-border: rgba(148, 163, 184, 0.3);
+    --custom-node-badge-stopped-bg: rgba(148, 163, 184, 0.15);
+    --custom-node-badge-stopped-text: #64748b;
+    --custom-node-badge-stopped-border: rgba(148, 163, 184, 0.3);
   }
 
   // Dark theme
@@ -897,5 +909,17 @@
     --supporting-node-button-color: #cbd5e1;
     --supporting-node-button-hover-bg: rgba(30, 41, 59, 0.5);
     --supporting-node-button-hover-color: #e2e8f0;
+
+    // CustomEdge
+    --edge-stopped-color: #64748b;
+    --edge-stopped-glow: rgba(148, 163, 184, 0.3);
+    --edge-stopped-secondary: #94a3b8;
+
+    // CustomNode
+    --custom-node-stopped-bg: rgba(148, 163, 184, 0.08);
+    --custom-node-stopped-border: rgba(148, 163, 184, 0.2);
+    --custom-node-badge-stopped-bg: rgba(148, 163, 184, 0.1);
+    --custom-node-badge-stopped-text: #94a3b8;
+    --custom-node-badge-stopped-border: rgba(148, 163, 184, 0.25);
   }
 } 
