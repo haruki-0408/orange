@@ -482,13 +482,14 @@
     
     --accent-primary: #06b6d4;
     --accent-secondary: #22d3ee;
+    --accent-gradient-secondary: rgba(6, 182, 212, 0.8);
     
     --success-primary: #10b981;
-    --success-secondary: rgba(16, 185, 129, 0.1);
+    --success-secondary: rgba(16, 185, 129, 0.8);
     --success-border: rgba(16, 185, 129, 0.2);
     
     --error-primary: #ef4444;
-    --error-secondary: rgba(239, 68, 68, 0.1);
+    --error-secondary: rgba(239, 68, 68, 0.8);
     --error-border: rgba(239, 68, 68, 0.2);
     
     --warning-primary: #f59e0b;
