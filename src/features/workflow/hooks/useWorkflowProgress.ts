@@ -1,20 +1,23 @@
 import { useEffect, useCallback, useState } from "react";
 import { useWorkflowStore } from "../stores/useWorkflowStore";
-import { ProgressData, StateType, WorkflowNodeId, NodeData } from "../types/types";
+import { ProgressData, StateType, WorkflowNodeId, NodeData, ProgressbarType } from "../types/types";
 import { useSSEStore } from "../stores/useSSEStore";
 import { getWorkflowProgress } from "@/app/actions/workflow";
 import { initialNodes } from "../const/initialNodes";
 import { initialEdges } from "../const/initialEdges";
 import { useReactFlow } from "@xyflow/react";
+import { useProgressStore } from '../stores/useProgressStore';
 
 const PARALLEL_NODES = ["formula-gen-lambda", "table-gen-lambda", "graph-gen-lambda"];
+
 
 export const useWorkflowProgress = (workflowId: string | null) => {
   const { isActiveWorkflow } = useWorkflowStore();
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
-  const { getEdge, getNode } = useReactFlow();
+  const { getEdge, getNode, getNodes } = useReactFlow();
   const { connectionStatus, initializeSSE, terminateSSE } = useSSEStore();
+  const { updateProgress } = useProgressStore();
 
   // ノードとエッジの状態をリセット
   const resetState = useCallback(() => {
@@ -195,7 +198,6 @@ export const useWorkflowProgress = (workflowId: string | null) => {
             
             updateEdge("e-callback-graph", { targetNodeStatus: "success" });
             
-            console.log(formulaNode?.data.status, tableNode?.data.status);
             if (formulaNode?.data.status !== "failed" && tableNode?.data.status !== "failed") {
               updateEdge("e-graph-pdf", { targetNodeStatus: "progress" });
             }
@@ -213,6 +215,16 @@ export const useWorkflowProgress = (workflowId: string | null) => {
     },
     [getNode, updateNode, updateEdge]
   );
+
+  // 進捗率を計算する関数
+  const calculateProgress = useCallback((nodeId: string, status: StateType) => {
+    const totalNodes = 11; // 進行に数えるノードの総数
+    const completedNodes = getNodes().filter(
+      node => node.data.status === 'success'
+      || (node.id === nodeId && status === 'success')
+    ).length;
+    return Math.round((completedNodes / totalNodes) * 100);
+  }, [nodes]);
 
   // ワークフローの状態更新
   const updateWorkflowState = useCallback(
@@ -264,13 +276,24 @@ export const useWorkflowProgress = (workflowId: string | null) => {
       if (status === "failed") {
         handleWorkflowToFailed(nodeId);
       }
+
+      // プログレスバーの更新
+      const newPercentage = calculateProgress(nodeId, status);
+      updateProgress(
+        newPercentage,
+        status === 'failed' ? 'FAILED' : 
+        newPercentage === 100 ? 'SUCCESS' : 'PROCESSING'
+      );
     },
-    [edges, nodes, updateNode, updateEdge, handleSpecificNodeUpdate, handleWorkflowToFailed]
+    [edges, nodes, updateNode, updateEdge, handleSpecificNodeUpdate, handleWorkflowToFailed, calculateProgress, updateProgress]
   );
 
   // 進捗状況を反映
   const reflectWorkflowProgress = useCallback(async () => {
-    if (!workflowId) return;
+    if (!workflowId) {
+      useProgressStore.getState().resetProgress();
+      return;
+    }
 
     const progressRecords = await getWorkflowProgress(workflowId);
     if (progressRecords.length === 0) {
@@ -279,13 +302,26 @@ export const useWorkflowProgress = (workflowId: string | null) => {
       return;
     }
 
+    // 進捗状態を更新
+    let successCount = 0;
+    let hasFailed = false;
+
     progressRecords.forEach((record) => {
       if (record.status === "success") {
+        successCount++;
         updateWorkflowState(record.state_name, "success");
       } else if (record.status === "failed" || record.status === "validation-failed") {
+        hasFailed = true;
         updateWorkflowState(record.state_name, "failed");
       }
     });
+
+    // 進捗バーの状態を更新
+    const percentage = Math.round((successCount / 11) * 100);
+    useProgressStore.getState().updateProgress(
+      percentage,
+      hasFailed ? 'FAILED' : percentage === 100 ? 'SUCCESS' : 'PROCESSING'
+    );
   }, [workflowId, updateWorkflowState, updateNode, updateEdge]);
 
   // 初期化処理
@@ -295,6 +331,7 @@ export const useWorkflowProgress = (workflowId: string | null) => {
 
       // 1. まず状態をリセット
       resetState();
+      useProgressStore.getState().resetProgress();
 
       // 2. 進捗状況を反映
       await reflectWorkflowProgress();

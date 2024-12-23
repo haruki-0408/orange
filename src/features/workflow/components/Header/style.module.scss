@@ -252,39 +252,25 @@
 
 .progressContainer {
   flex: 1;
-  position: relative;
-  height: 4px;
+  height: 6px;
   background: var(--progress-bg);
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow: var(--progress-shadow);
-}
+  position: relative;
 
-.progressBar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: var(--progress, 0%);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+  .progressBar {
     height: 100%;
+    width: var(--progress);
     background: var(--progress-gradient);
-    background-size: 200% 100%;
-    animation: gradientShift 2s linear infinite;
-  }
+    transition: all 0.3s ease;
+    position: relative;
 
-  &.processing {
-    &::before {
-      animation: 
-        gradientShift 2s linear infinite,
-        pulse 2s infinite;
+    &.SUCCESS {
+      background: var(--progress-success-gradient);
+    }
+
+    &.FAILED {
+      background: var(--progress-error-gradient);
     }
 
     &::after {
@@ -299,83 +285,54 @@
       animation: shimmer 1.5s ease-in-out infinite;
     }
   }
-
-  &.success::before {
-    background: var(--progress-success-gradient);
-    animation: successPulse 1s ease-out forwards;
-  }
-
-  &.error::before {
-    background: var(--progress-error-gradient);
-    animation: errorShake 0.5s ease-in-out;
-  }
-
-  &.completed {
-    &::before {
-      background: var(--progress-completed-gradient);
-      animation: completedPulse 1s ease-out forwards;
-    }
-  }
 }
 
 .progressInfo {
-  margin-left: 16px;
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 160px;
+  margin-left: 16px;
 
   .percentage {
     font-family: 'Geist Mono', monospace;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    color: var(--progress-percentage-color);
-    text-shadow: var(--progress-percentage-shadow);
+    color: var(--text-secondary);
     min-width: 48px;
-    position: relative;
-
+    text-align: right;
+    
     &::after {
       content: '%';
-      font-size: 0.75rem;
-      opacity: 0.7;
       margin-left: 2px;
+      opacity: 0.7;
     }
   }
 
   .status {
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 0.7rem;
-    padding: 4px 8px;
-    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
     font-weight: 500;
-    position: relative;
-    overflow: hidden;
-
-    &.processing {
+    letter-spacing: 0.02em;
+    
+    &.PROCESSING {
       background: var(--progress-status-processing);
-      border: 1px solid var(--progress-status-processing-border);
       color: var(--progress-status-processing-color);
-      animation: statusPulse 2s infinite;
+      border: 1px solid var(--progress-status-processing-border);
     }
-
-    &.success {
+    
+    &.SUCCESS {
       background: var(--progress-status-success);
-      border: 1px solid var(--progress-status-success-border);
       color: var(--progress-status-success-color);
+      border: 1px solid var(--progress-status-success-border);
     }
-
-    &.error {
+    
+    &.FAILED {
       background: var(--progress-status-error);
-      border: 1px solid var(--progress-status-error-border);
       color: var(--progress-status-error-color);
-    }
-
-    &.completed {
-      background: var(--progress-status-completed);
-      border-color: var(--progress-status-completed-border);
-      color: var(--progress-status-completed-color);
-      animation: completedStatusPulse 1s ease-out forwards;
+      border: 1px solid var(--progress-status-error-border);
     }
   }
 }

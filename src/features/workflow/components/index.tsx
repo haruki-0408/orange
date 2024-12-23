@@ -11,8 +11,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import '../styles/theme.scss';
 import { 
   Category, 
-  WorkflowHistory, 
-  ProgressbarType 
+  WorkflowHistory
 } from '../types/types';
 import { WorkflowHistories } from './WorkflowHistories';
 import { useWorkflowStore } from '../stores/useWorkflowStore';
@@ -40,10 +39,6 @@ export const Workflow: FCX<Props> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [thesisTitle, setThesisTitle] = useState('');
   const [histories, setHistories] = useState<WorkflowHistory[]>(initialHistories);
-  const [progressBar, setProgressBar] = useState<ProgressbarType>({
-    percentage: 0,
-    status: 'PROCESSING'
-  });
 
   // ReactFlow states
   
@@ -54,7 +49,6 @@ export const Workflow: FCX<Props> = ({
   // 進行中のワークフローの復元
   useEffect(() => {
     const activeWorkflow = getWorkflowBySession(sessionId);
-    // console.log('activeWorkflow', activeWorkflow);
     if (activeWorkflow) {
       setWorkflowId(activeWorkflow.workflowId);
       setThesisTitle(activeWorkflow.title);
@@ -123,7 +117,6 @@ export const Workflow: FCX<Props> = ({
         categories={categories}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
-        progressBar={progressBar}
         workflowId={workflowId}
       />
       <div className="flex w-full">

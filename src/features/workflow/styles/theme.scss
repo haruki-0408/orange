@@ -78,27 +78,29 @@
       rgba(241, 245, 249, 0.95)
     );
     --progress-bg: rgba(37, 99, 235, 0.1);
-    --progress-gradient: linear-gradient(90deg, #2563eb, #3b82f6, #2563eb);
-    --progress-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2), 0 4px 12px rgba(37, 99, 235, 0.1);
+    --progress-gradient: linear-gradient(90deg, #2563eb, #3b82f6);
+    --progress-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
     --progress-shine: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
     
-    --progress-success-gradient: linear-gradient(90deg, #2563eb, #3b82f6, #2563eb);
-    --progress-error-gradient: linear-gradient(90deg, #ef4444, #f87171, #ef4444);
+    --progress-success-gradient: linear-gradient(90deg, #059669, #10b981);
+    --progress-error-gradient: linear-gradient(90deg, #dc2626, #ef4444);
     
     --progress-percentage-color: #2563eb;
     --progress-percentage-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
     
-    --progress-status-processing: rgba(37, 99, 235, 0.1);
-    --progress-status-processing-border: rgba(37, 99, 235, 0.2);
+    --progress-status-processing: rgba(37, 99, 235, 0.08);
+    --progress-status-processing-border: rgba(37, 99, 235, 0.15);
     --progress-status-processing-color: #2563eb;
     
-    --progress-status-success: rgba(16, 185, 129, 0.1);
-    --progress-status-success-border: rgba(16, 185, 129, 0.2);
-    --progress-status-success-color: #10b981;
+    --progress-status-success: rgba(16, 185, 129, 0.08);
+    --progress-status-success-border: rgba(16, 185, 129, 0.15);
+    --progress-status-success-color: #059669;
     
-    --progress-status-error: rgba(239, 68, 68, 0.1);
-    --progress-status-error-border: rgba(239, 68, 68, 0.2);
-    --progress-status-error-color: #ef4444;
+    --progress-status-error: rgba(239, 68, 68, 0.08);
+    --progress-status-error-border: rgba(239, 68, 68, 0.15);
+    --progress-status-error-color: #dc2626;
+    
+
     
     // TracesDashboard
     --traces-bg: #ffffff;
@@ -363,13 +365,6 @@
     --connection-pulse-color: rgba(6, 182, 212, 0.5);
 
     // Progress Status
-    --progress-status-completed: rgba(6, 182, 212, 0.1);
-    --progress-status-completed-border: rgba(6, 182, 212, 0.3);
-    --progress-status-completed-color: rgba(6, 182, 212, 0.9);
-    --progress-completed-gradient: linear-gradient(90deg, 
-      rgba(6, 182, 212, 0.8),
-      rgba(6, 182, 212, 0.6)
-    );
 
     // WorkflowHistories
     --histories-bg: rgba(248, 250, 252, 0.95);
@@ -386,9 +381,17 @@
     --histories-text-secondary: rgba(51, 65, 85, 0.75);
     --histories-text-tertiary: rgba(51, 65, 85, 0.6);
     
-    --histories-status-processing: #0284c7;
-    --histories-status-completed: #0d9488;
-    --histories-status-error: #dc2626;
+    --histories-status-processing: rgba(2, 132, 199, 0.1);
+    --histories-status-processing-text: #0284c7;
+    --histories-status-processing-dot: #0284c7;
+    
+    --histories-status-success: rgba(13, 148, 136, 0.1);
+    --histories-status-success-text: #0d9488;
+    --histories-status-success-dot: #0d9488;
+    
+    --histories-status-error: rgba(220, 38, 38, 0.1);
+    --histories-status-error-text: #dc2626;
+    --histories-status-error-dot: #dc2626;
     
     --histories-category-bg: rgba(14, 165, 233, 0.08);
     --histories-category-text: #0284c7;
@@ -396,6 +399,7 @@
     --histories-card-shadow: rgba(51, 65, 85, 0.08);
     --histories-card-active-bg: rgba(14, 165, 233, 0.04);
     --histories-card-active-border: rgba(14, 165, 233, 0.5);
+    --histories-card-active-gradient: linear-gradient(45deg, #06b6d4, #0ea5e9);
 
     --workflow-id-bg: rgba(37, 99, 235, 0.05);
     --workflow-id-border: rgba(37, 99, 235, 0.1);
@@ -544,28 +548,28 @@
       transparent,
       rgba(13, 13, 15, 0.95)
     );
-    --progress-bg: rgba(255, 255, 255, 0.05);
-    --progress-gradient: linear-gradient(90deg, #06b6d4, #0ea5e9, #06b6d4);
-    --progress-shadow: 0 0 0 1px rgba(6, 182, 212, 0.1), 0 4px 12px rgba(0, 0, 0, 0.2);
+    --progress-bg: rgba(59, 130, 246, 0.1);
+    --progress-gradient: linear-gradient(90deg, #3b82f6, #60a5fa);
+    --progress-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
     --progress-shine: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2));
     
-    --progress-success-gradient: linear-gradient(90deg, #10b981, #34d399, #10b981);
-    --progress-error-gradient: linear-gradient(90deg, #ef4444, #f87171, #ef4444);
+    --progress-success-gradient: linear-gradient(90deg, #10b981, #34d399);
+    --progress-error-gradient: linear-gradient(90deg, #ef4444, #f87171);
     
     --progress-percentage-color: #06b6d4;
     --progress-percentage-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
     
-    --progress-status-processing: rgba(6, 182, 212, 0.1);
-    --progress-status-processing-border: rgba(6, 182, 212, 0.2);
-    --progress-status-processing-color: #06b6d4;
+    --progress-status-processing: rgba(59, 130, 246, 0.15);
+    --progress-status-processing-border: rgba(59, 130, 246, 0.25);
+    --progress-status-processing-color: #60a5fa;
     
-    --progress-status-success: rgba(16, 185, 129, 0.1);
-    --progress-status-success-border: rgba(16, 185, 129, 0.2);
-    --progress-status-success-color: #10b981;
+    --progress-status-success: rgba(34, 197, 94, 0.15);
+    --progress-status-success-border: rgba(34, 197, 94, 0.25);
+    --progress-status-success-color: #4ade80;
     
-    --progress-status-error: rgba(239, 68, 68, 0.1);
-    --progress-status-error-border: rgba(239, 68, 68, 0.2);
-    --progress-status-error-color: #ef4444;
+    --progress-status-error: rgba(239, 68, 68, 0.15);
+    --progress-status-error-border: rgba(239, 68, 68, 0.25);
+    --progress-status-error-color: #f87171;
     
     // TracesDashboard
     --traces-bg: rgba(13, 13, 15, 0.98);
@@ -824,15 +828,6 @@
     --connection-indicator-text: rgba(255, 255, 255, 0.95);
     --connection-pulse-color: rgba(6, 182, 212, 0.6);
 
-    // Progress Status
-    --progress-status-completed: rgba(6, 182, 212, 0.15);
-    --progress-status-completed-border: rgba(6, 182, 212, 0.35);
-    --progress-status-completed-color: rgba(34, 211, 238, 1);
-    --progress-completed-gradient: linear-gradient(90deg, 
-      rgba(6, 182, 212, 0.9),
-      rgba(6, 182, 212, 0.7)
-    );
-
     // WorkflowHistories
     --histories-bg: rgba(17, 17, 21, 0.95);
     --histories-header-bg: rgba(17, 17, 21, 0.98);
@@ -848,9 +843,17 @@
     --histories-text-secondary: rgba(255, 255, 255, 0.6);
     --histories-text-tertiary: rgba(255, 255, 255, 0.5);
     
-    --histories-status-processing: #38bdf8;
-    --histories-status-completed: #34d399;
-    --histories-status-error: #f87171;
+    --histories-status-processing: rgba(56, 189, 248, 0.15);
+    --histories-status-processing-text: #38bdf8;
+    --histories-status-processing-dot: #38bdf8;
+    
+    --histories-status-success: rgba(52, 211, 153, 0.15);
+    --histories-status-success-text: #34d399;
+    --histories-status-success-dot: #34d399;
+    
+    --histories-status-error: rgba(248, 113, 113, 0.15);
+    --histories-status-error-text: #f87171;
+    --histories-status-error-dot: #f87171;
     
     --histories-category-bg: rgba(6, 182, 212, 0.15);
     --histories-category-text: #22d3ee;
@@ -858,6 +861,7 @@
     --histories-card-shadow: rgba(0, 0, 0, 0.2);
     --histories-card-active-bg: rgba(6, 182, 212, 0.1);
     --histories-card-active-border: rgba(6, 182, 212, 0.5);
+    --histories-card-active-gradient: linear-gradient(45deg, #06b6d4, #0ea5e9);
 
     --workflow-id-bg: rgba(6, 182, 212, 0.1);
     --workflow-id-border: rgba(6, 182, 212, 0.15);

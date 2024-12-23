@@ -4,8 +4,8 @@ import styles from './style.module.scss';
 import { Category } from '@/features/workflow/types/types';
 import clsx from 'clsx';
 import { ThemeToggle } from '../ThemeToggle';
-import { ConnectionStatus, ProgressbarType } from '@/features/workflow/types/types';
 import { useSSEStore } from '../../stores/useSSEStore';
+import { useProgressStore } from '../../stores/useProgressStore';
 
 interface Props {
   title: string;
@@ -14,8 +14,7 @@ interface Props {
   categories: Category[];
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
-  progressBar: ProgressbarType;
-  workflowId?: string | null;
+  workflowId: string | null;
 }
 
 export const Header: FCX<Props> = memo(({ 
@@ -25,11 +24,10 @@ export const Header: FCX<Props> = memo(({
   categories,
   selectedCategory,
   onCategoryChange,
-  progressBar,
   workflowId
 }) => {
   const { connectionStatus } = useSSEStore();
-
+  const { progressBar } = useProgressStore();
   const getStatusDisplay = () => {
     switch (connectionStatus) {
       case 'disconnected':

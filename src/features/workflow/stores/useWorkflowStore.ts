@@ -106,7 +106,6 @@ export const useWorkflowStore = create<WorkflowState>()(
 
       isActiveWorkflow: (workflowId: string) => {
         const workflow = get().activeWorkflows.get(workflowId);
-        console.log('workflow', workflow);
         return workflow?.status === 'PROCESSING';
       }
     }),

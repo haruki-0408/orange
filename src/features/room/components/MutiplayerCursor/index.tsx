@@ -13,7 +13,6 @@ type Props = {
 };
 
 export const MultiplayerCursor: FCX<Props> = ({ id, color, name, x, y }) => {
-console.log(id)
   return (
     <div key={id}>
       <Cursor color={color} x={x} y={y} />

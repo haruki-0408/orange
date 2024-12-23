@@ -29,8 +29,7 @@ export const WorkflowHistories: FCX<Props> = memo(({
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (connectionStatus === 'connected' || connectionStatus === 'connecting') {
         e.preventDefault();
-        e.returnValue = 'You will lose real-time progress tracking if you leave. Are you sure?';
-        return e.returnValue;
+        return;
       }
     };
 
