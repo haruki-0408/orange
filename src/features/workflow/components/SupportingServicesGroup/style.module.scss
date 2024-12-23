@@ -3,9 +3,10 @@
   padding: 16px;
   background: linear-gradient(
     to bottom right,
-    var(--supporting-group-bg-start),
-    var(--supporting-group-bg-end)
+    var(--supporting-group-bg-start) 0%,
+    var(--supporting-group-bg-end) 100%
   );
+  opacity: 0.85;
   border: 1px dashed var(--supporting-group-border);
   border-radius: 12px;
   height: 100%;
@@ -32,11 +33,6 @@
       box-shadow: 0 2px 4px var(--supporting-header-shadow);
       z-index: 1;
 
-      .icon {
-        font-size: 0.9rem;
-        opacity: 0.7;
-        filter: drop-shadow(0 1px 1px var(--supporting-icon-shadow));
-      }
 
       .label {
         font-size: 0.8rem;

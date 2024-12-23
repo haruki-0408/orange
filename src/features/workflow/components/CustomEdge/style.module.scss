@@ -48,35 +48,26 @@
   &.ready {
     fill: var(--edge-ready-color);
     stroke: var(--edge-ready-color);
-    opacity: var(--edge-ready-opacity);
   }
 
   &.progress {
     fill: var(--edge-progress-secondary);
     stroke: var(--edge-progress-color);
-    filter: drop-shadow(0 0 2px var(--edge-progress-glow));
-    animation: arrowProgress 2s infinite;
   }
 
   &.success {
     fill: var(--edge-success-secondary);
     stroke: var(--edge-success-color);
-    filter: drop-shadow(0 0 2px var(--edge-success-glow));
-    animation: arrowSuccess 2s infinite;
   }
 
   &.failed {
     fill: var(--edge-error-secondary);
     stroke: var(--edge-error-color);
-    filter: drop-shadow(0 0 2px var(--edge-error-glow));
-    animation: arrowError 2s infinite;
   }
 
   &.stopped {
     fill: var(--edge-stopped-secondary);
     stroke: var(--edge-stopped-color);
-    filter: drop-shadow(0 0 2px var(--edge-stopped-glow));
-    opacity: 0.5;
   }
 }
 

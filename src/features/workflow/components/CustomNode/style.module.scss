@@ -24,7 +24,11 @@
   }
 
   &.progress {
-    background: linear-gradient(to right bottom, var(--custom-node-bg), var(--accent-secondary));
+    background: linear-gradient(
+      to right bottom, 
+      var(--custom-node-bg), 
+      var(--accent-gradient-secondary)
+    );
     animation: pulseNode 2s infinite;
   }
 
@@ -242,24 +246,27 @@
   z-index: 10;
   
   &.ready {
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
+    background: var(--custom-node-badge-ready-bg);
+    color: var(--custom-node-badge-ready-text);
+    border-color: var(--custom-node-badge-ready-border);
   }
   
   &.progress {
-    background: var(--accent-primary);
-    color: var(--text-primary);
-    animation: pulse 2s infinite;
+    background: var(--accent-secondary);
+    color: #ffffff;
+    border-color: var(--accent-primary);
   }
   
   &.success {
-    background: var(--custom-node-status-success);
-    color: var(--text-primary);
+    background: var(--success-primary);
+    color: #ffffff;
+    border-color: var(--success-border);
   }
   
   &.failed {
-    background: var(--custom-node-status-error);
-    color: var(--text-primary);
+    background: var(--error-primary);
+    color: #ffffff;
+    border-color: var(--error-border);
   }
 
   &.stopped {

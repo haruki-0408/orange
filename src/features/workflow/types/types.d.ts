@@ -1,5 +1,5 @@
 export type ServiceType = 'Lambda' | 'SQS' | 'APIGateway' | 'DynamoDB' | 'S3';
-export type StateType = 'ready' | 'progress' | 'success' | 'failed' | 'stopped';
+export type StateType = 'ready' | 'progress' | 'success' | 'failed' | 'stopped' | 'validation-failed';
 export type WorkflowStatusType = 'PROCESSING' | 'SUCCESS' | 'FAILED';
 export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'completed' | 'error';
 

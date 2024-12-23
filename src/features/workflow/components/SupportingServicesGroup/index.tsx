@@ -13,7 +13,6 @@ export const SupportingServicesGroup: FCX<Props> = ({ data: { label } }) => {
     <div className={styles.supportingGroup}>
       <div className={styles.header}>
         <div className={styles.titleWrapper}>
-          <span className={styles.icon}>⚙️</span>
           <h3 className={styles.label}>{label}</h3>
         </div>
       </div>

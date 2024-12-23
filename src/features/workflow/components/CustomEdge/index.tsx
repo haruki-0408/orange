@@ -27,17 +27,19 @@ export const CustomEdge: FCX<EdgeProps> = ({
 
   const edgeStatus: StateType = (data as { targetNodeStatus?: StateType })?.targetNodeStatus || 'ready';
   
+  const markerId = `edge-arrow-${id}`;
+
   return (
     <>
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>
         <defs>
           <marker
-            id="edge-arrow"
-            viewBox="0 0 12 12"
+            id={`edge-arrow-${id}`}
+            viewBox="-2 -2 16 16"
             refX="6"
             refY="6"
-            markerWidth="8"
-            markerHeight="8"
+            markerWidth="12"
+            markerHeight="12"
             orient="auto"
           >
             <path
@@ -51,7 +53,7 @@ export const CustomEdge: FCX<EdgeProps> = ({
         id={id}
         className={clsx(styles.customEdge, styles[edgeStatus])}
         d={edgePath}
-        markerEnd="url(#edge-arrow)"
+        markerEnd={`url(#edge-arrow-${id})`}
       />
     </>
   );
