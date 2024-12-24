@@ -1,8 +1,9 @@
 'use server'
 
 import { DynamoDB } from 'aws-sdk';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, unstable_cache, revalidateTag } from 'next/cache';
 import { WorkflowHistory } from '@/features/workflow/types/types';
+import { CloudWatchLogs } from 'aws-sdk';
 
 const dynamodb = new DynamoDB.DocumentClient({
   region: process.env.AWS_REGION,
@@ -11,6 +12,50 @@ const dynamodb = new DynamoDB.DocumentClient({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
   }
 });
+
+const cloudWatchLogs = new CloudWatchLogs({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+  }
+});
+
+interface LogQueryParams {
+  workflowId: string;
+  logGroupName: string;
+  requestId?: string;
+}
+
+interface CloudWatchQueryResult {
+  results?: {
+    field: string;
+    value: string;
+  }[][];
+  status: 'Complete' | 'Failed' | 'Running' | 'Cancelled' | 'Timeout' | 'Unknown';
+}
+
+interface LogEntry {
+  timestamp: Date;
+  ingestionTime: Date;
+  message: string;
+}
+
+interface LogGroupRequestIds {
+  [logGroupName: string]: string;  // key: logGroupName, value: requestId
+}
+
+interface QueryResults {
+  logGroupName: string;
+  queryId: string;
+  logStream: string;
+  startTime: number;
+  endTime: number;
+}
+
+interface LogGroupResults {
+  [logGroupName: string]: LogEntry[];
+}
 
 // カテゴリ取得
 export async function getCategories() {
@@ -97,7 +142,7 @@ export async function updateWorkflowStatus(workflowId: string, status: 'processi
   }
 }
 
-// ワークフローの進捗状況を取得
+// ワクフローの進捗状況を取得
 export async function getWorkflowProgress(workflowId: string) {
   try {
     const result = await dynamodb.query({
@@ -147,4 +192,165 @@ export async function getWorkflowProgress(workflowId: string) {
     console.error('Failed to fetch workflow progress:', error);
     return [];
   }
+}
+
+// キャッシュされたログ取得関数
+export const startAndWaitLogQueries = unstable_cache(
+  async (
+    workflowId: string,
+    logGroupRequests: LogGroupRequestIds,
+    timestamp: string
+  ): Promise<LogGroupResults> => {
+    try {
+      const workflowStartTime = new Date(timestamp).getTime();
+      console.log('Fetching logs for workflow:', workflowId);
+
+      // クエリを開始
+      const startedQueries = await Promise.all(
+        Object.entries(logGroupRequests).map(async ([logGroupName, requestId]) => {
+          const query = await cloudWatchLogs.startQuery({
+            logGroupName,
+            startTime: workflowStartTime,
+            endTime: Date.now(),
+            queryString: `
+              fields @timestamp, @logStream
+              | filter @requestId = '${requestId}'
+              | stats earliest(@logStream) as logStream,
+                      latest(@timestamp) as endTime,
+                      earliest(@timestamp) as startTime
+            `
+          }).promise();
+
+          return {
+            logGroupName,
+            queryId: query.queryId!,
+            requestId
+          };
+        })
+      );
+
+      console.log('Started queries for workflow:', workflowId, startedQueries);
+
+      // 結果を格納するオブジェクト
+      const allLogs: LogGroupResults = {};
+      const pendingQueries = new Set(startedQueries.map(q => q.logGroupName));
+
+      // クエリの完了を監視し、完了したものからログを取得
+      while (pendingQueries.size > 0) {
+        await Promise.all(
+          Array.from(pendingQueries).map(async (logGroupName) => {
+            const query = startedQueries.find(q => q.logGroupName === logGroupName)!;
+            
+            try {
+              const result = await cloudWatchLogs.getQueryResults({
+                queryId: query.queryId
+              }).promise() as CloudWatchQueryResult;
+
+              if (result.status === 'Complete') {
+                console.log('Query results:', {
+                  logGroupName,
+                  status: result.status,
+                  resultsCount: result.results?.length,
+                  firstResult: result.results?.[0]
+                });
+
+                if (result.results?.[0]) {
+                  // 結果から各フィールドの値を取得
+                  const logStream = result.results[0].find(r => r.field === 'logStream')?.value;
+                  const startTime = result.results[0].find(r => r.field === 'startTime')?.value;
+                  const endTime = result.results[0].find(r => r.field === 'endTime')?.value;
+
+                  if (logStream && startTime && endTime) {
+                    const queryResult: QueryResults = {
+                      logGroupName,
+                      queryId: query.queryId,
+                      logStream,
+                      startTime: Number(startTime),
+                      endTime: Number(endTime)
+                    };
+
+                    // ログを取得して直接格納
+                    allLogs[logGroupName] = await getWorkflowLogs(queryResult);
+                    console.log(`Completed logs for ${logGroupName}`);
+                  } else {
+                    console.log(`Missing required fields for ${logGroupName}`, { logStream, startTime, endTime });
+                  }
+                } else {
+                  console.log(`No logs found for ${logGroupName}`);
+                }
+                pendingQueries.delete(logGroupName);
+              }
+
+              if (result.status === 'Failed' || result.status === 'Cancelled' || result.status === 'Timeout') {
+                console.error(`Query failed for ${logGroupName} with status: ${result.status}`);
+                pendingQueries.delete(logGroupName);
+              }
+            } catch (error) {
+              console.error(`Error processing ${logGroupName}:`, error);
+              pendingQueries.delete(logGroupName);
+            }
+          })
+        );
+
+        if (pendingQueries.size > 0) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+
+      return allLogs;
+
+    } catch (error) {
+      console.error('Failed to execute log queries:', error);
+      throw error instanceof Error ? error : new Error('Failed to execute log queries');
+    }
+  },
+  ['workflow-logs'],  // タグ
+  {
+    revalidate: 60 * 60 * 24,  // 24時間キャッシュ
+    tags: ['workflow-logs']     // キャッシュの無効化に使用できるタグ
+  }
+);
+
+// 個別のログ取得関数
+export async function getWorkflowLogs(queryResult: QueryResults): Promise<LogEntry[]> {
+  try {
+    const { logGroupName, logStream, startTime, endTime } = queryResult;
+
+    // パラメータのログ出力を追加
+    console.log('Fetching logs with params:', {
+      logGroupName,
+      logStream,
+      startTime: new Date(startTime).toISOString(),
+      endTime: new Date(endTime).toISOString()
+    });
+
+    // logStreamが存在することを確認
+    if (!logStream) {
+      console.error('LogStream is empty');
+      return [];
+    }
+
+    const logs = await cloudWatchLogs.filterLogEvents({
+      logGroupName,
+      logStreamNames: [logStream],
+      startTime,
+      endTime,
+      limit: 100
+    }).promise();
+
+    return (logs.events || []).map(event => ({
+      timestamp: new Date(event.timestamp!),
+      ingestionTime: new Date(event.ingestionTime!),
+      message: event.message!
+    }));
+
+  } catch (error) {
+    console.error('Failed to fetch workflow logs:', error);
+    throw error instanceof Error ? error : new Error('Failed to fetch workflow logs');
+  }
+}
+
+// キャッシュを無効化する関数
+export async function invalidateWorkflowLogs() {
+  revalidateTag('workflow-logs');
 } 

@@ -7,6 +7,7 @@ import { initialNodes } from "../const/initialNodes";
 import { initialEdges } from "../const/initialEdges";
 import { useReactFlow } from "@xyflow/react";
 import { useProgressStore } from '../stores/useProgressStore';
+import { useLoadingStore } from '../stores/useLoadingStore';
 
 const PARALLEL_NODES = ["formula-gen-lambda", "table-gen-lambda", "graph-gen-lambda"];
 
@@ -18,6 +19,7 @@ export const useWorkflowProgress = (workflowId: string | null) => {
   const { getEdge, getNode, getNodes } = useReactFlow();
   const { connectionStatus, initializeSSE, terminateSSE } = useSSEStore();
   const { updateProgress } = useProgressStore();
+  const { setLoading } = useLoadingStore();
 
   // ノードとエッジの状態をリセット
   const resetState = useCallback(() => {
@@ -351,7 +353,13 @@ export const useWorkflowProgress = (workflowId: string | null) => {
       }
     };
 
-    initializeWorkflow();
+    setLoading(true);
+    try {
+      // 進捗状況の初期化処理
+      initializeWorkflow();
+    } finally {
+      setLoading(false);
+    }
   }, [workflowId]);
 
   return {

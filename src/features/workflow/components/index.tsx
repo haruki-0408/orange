@@ -16,7 +16,7 @@ import {
 import { WorkflowHistories } from './WorkflowHistories';
 import { useWorkflowStore } from '../stores/useWorkflowStore';
 import { WorkflowVisualizer } from './WorkflowVisualizer';
-import { useSSEStore } from '../stores/useSSEStore';
+import { useProgressStore } from '../stores/useProgressStore';
 
 interface Props { 
   className?: string;
@@ -32,7 +32,7 @@ export const Workflow: FCX<Props> = ({
   
   const { addWorkflow, getWorkflowBySession, generateSessionId } = useWorkflowStore();
   
-  const { connectionStatus } = useSSEStore();
+  const { progressBar } = useProgressStore();
   
   const [sessionId] = useState(() => generateSessionId());
   const [workflowId, setWorkflowId] = useState<string | null>(null);
@@ -41,7 +41,6 @@ export const Workflow: FCX<Props> = ({
   const [histories, setHistories] = useState<WorkflowHistory[]>(initialHistories);
 
   // ReactFlow states
-  
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -68,22 +67,6 @@ export const Workflow: FCX<Props> = ({
       });
     }
   }, [sessionId, getWorkflowBySession]);
-
-  // TracesDashboardの表示制御
-  const shouldShowTraces = connectionStatus === 'completed' || connectionStatus === 'error';
-  const [isTracesVisible, setIsTracesVisible] = useState(false);
-
-  useEffect(() => {
-    if (shouldShowTraces) {
-      setTimeout(() => {
-        setIsTracesVisible(true);
-        setIsSidebarOpen(true);
-      }, 500);
-    } else {
-      setIsTracesVisible(false);
-      setIsSidebarOpen(false);
-    }
-  }, [shouldShowTraces]);
 
   // ワークフロー生成開始
   const handleStartWorkflow = async () => {
@@ -128,41 +111,56 @@ export const Workflow: FCX<Props> = ({
           }}
         />
         <div className="w-full relative flex overflow-hidden">
-          <div 
-            style={{
-              width: shouldShowTraces ? "60%" : "100%",
-              height: "calc(100vh - 100px)",
-              transition: "width 0.3s ease",
-            }}
-          >
-            <ReactFlowProvider>
+          <ReactFlowProvider>
             <div 
               style={{ 
-                width: isTracesVisible && isSidebarOpen ? "60%" : "100%",
+                position: 'relative',
+                width: "100%",
                 height: "calc(100vh - 100px)",
-                transition: "width 0.5s ease",
+                transition: "all 0.5s ease",
                 background: theme === 'dark' 
                   ? "linear-gradient(180deg, rgba(14, 14, 20, 0.85), rgba(22, 22, 32, 0.82))" 
                   : "linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.95))",
+                display: 'flex',
               }}
             >
-              <WorkflowVisualizer
-                workflowId={workflowId}
-                onNodeClick={setSelectedNodeId}
-                selectedNodeId={selectedNodeId}
-              />
+              <div style={{
+                width: (progressBar.status === 'SUCCESS' || progressBar.status === 'FAILED') 
+                  ? (isSidebarOpen ? "60%" : "100%")
+                  : "100%",
+                height: "100%",
+                transition: "width 0.5s ease",
+              }}>
+                <WorkflowVisualizer
+                  workflowId={workflowId}
+                  onNodeClick={setSelectedNodeId}
+                  selectedNodeId={selectedNodeId}
+                />
+              </div>
+              {(progressBar.status === 'SUCCESS' || progressBar.status === 'FAILED') && (
+                <div style={{ 
+                  width: "40%",
+                  height: "100%",
+                  transform: `translateX(${isSidebarOpen ? '0' : '100%'})`,
+                  transition: "transform 0.5s ease",
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                  borderLeft: theme === 'dark' 
+                    ? '1px solid rgba(255, 255, 255, 0.1)' 
+                    : '1px solid rgba(0, 0, 0, 0.1)',
+                }}>
+                  <TracesDashboard
+                    workflowId={workflowId || ""}
+                    traces={mockTraceData}
+                    currentNodeId={selectedNodeId || undefined}
+                    isOpen={isSidebarOpen}
+                    onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                  />
+                </div>
+              )}
             </div>
-            </ReactFlowProvider>
-          </div>
-          {shouldShowTraces && (
-            <TracesDashboard
-              workflowId="wf-001"
-              traces={mockTraceData}
-              currentNodeId={selectedNodeId || undefined}
-              isOpen={isSidebarOpen}
-              onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-            />
-          )}
+          </ReactFlowProvider>
         </div>
       </div>
     </div>

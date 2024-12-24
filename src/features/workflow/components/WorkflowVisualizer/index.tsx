@@ -19,6 +19,8 @@ import TerminalNode from "../TerminalNode";
 import { SupportingServicesGroup } from "../SupportingServicesGroup";
 import CustomEdge from "../CustomEdge";
 import { FCX } from "@/types/types";
+import { useLoadingStore } from '../../stores/useLoadingStore';
+import { LoadingOverlay } from '../LoadingOverlay';
 
 interface Props {
   workflowId: string | null;
@@ -46,9 +48,11 @@ export const WorkflowVisualizer: FCX<Props> = ({
 }) => {
   const { theme } = useTheme();
   const { nodes, edges } = useWorkflowProgress(workflowId);
+  const { isLoading } = useLoadingStore();
 
   return (
     <div className={styles.visualizer}>
+      {isLoading && <LoadingOverlay />}
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -100,3 +104,5 @@ export const WorkflowVisualizer: FCX<Props> = ({
     </div>
   );
 };
+
+WorkflowVisualizer.displayName = 'WorkflowVisualizer';

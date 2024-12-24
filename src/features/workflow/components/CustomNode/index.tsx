@@ -251,7 +251,7 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
           </div>
         </div>
         {renderServiceDetails()}
-        <hr className={styles.separator} />
+        {/* <hr className={styles.separator} />
         <button
           className={clsx(
             styles.toggleButton,
@@ -279,7 +279,7 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
         </button>
         <div className={clsx(styles.codeBlock, isOpen && styles.open)}>
           <code>{props.data.logs}</code>
-        </div>
+        </div> */}
       </div>
 
       {!props.data.isSupporting && (

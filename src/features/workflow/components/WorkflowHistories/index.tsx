@@ -5,6 +5,8 @@ import { WorkflowHistory, ConnectionStatus } from '@/features/workflow/types/typ
 import clsx from 'clsx';
 import { formatJstDistance } from '@/utils/date';
 import { useSSEStore } from '../../stores/useSSEStore';
+import { startAndWaitLogQueries } from '@/app/actions/workflow';
+import { useLoadingStore } from '../../stores/useLoadingStore';
 
 interface Props {
   histories: WorkflowHistory[];
@@ -18,6 +20,7 @@ export const WorkflowHistories: FCX<Props> = memo(({
   onSelect,
 }) => {
   const { connectionStatus } = useSSEStore();
+  const { setLoading } = useLoadingStore();
 
   // 進行中のワークフローかどうかを判定
   const isActiveWorkflow = useCallback((history: WorkflowHistory) => {
@@ -52,6 +55,27 @@ export const WorkflowHistories: FCX<Props> = memo(({
     };
   }, [connectionStatus]);
 
+  // ログ取得のテスト用
+  const handleFetchLogs = useCallback(async (workflowId: string, timestamp: string) => {
+    try {
+      setLoading(true);
+      const logGroupRequests = {
+        '/aws/lambda/melon_dev_request_generative_ai_model_api': 'c1b29677-26bc-4373-b9fc-d0d767fe22d3'
+      };
+
+      const logs = await startAndWaitLogQueries(
+        workflowId,
+        logGroupRequests,
+        timestamp
+      );
+      console.log('Fetched logs:', logs);
+    } catch (error) {
+      console.error('Failed to fetch logs:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const getStatusBadge = (history: WorkflowHistory) => {
     // 進行中のワークフローの場合のみLIVE表示
     if (isActiveWorkflow(history)) {
@@ -76,6 +100,7 @@ export const WorkflowHistories: FCX<Props> = memo(({
   const handleHistorySelect = (history: WorkflowHistory) => {
     // 進行中のワークフロー以外は選択不可
     onSelect(history);
+    handleFetchLogs(history.workflow_id, history.timestamp);
   };
 
   return (
