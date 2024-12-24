@@ -29,5 +29,3 @@ export const LoadingSpinner: FCX<Props> = ({
     </div>
   );
 };
-
-export default LoadingSpinner; 

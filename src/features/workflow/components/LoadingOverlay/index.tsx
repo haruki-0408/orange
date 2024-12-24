@@ -12,5 +12,3 @@ export const LoadingOverlay: FCX = ({ className }) => {
     </div>
   );
 };
-
-LoadingOverlay.displayName = 'LoadingOverlay'; 

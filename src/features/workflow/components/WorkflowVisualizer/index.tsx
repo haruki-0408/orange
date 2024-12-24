@@ -104,5 +104,3 @@ export const WorkflowVisualizer: FCX<Props> = ({
     </div>
   );
 };
-
-WorkflowVisualizer.displayName = 'WorkflowVisualizer';

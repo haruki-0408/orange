@@ -148,5 +148,3 @@ export const WorkflowHistories: FCX<Props> = memo(({
     </div>
   );
 });
-
-WorkflowHistories.displayName = 'WorkflowHistories';

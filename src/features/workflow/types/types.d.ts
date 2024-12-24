@@ -170,3 +170,33 @@ export interface NodeData {
   };
   timestamp?: string;
 } 
+
+export interface CloudWatchQueryResult {
+  results?: {
+    field: string;
+    value: string;
+  }[][];
+  status: 'Complete' | 'Failed' | 'Running' | 'Cancelled' | 'Timeout' | 'Unknown';
+}
+
+export interface LogEntry {
+  timestamp: string;
+  ingestionTime: string;
+  message: string;
+}
+
+export interface LogGroupRequestIds {
+  [logGroupName: string]: string;  // key: logGroupName, value: requestId
+}
+
+export interface QueryResults {
+  logGroupName: string;
+  queryId: string;
+  logStream: string;
+  startTime: number;
+  endTime: number;
+}
+
+export interface LogGroupResults {
+  [logGroupName: string]: LogEntry[];
+}

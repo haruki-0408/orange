@@ -5,11 +5,11 @@ import { useReactFlow, Node } from '@xyflow/react';
 import { TraceData, MetricsData } from '@/features/workflow/types/types';
 import clsx from 'clsx';
 import { MetricCard } from '../MetricCard';
-import { ErrorCard } from '../ErrorCard';
 import { TimelineCard } from '../TimelineCard';
 import { mockTraceData } from '../../const/mockTraceData';
-import { mockErrorData } from '../../const/mockErrorData';
+import { mockLogData } from '../../const/mockLogData';
 import { mockMetricsData } from '../../const/mockMetricsData';
+import { LogCard } from '../LogCard';
 
 interface Props {
   workflowId?: string;
@@ -20,7 +20,7 @@ interface Props {
   className?: string;
 }
 
-type TabType = 'metrics' | 'timeline' | 'errors';
+type TabType = 'metrics' | 'timeline' | 'logs';
 
 export const TracesDashboard: FCX<Props> = ({ 
   workflowId, 
@@ -121,14 +121,14 @@ export const TracesDashboard: FCX<Props> = ({
             Timeline
           </button>
           <button
-            className={clsx(styles.tabButton, activeTab === 'errors' && styles.active)}
-            onClick={() => setActiveTab('errors')}
+            className={clsx(styles.tabButton, activeTab === 'logs' && styles.active)}
+            onClick={() => setActiveTab('logs')}
           >
             <svg className={styles.tabIcon} viewBox="0 0 24 24">
               <path d="M12 8v5M12 16h.01" stroke="currentColor" strokeWidth="2" fill="none"/>
               <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="currentColor" strokeWidth="2" fill="none"/>
             </svg>
-            Errors
+            Logs
           </button>
         </div>
 
@@ -203,12 +203,16 @@ export const TracesDashboard: FCX<Props> = ({
             </div>
           )}
 
-          {activeTab === 'errors' && (
-            <div className={styles.errorsTab}>
-              {mockErrorData.map((error) => (
-                <ErrorCard
-                  key={error.id}
-                  {...error}
+          {activeTab === 'logs' && (
+            <div className={styles.logsTab}>
+              {mockLogData.map((log) => (
+                <LogCard
+                  key={log.id}
+                  logGroupResults={log.logGroupResults}
+                  level={log.level}
+                  service={log.service}
+                  id={log.id}
+                  timestamp={log.timestamp}
                 />
               ))}
             </div>

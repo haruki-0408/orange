@@ -4,6 +4,7 @@ import { DynamoDB } from 'aws-sdk';
 import { revalidatePath, unstable_cache, revalidateTag } from 'next/cache';
 import { WorkflowHistory } from '@/features/workflow/types/types';
 import { CloudWatchLogs } from 'aws-sdk';
+import { LogGroupResults, LogGroupRequestIds, QueryResults, LogEntry, CloudWatchQueryResult } from '@/features/workflow/types/types';
 
 const dynamodb = new DynamoDB.DocumentClient({
   region: process.env.AWS_REGION,
@@ -20,42 +21,6 @@ const cloudWatchLogs = new CloudWatchLogs({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
   }
 });
-
-interface LogQueryParams {
-  workflowId: string;
-  logGroupName: string;
-  requestId?: string;
-}
-
-interface CloudWatchQueryResult {
-  results?: {
-    field: string;
-    value: string;
-  }[][];
-  status: 'Complete' | 'Failed' | 'Running' | 'Cancelled' | 'Timeout' | 'Unknown';
-}
-
-interface LogEntry {
-  timestamp: Date;
-  ingestionTime: Date;
-  message: string;
-}
-
-interface LogGroupRequestIds {
-  [logGroupName: string]: string;  // key: logGroupName, value: requestId
-}
-
-interface QueryResults {
-  logGroupName: string;
-  queryId: string;
-  logStream: string;
-  startTime: number;
-  endTime: number;
-}
-
-interface LogGroupResults {
-  [logGroupName: string]: LogEntry[];
-}
 
 // カテゴリ取得
 export async function getCategories() {
@@ -339,8 +304,8 @@ export async function getWorkflowLogs(queryResult: QueryResults): Promise<LogEnt
     }).promise();
 
     return (logs.events || []).map(event => ({
-      timestamp: new Date(event.timestamp!),
-      ingestionTime: new Date(event.ingestionTime!),
+      timestamp: new Date(event.timestamp!).toISOString(),
+      ingestionTime: new Date(event.ingestionTime!).toISOString(),
       message: event.message!
     }));
 
