@@ -74,6 +74,15 @@ export interface ProgressData {
   // };
 }
 
+export interface LogData {
+  id: string;
+  level: 'error' | 'warning' | 'info';
+  timestamp: string;
+  stateName: string;
+  service: string;
+  logGroupResults: LogGroupResults;
+}
+
 export interface TraceData {
   id: string;
   name: string;

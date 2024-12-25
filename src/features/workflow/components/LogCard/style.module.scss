@@ -1,122 +1,219 @@
-.errorItem {
-  background: var(--error-card-bg);
-  border: 1px solid var(--error-card-border);
+.logItem {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
-  position: relative;
-  transition: all 0.2s ease;
   cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
 
   &:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--error-card-hover-shadow);
+    background: var(--bg-hover-accent);
+    border-color: var(--border-primary);
+    box-shadow: var(--shadow-sm);
+
+    .messagePreview {
+      color: var(--text-primary);
+    }
+
+    &::before {
+      opacity: 1;
+    }
+
+    .logService {
+      color: var(--text-primary);
+    }
   }
 
   &::before {
     content: '';
     position: absolute;
     top: 0;
-    left: -1px;
-    border-radius: 8px;
-    width: 3px;
+    left: 0;
     height: 100%;
-    background: linear-gradient(to bottom,
-      var(--error-gradient-start),
-      var(--error-gradient-end)
-    );
+    width: 4px;
+    border-radius: 4px 0 0 4px;
+    background: var(--log-gradient-start);
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
   }
 
   &.error::before {
-    background: var(--error-level-error-gradient);
+    background: var(--log-level-error-gradient);
   }
 
   &.warning::before {
-    background: var(--error-level-warning-gradient);
+    background: var(--log-level-warning-gradient);
   }
 
   &.info::before {
-    background: var(--error-level-info-gradient);
+    background: var(--log-level-info-gradient);
+  }
+
+  .logHeader {
+    .topRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+
+      .leftSide {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .logLevel {
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 4px 8px;
+          border-radius: 4px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+
+          &.error {
+            color: var(--log-level-error-color);
+            background: var(--log-level-error-bg);
+          }
+
+          &.warning {
+            color: var(--log-level-warning-color);
+            background: var(--log-level-warning-bg);
+          }
+
+          &.info {
+            color: var(--log-level-info-color);
+            background: var(--log-level-info-bg);
+          }
+        }
+      }
+
+      .logService {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        transition: color 0.2s ease;
+      }
+
+      .timestamp {
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+        font-family: 'Geist Mono', monospace;
+      }
+    }
+
+    .middleRow {
+      margin-bottom: 0.75rem;
+
+      .logStateName {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+    }
+
+    .messagePreview {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: 'Geist Mono', monospace;
+      padding-right: 8px;
+      transition: color 0.2s ease;
+    }
   }
 }
 
-.errorHeader {
+.logHeader {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.errorInfo {
+.topRow {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 
-  time {
-    font-family: 'Geist Mono', monospace;
+  .leftSide {
+    .logLevel {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+
+      &.error {
+        background: var(--log-level-error-bg);
+        color: var(--log-level-error-color);
+        border: 1px solid var(--log-level-error-border);
+      }
+
+      &.warning {
+        background: var(--log-level-warning-bg);
+        color: var(--log-level-warning-color);
+        border: 1px solid var(--log-level-warning-border);
+      }
+
+      &.info {
+        background: var(--log-level-info-bg);
+        color: var(--log-level-info-color);
+        border: 1px solid var(--log-level-info-border);
+      }
+    }
+  }
+
+  .logService {
     font-size: 0.75rem;
-    color: var(--error-info-time);
-    background: var(--error-info-time-bg);
-    border: 1px solid var(--error-info-time-border);
+    color: var(--log-info-time);
+    background: var(--log-info-time-bg);
+    border: 1px solid var(--log-info-time-border);
     padding: 2px 6px;
     border-radius: 4px;
   }
-}
 
-.errorLevel {
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: 4px;
-  letter-spacing: 0.02em;
-
-  &.error {
-    background: var(--error-level-error-bg);
-    color: var(--error-level-error-color);
-    border: 1px solid var(--error-level-error-border);
-  }
-
-  &.warning {
-    background: var(--error-level-warning-bg);
-    color: var(--error-level-warning-color);
-    border: 1px solid var(--error-level-warning-border);
-  }
-
-  &.info {
-    background: var(--error-level-info-bg);
-    color: var(--error-level-info-color);
-    border: 1px solid var(--error-level-info-border);
+  .timestamp {
+    margin-left: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
   }
 }
 
-.errorService {
-  font-size: 0.75rem;
-  color: var(--error-service-text);
-  background: var(--error-service-bg);
-  border: 1px solid var(--error-service-border);
-  padding: 2px 6px;
-  border-radius: 4px;
-  letter-spacing: 0.02em;
+.middleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .logStateName {
+    font-size: 0.75rem;
+    color: var(--log-service-text);
+    // background: var(--log-service-bg);
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+  }
 }
 
-.errorMessage {
+.messagePreview {
   font-size: 0.85rem;
-  color: var(--error-card-message);
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-
-.errorDetails {
-  font-size: 0.75rem;
-  color: var(--error-card-details);
-  line-height: 1.4;
+  color: var(--log-card-message);
+  margin-top: 4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
   font-family: 'Geist Mono', monospace;
+  line-height: 1.4;
 }
 
-// Modal specific styles
 .logModal {
-  max-width: 1000px !important;
+  max-width: 1000px;
 }
 
 .logDetails {
@@ -183,43 +280,162 @@
 .modalInfo {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
+  padding: 0 8px;
 
-  .timestamp {
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.875rem;
-    color: var(--text-secondary);
+  .cloudwatchHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 12px;
+    img {
+      width: 24px;
+      height: 24px;
+    }
+    
+    span {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
   }
-} 
+}
 
 .logModal {
   display: flex;
   flex-direction: column;
   gap: 20px;
   height: 100%;
+  
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-secondary);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--border-primary);
+    }
+  }
 }
 
 .requestInfo {
-  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 16px;
+  padding: 16px;
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
-  border-radius: 8px;
-}
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
 
-.requestId {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Geist Mono', monospace;
-  
-  .label {
-    color: var(--text-secondary);
-    font-size: 0.875rem;
+  .mainInfo {
+    .stateInfo {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 16px;
+      border-right: 1px solid var(--border-secondary);
+
+      .label {
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .stateName {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        line-height: 1.4;
+      }
+    }
   }
-  
-  .value {
-    color: var(--text-primary);
-    font-weight: 500;
+
+  .metaInfo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+
+    .requestId,
+    .timestamp,
+    .logService,
+    .logLevel,
+    .logGroup {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .label {
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .value {
+        font-family: 'Geist Mono', monospace;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        border: 1px solid var(--border-secondary);
+        padding: 6px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: var(--border-primary);
+          background: var(--bg-hover);
+        }
+      }
+    }
+
+    .logLevel .value {
+      text-align: center;
+      font-weight: 600;
+      
+      &.error {
+        color: var(--log-level-error-color);
+        background: var(--log-level-error-bg);
+        border: 1px solid var(--log-level-error-border);
+        
+        &:hover {
+          background: var(--log-level-error-hover-bg);
+        }
+      }
+      
+      &.warning {
+        color: var(--log-level-warning-color);
+        background: var(--log-level-warning-bg);
+        border: 1px solid var(--log-level-warning-border);
+        
+        &:hover {
+          background: var(--log-level-warning-hover-bg);
+        }
+      }
+      
+      &.info {
+        color: var(--log-level-info-color);
+        background: var(--log-level-info-bg);
+        border: 1px solid var(--log-level-info-border);
+        
+        &:hover {
+          background: var(--log-level-info-hover-bg);
+        }
+      }
+    }
   }
 }
 
@@ -233,71 +449,99 @@
   font-family: 'Geist Mono', monospace;
   font-size: 0.875rem;
   line-height: 1.5;
+  box-shadow: var(--shadow-lg);
+  background: var(--bg-primary);
+  min-height: 400px;
 }
 
 .tableHeader {
   display: grid;
-  grid-template-columns: 180px 180px 1fr;
-  gap: 16px;
-  padding: 12px 16px;
+  grid-template-columns: 160px 160px 1fr;
+  gap: 8px;
+  padding: 8px 12px;
   background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-primary);
+  border-bottom: 2px solid var(--border-primary);
   font-weight: 600;
   color: var(--text-secondary);
   position: sticky;
   top: 0;
   z-index: 1;
+
+  .timestamp
+  .ingestionTime {
+    font-size: 0.75rem;
+  }
+
+  .message {
+    padding-left: 8px;
+  }
 }
 
 .tableBody {
   flex: 1;
   overflow-y: auto;
   background: var(--bg-primary);
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-secondary);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--border-primary);
+    }
+  }
 }
 
 .logEntry {
   display: grid;
-  grid-template-columns: 180px 180px 1fr;
-  gap: 16px;
-  padding: 12px 16px;
+  grid-template-columns: 160px 160px 1fr;
+  gap: 8px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border-secondary);
+  align-items: center;
   
   &:hover {
     background: var(--bg-hover);
   }
 
-  .timestamp, .ingestionTime {
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .timestamp,
+  .ingestionTime {
+    font-size: 0.75rem;
     color: var(--text-secondary);
     white-space: nowrap;
+    padding: 4px 0;
   }
 
   .message {
+    font-size: 0.8rem;
     color: var(--text-primary);
+    max-height: 300px;
+    overflow-y: auto;
+    padding-left: 8px;
+    border-left: 1px solid var(--border-secondary);
     
     pre {
       margin: 0;
+      padding: 8px 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-secondary);
+      border-radius: 4px;
       white-space: pre-wrap;
       word-break: break-all;
+      line-height: 1.6;
     }
   }
 }
-
-// スクロールバーのスタイル
-// .tableBody {
-//   &::-webkit-scrollbar {
-//     width: 8px;
-//   }
-
-//   &::-webkit-scrollbar-track {
-//     background: transparent;
-//   }
-
-//   &::-webkit-scrollbar-thumb {
-//     background: var(--border-primary);
-//     border-radius: 4px;
-
-//     &:hover {
-//       background: var(--border-secondary);
-//     }
-//   }
-// }

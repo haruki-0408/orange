@@ -5,73 +5,75 @@ import clsx from "clsx";
 import { Modal } from "@/features/workflow/components/Modal";
 import { LogGroupResults } from "@/features/workflow/types/types";
 import { LogEntry } from "@/features/workflow/types/types";
+import Image from "next/image";
 interface Props {
-  // id: string;
-  // level: 'error' | 'warning' | 'info';
-  // message: string;
-  // timestamp: string;
-  // service: string;
-  // details: string;
-  level: string;
+  stateName: string;
+  level: "error" | "warning" | "info";
   id: string;
   timestamp: string;
   service: string;
   logGroupResults: LogGroupResults;
 }
 
+const formatDateTime = (dateString: string) => {
+  return new Date(dateString)
+    .toLocaleString("ja-JP", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false
+    })
+    .replace(/\//g, "/")
+    .replace(",", "");
+};
+
 export const LogCard: FCX<Props> = ({
-  // level,
-  // message,
-  // timestamp,
-  // service,
-  // details,
-  // className
   level,
   className,
   id,
   timestamp,
+  stateName,
   service,
   logGroupResults
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // 最初のメッセージを取得
+  const firstMessage = Object.values(logGroupResults)[0]?.[0]?.message || "";
+
   const headerContent = (
     <div className={styles.modalInfo}>
-      <span className={clsx(styles.errorLevel, styles[level])}>{level.toUpperCase()}</span>
-      <span className={styles.errorService}>{service}</span>
-      <time className={styles.timestamp}>
-        {new Date(timestamp).toLocaleString("ja-JP", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false
-        })}
-      </time>
+      <div className={styles.cloudwatchHeader}>
+        <Image src="/aws/cloudwatch.svg" alt="CloudWatch" width={24} height={24} />
+        <span>Cloudwatch Logs</span>
+      </div>
     </div>
   );
 
   return (
     <>
       <div
-        className={clsx(styles.errorItem, styles[level], className)}
+        className={clsx(styles.logItem, styles[level], className)}
         onClick={() => setIsModalOpen(true)}
         role="button"
         tabIndex={0}
       >
-        <div className={styles.errorHeader}>
-          <div className={styles.errorInfo}>
-            <span className={clsx(styles.errorLevel, styles[level])}>{level.toUpperCase()}</span>
-            <time>{new Date(timestamp).toLocaleTimeString()}</time>
+        <div className={styles.logHeader}>
+          <div className={styles.topRow}>
+            <div className={styles.leftSide}>
+              <span className={clsx(styles.logLevel, styles[level])}>{level.toUpperCase()}</span>
+            </div>
+            <span className={styles.logService}>{service}</span>
+            <time className={styles.timestamp}>{formatDateTime(timestamp)}</time>
           </div>
-          <span className={styles.errorService}>{service}</span>
+          <div className={styles.middleRow}>
+            <span className={styles.logStateName}>{stateName}</span>
+          </div>
+          <div className={styles.messagePreview}>{firstMessage}</div>
         </div>
-        {/* <p className={styles.errorMessage}>{message}</p>
-        <pre className={styles.errorDetails}>
-          <code>{details}</code>
-        </pre> */}
       </div>
 
       <Modal
@@ -80,16 +82,35 @@ export const LogCard: FCX<Props> = ({
         headerContent={headerContent}
         className={styles.logModal}
       >
-        {/* <div>
-          <h3>詳細情報</h3>
-          <p>{message}</p>
-          <pre>{details}</pre>
-        </div> */}
         <div className={styles.logModal}>
           <div className={styles.requestInfo}>
-            <div className={styles.requestId}>
-              <span className={styles.label}>Request ID:</span>
-              <span className={styles.value}>{id}</span>
+            <div className={styles.mainInfo}>
+              <div className={styles.stateInfo}>
+                <span className={styles.label}>State</span>
+                <span className={styles.stateName}>{stateName}</span>
+              </div>
+            </div>
+            <div className={styles.metaInfo}>
+              <div className={styles.requestId}>
+                <span className={styles.label}>Request ID</span>
+                <span className={styles.value}>{id}</span>
+              </div>
+              <div className={styles.timestamp}>
+                <span className={styles.label}>Timestamp</span>
+                <span className={styles.value}>{formatDateTime(timestamp)}</span>
+              </div>
+              <div className={styles.logService}>
+                <span className={styles.label}>Service</span>
+                <span className={styles.value}>{service}</span>
+              </div>
+              <div className={styles.logLevel}>
+                <span className={styles.label}>Level</span>
+                <span className={clsx(styles.value, styles[level])}>{level.toUpperCase()}</span>
+              </div>
+              <div className={styles.logGroup}>
+                <span className={styles.label}>Log Group</span>
+                <span className={styles.value}>{Object.keys(logGroupResults)[0]}</span>
+              </div>
             </div>
           </div>
 
@@ -100,17 +121,17 @@ export const LogCard: FCX<Props> = ({
               <div className={styles.message}>Message</div>
             </div>
             <div className={styles.tableBody}>
-              {Object.values(logGroupResults).map((events, logGroupName) =>
-                events.map((logEntry: LogEntry, index: number) => (
-                  <div key={index} className={styles.logEntry}>
-                    <div className={styles.timestamp}>{logEntry.timestamp}</div>
-                    <div className={styles.ingestionTime}>{logEntry.ingestionTime}</div>
-                    <div className={styles.message}>
-                      <pre>{logEntry.message}</pre>
-                    </div>
+              {Object.values(logGroupResults)[0]?.map((logEntry: LogEntry, index: number) => (
+                <div key={index} className={styles.logEntry}>
+                  <div className={styles.timestamp}>{formatDateTime(logEntry.timestamp)}</div>
+                  <div className={styles.ingestionTime}>
+                    {formatDateTime(logEntry.ingestionTime)}
                   </div>
-                ))
-              )}
+                  <div className={styles.message}>
+                    <pre>{logEntry.message}</pre>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

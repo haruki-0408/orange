@@ -142,33 +142,33 @@
     --trend-stable-color: #64748b;
     --trend-stable-bg: rgba(100, 116, 139, 0.1);
 
-    // ErrorCard
-    --error-card-bg: #ffffff;
-    --error-card-border: rgba(37, 99, 235, 0.1);
-    --error-card-hover-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
-    --error-card-message: #1e293b;
-    --error-card-details: #64748b;
-    --error-card-service: #64748b;
-    --error-card-service-bg: rgba(37, 99, 235, 0.05);
+    // LogCard
+    --log-card-bg: #ffffff;
+    --log-card-border: rgba(37, 99, 235, 0.1);
+    --log-card-hover-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    --log-card-message: #1e293b;
+    --log-card-details: #64748b;
+    --log-card-service: #64748b;
+    --log-card-service-bg: rgba(37, 99, 235, 0.05);
     
-    --error-gradient-start: rgba(37, 99, 235, 0.2);
-    --error-gradient-end: rgba(37, 99, 235, 0.05);
+    --log-gradient-start: rgba(37, 99, 235, 0.2);
+    --log-gradient-end: rgba(37, 99, 235, 0.05);
     
-    --error-level-error-gradient: linear-gradient(to bottom, #ef4444, rgba(239, 68, 68, 0.1));
-    --error-level-warning-gradient: linear-gradient(to bottom, #f59e0b, rgba(245, 158, 11, 0.1));
-    --error-level-info-gradient: linear-gradient(to bottom, #2563eb, rgba(37, 99, 235, 0.1));
+    --log-level-error-gradient: linear-gradient(to bottom, #ef4444, rgba(239, 68, 68, 0.1));
+    --log-level-warning-gradient: linear-gradient(to bottom, #f59e0b, rgba(245, 158, 11, 0.1));
+    --log-level-info-gradient: linear-gradient(to bottom, #2563eb, rgba(37, 99, 235, 0.1));
     
-    --error-level-error-bg: rgba(239, 68, 68, 0.1);
-    --error-level-error-color: #dc2626;
-    --error-level-error-border: rgba(239, 68, 68, 0.2);
+    --log-level-error-bg: rgba(239, 68, 68, 0.1);
+    --log-level-error-color: #dc2626;
+    --log-level-error-border: rgba(239, 68, 68, 0.2);
     
-    --error-level-warning-bg: rgba(245, 158, 11, 0.1);
-    --error-level-warning-color: #d97706;
-    --error-level-warning-border: rgba(245, 158, 11, 0.2);
+    --log-level-warning-bg: rgba(245, 158, 11, 0.1);
+    --log-level-warning-color: #d97706;
+    --log-level-warning-border: rgba(245, 158, 11, 0.2);
     
-    --error-level-info-bg: rgba(37, 99, 235, 0.1);
-    --error-level-info-color: #2563eb;
-    --error-level-info-border: rgba(37, 99, 235, 0.2);
+    --log-level-info-bg: rgba(37, 99, 235, 0.1);
+    --log-level-info-color: #2563eb;
+    --log-level-info-border: rgba(37, 99, 235, 0.2);
 
     // TimelineCard
     --timeline-service-name: #1e293b;
@@ -199,14 +199,15 @@
     --timeline-time-border: rgba(37, 99, 235, 0.1);
     --timeline-time-color: #2563eb;
 
-    // ErrorCard
-    --error-info-time: #64748b;
-    --error-info-time-bg: rgba(37, 99, 235, 0.05);
-    --error-info-time-border: rgba(37, 99, 235, 0.1);
+    // LogCard
+    --log-info-time: #64748b;
+    --log-info-time-bg: rgba(37, 99, 235, 0.05);
+    --log-info-time-border: rgba(37, 99, 235, 0.1);
     
-    --error-service-text: #64748b;
-    --error-service-bg: rgba(37, 99, 235, 0.05);
-    --error-service-border: rgba(37, 99, 235, 0.1);
+    --log-service-text: #64748b;
+    --log-service-bg: rgba(37, 99, 235, 0.05);
+    --log-service-border: rgba(37, 99, 235, 0.1);
+    --bg-hover-accent: rgba(37, 99, 235, 0.04);
 
     // TimelineCard
     --timeline-card-bg: #ffffff;
@@ -643,33 +644,33 @@
     --trend-stable-color: #94a3b8;
     --trend-stable-bg: rgba(148, 163, 184, 0.1);
 
-    // ErrorCard
-    --error-card-bg: rgba(17, 17, 21, 0.4);
-    --error-card-border: rgba(255, 255, 255, 0.1);
-    --error-card-hover-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
-    --error-card-message: rgba(255, 255, 255, 0.9);
-    --error-card-details: rgba(255, 255, 255, 0.6);
-    --error-card-service: rgba(255, 255, 255, 0.7);
-    --error-card-service-bg: rgba(255, 255, 255, 0.08);
+    // LogCard
+    --log-card-bg: rgba(17, 17, 21, 0.4);
+    --log-card-border: rgba(255, 255, 255, 0.1);
+    --log-card-hover-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    --log-card-message: rgba(255, 255, 255, 0.9);
+    --log-card-details: rgba(255, 255, 255, 0.6);
+    --log-card-service: rgba(255, 255, 255, 0.7);
+    --log-card-service-bg: rgba(255, 255, 255, 0.08);
     
-    --error-gradient-start: rgba(6, 182, 212, 0.4);
-    --error-gradient-end: transparent;
+    --log-gradient-start: rgba(6, 182, 212, 0.4);
+    --log-gradient-end: transparent;
     
-    --error-level-error-gradient: linear-gradient(to bottom, #ef4444, transparent);
-    --error-level-warning-gradient: linear-gradient(to bottom, #f59e0b, transparent);
-    --error-level-info-gradient: linear-gradient(to bottom, #06b6d4, transparent);
+    --log-level-error-gradient: linear-gradient(to bottom, #ef4444, transparent);
+    --log-level-warning-gradient: linear-gradient(to bottom, #f59e0b, transparent);
+    --log-level-info-gradient: linear-gradient(to bottom, #06b6d4, transparent);
     
-    --error-level-error-bg: rgba(239, 68, 68, 0.25);
-    --error-level-error-color: #fee2e2;
-    --error-level-error-border: rgba(239, 68, 68, 0.5);
+    --log-level-error-bg: rgba(239, 68, 68, 0.25);
+    --log-level-error-color: #fee2e2;
+    --log-level-error-border: rgba(239, 68, 68, 0.5);
     
-    --error-level-warning-bg: rgba(245, 158, 11, 0.25);
-    --error-level-warning-color: #fef3c7;
-    --error-level-warning-border: rgba(245, 158, 11, 0.5);
+    --log-level-warning-bg: rgba(245, 158, 11, 0.25);
+    --log-level-warning-color: #fef3c7;
+    --log-level-warning-border: rgba(245, 158, 11, 0.5);
     
-    --error-level-info-bg: rgba(6, 182, 212, 0.25);
-    --error-level-info-color: #cffafe;
-    --error-level-info-border: rgba(6, 182, 212, 0.5);
+    --log-level-info-bg: rgba(6, 182, 212, 0.25);
+    --log-level-info-color: #cffafe;
+    --log-level-info-border: rgba(6, 182, 212, 0.5);
 
     // TimelineCard
     --timeline-service-name: #e2e8f0;
@@ -696,14 +697,15 @@
     --timeline-time-border: rgba(255, 255, 255, 0.12);
     --timeline-time-color: #e2e8f0;
 
-    // ErrorCard
-    --error-info-time: rgba(255, 255, 255, 0.9);
-    --error-info-time-bg: rgba(255, 255, 255, 0.1);
-    --error-info-time-border: rgba(255, 255, 255, 0.2);
+    // LogCard
+    --log-info-time: rgba(255, 255, 255, 0.9);
+    --log-info-time-bg: rgba(255, 255, 255, 0.1);
+    --log-info-time-border: rgba(255, 255, 255, 0.2);
     
-    --error-service-text: rgba(255, 255, 255, 0.9);
-    --error-service-bg: rgba(255, 255, 255, 0.1);
-    --error-service-border: rgba(255, 255, 255, 0.2);
+    --log-service-text: rgba(255, 255, 255, 0.9);
+    --log-service-bg: rgba(255, 255, 255, 0.1);
+    --log-service-border: rgba(255, 255, 255, 0.2);
+    --bg-hover-accent: rgba(6, 182, 212, 0.08);
 
     // TimelineCard
     --timeline-card-bg: rgba(17, 17, 21, 0.4);

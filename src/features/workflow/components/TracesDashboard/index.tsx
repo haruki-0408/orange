@@ -208,6 +208,7 @@ export const TracesDashboard: FCX<Props> = ({
               {mockLogData.map((log) => (
                 <LogCard
                   key={log.id}
+                  stateName={log.stateName}
                   logGroupResults={log.logGroupResults}
                   level={log.level}
                   service={log.service}

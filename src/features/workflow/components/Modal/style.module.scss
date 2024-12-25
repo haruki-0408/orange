@@ -17,13 +17,11 @@
   background: var(--modal-content-bg);
   border: 1px solid var(--modal-content-border);
   border-radius: 16px;
-  width: 100%;
-  max-width: 800px; // モーダルの最大幅を調整
+  max-width: 1000px;
   max-height: calc(100vh - 48px);
   margin: auto;
-  overflow: hidden;
+  overflow: auto;
   box-shadow: var(--modal-content-shadow);
-  opacity: 0;
   transform: translateY(10px);
   animation: slideUp 0.4s ease forwards;
   display: flex;
@@ -34,7 +32,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  padding: 20px 24px; // パディングを調整
+  padding: 20px 24px;
   background: var(--modal-header-bg);
   border-bottom: 1px solid var(--modal-header-border);
   box-shadow: var(--modal-header-shadow);
@@ -88,11 +86,12 @@
 
 .body {
   flex: 1;
-  overflow-y: auto;
+  overflow: auto;
   padding: 24px;
   color: var(--modal-text-color);
   font-size: 0.95rem;
   line-height: 1.6;
+  min-width: min-content;
 
   &::-webkit-scrollbar {
     width: 8px;

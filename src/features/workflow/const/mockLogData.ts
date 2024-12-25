@@ -1,11 +1,4 @@
-import { LogGroupResults } from '@/features/workflow/types/types';
-interface LogData {
-  id: string;
-  level: 'error' | 'warning' | 'info';
-  timestamp: string;
-  service: string;
-  logGroupResults: LogGroupResults;
-}
+import { LogData } from "../types/types";
 
 export const mockLogData: LogData[] = [
   {
@@ -13,6 +6,7 @@ export const mockLogData: LogData[] = [
     level: 'error',
     timestamp: '2024-03-14T10:00:01.782Z',
     service: 'Lambda',
+    stateName: 'AI Request',
     logGroupResults: {
       "/aws/lambda/melon_dev_request_generative_ai_model_api": [
         {
@@ -53,20 +47,4 @@ export const mockLogData: LogData[] = [
       ]
     }
   },
-  // {
-  //   id: 'err-002',
-  //   level: 'warning',
-  //   message: 'High latency detected',
-  //   timestamp: '2024-03-14T10:00:02.123Z',
-  //   service: 'API Gateway',
-  //   details: 'Request processing took longer than expected'
-  // },
-  // {
-  //   id: 'err-003',
-  //   level: 'info',
-  //   message: 'Auto-scaling event triggered',
-  //   timestamp: '2024-03-14T10:00:02.445Z',
-  //   service: 'Lambda',
-  //   details: 'Function concurrency increased'
-  // }
 ]; 
