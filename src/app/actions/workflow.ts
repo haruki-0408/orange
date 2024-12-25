@@ -142,6 +142,7 @@ export async function getWorkflowProgress(workflowId: string) {
             workflow_id: item.workflow_id,
             state_name: item.state_name,
             timestamp: formattedTimestamp,
+            request_id: item.request_id,
             order: parseInt(order),
             status: item.status
           };

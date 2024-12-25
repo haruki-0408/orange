@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
-import { WorkflowStatusType } from '../types/types';
+import { WorkflowStatusType, WorkflowHistory } from '../types/types';
+
 type ActiveWorkflow = {
   workflowId: string;
   sessionId: string;  
@@ -19,6 +20,8 @@ interface WorkflowState {
   hasActiveWorkflow: (sessionId: string) => boolean;
   isActiveWorkflow: (workflowId: string) => boolean;
   generateSessionId: () => string;
+  selectedWorkflow: WorkflowHistory | null;
+  setSelectedWorkflow: (workflow: WorkflowHistory | null) => void;
 }
 
 const SESSION_STORAGE_KEY = 'workflow_session_id';
@@ -107,7 +110,10 @@ export const useWorkflowStore = create<WorkflowState>()(
       isActiveWorkflow: (workflowId: string) => {
         const workflow = get().activeWorkflows.get(workflowId);
         return workflow?.status === 'PROCESSING';
-      }
+      },
+
+      selectedWorkflow: null,
+      setSelectedWorkflow: (workflow) => set({ selectedWorkflow: workflow }),
     }),
     { name: 'workflow-store' }
   )

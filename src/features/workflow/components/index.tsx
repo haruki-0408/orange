@@ -151,7 +151,6 @@ export const Workflow: FCX<Props> = ({
                     : '1px solid rgba(0, 0, 0, 0.1)',
                 }}>
                   <TracesDashboard
-                    workflowId={workflowId || ""}
                     traces={mockTraceData}
                     currentNodeId={selectedNodeId || undefined}
                     isOpen={isSidebarOpen}

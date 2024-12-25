@@ -17,7 +17,7 @@ export const useWorkflowProgress = (workflowId: string | null) => {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
   const { getEdge, getNode, getNodes } = useReactFlow();
-  const { connectionStatus, initializeSSE, terminateSSE } = useSSEStore();
+  const { initializeSSE, terminateSSE } = useSSEStore();
   const { updateProgress } = useProgressStore();
   const { setLoading } = useLoadingStore();
 
@@ -363,7 +363,6 @@ export const useWorkflowProgress = (workflowId: string | null) => {
   }, [workflowId]);
 
   return {
-    connectionStatus,
     nodes,
     edges
   };

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { useReactFlow, Node } from '@xyflow/react';
-import { TraceData, MetricsData } from '@/features/workflow/types/types';
+import { TraceData } from '@/features/workflow/types/types';
 import clsx from 'clsx';
 import { MetricCard } from '../MetricCard';
 import { TimelineCard } from '../TimelineCard';
@@ -10,9 +10,12 @@ import { mockTraceData } from '../../const/mockTraceData';
 import { mockLogData } from '../../const/mockLogData';
 import { mockMetricsData } from '../../const/mockMetricsData';
 import { LogCard } from '../LogCard';
+import { startAndWaitLogQueries } from '@/app/actions/workflow';
+import { useLoadingStore } from '../../stores/useLoadingStore';
+import { LogData } from '@/features/workflow/types/types';
+import { useWorkflowStore } from '../../stores/useWorkflowStore';
 
 interface Props {
-  workflowId?: string;
   traces?: TraceData[];
   currentNodeId?: string;
   isOpen: boolean;
@@ -23,15 +26,46 @@ interface Props {
 type TabType = 'metrics' | 'timeline' | 'logs';
 
 export const TracesDashboard: FCX<Props> = ({ 
-  workflowId, 
   traces = mockTraceData, 
   currentNodeId,
   isOpen,
   onToggle,
-  className 
+  className,
 }) => {
+  const { selectedWorkflow } = useWorkflowStore();
   const { setCenter, getNode } = useReactFlow();
   const [activeTab, setActiveTab] = useState<TabType>('metrics');
+  const { setLoading } = useLoadingStore();
+  const [logs, setLogs] = useState<LogData[]>([]);
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      if (!selectedWorkflow) return;
+
+      try {
+        setLoading(true);
+        const logGroupRequests = {
+          '/aws/lambda/melon_dev_request_generative_ai_model_api': 'c1b29677-26bc-4373-b9fc-d0d767fe22d3'
+        };
+
+        const logsData = await startAndWaitLogQueries(
+          selectedWorkflow.workflow_id,
+          logGroupRequests,
+          selectedWorkflow.timestamp
+        );
+        
+        // setLogs(logsData);
+      } catch (error) {
+        console.error('Failed to fetch logs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (activeTab === 'logs') {
+      fetchLogs();
+    }
+  }, [selectedWorkflow, activeTab]);
 
   const calculateAbsolutePosition = (node: Node) => {
     let absoluteX = node.position.x;
@@ -75,27 +109,29 @@ export const TracesDashboard: FCX<Props> = ({
       </div>
       <div className={styles.dashboard}>
         {/* Overview Section */}
+        {selectedWorkflow && (
         <div className={styles.overview}>
           <div className={styles.workflowInfo}>
             <h2>Workflow Execution</h2>
             <div className={styles.workflowId}>
-              <span>ID:</span>
-              <code>{workflowId}</code>
+                <span>ID:</span>
+                <code>{selectedWorkflow.workflow_id}</code>
+              </div>
             </div>
           </div>
-          <div className={styles.stats}>
-            <div className={styles.statItem}>
-              <div className={styles.statValue}>{mockMetricsData.summary.totalDuration}ms</div>
-              <div className={styles.statLabel}>Duration</div>
-            </div>
-            <div className={styles.statItem}>
-              <div className={styles.statValue}>{mockMetricsData.summary.totalServices}</div>
-              <div className={styles.statLabel}>Services</div>
-            </div>
-            <div className={styles.statItem}>
-              <div className={styles.statValue}>${mockMetricsData.summary.estimatedCost}</div>
-              <div className={styles.statLabel}>Cost</div>
-            </div>
+        )}
+        <div className={styles.stats}>
+          <div className={styles.statItem}>
+            <div className={styles.statValue}>{mockMetricsData.summary.totalDuration}ms</div>
+            <div className={styles.statLabel}>Duration</div>
+          </div>
+          <div className={styles.statItem}>
+            <div className={styles.statValue}>{mockMetricsData.summary.totalServices}</div>
+            <div className={styles.statLabel}>Services</div>
+          </div>
+          <div className={styles.statItem}>
+            <div className={styles.statValue}>${mockMetricsData.summary.estimatedCost}</div>
+            <div className={styles.statLabel}>Cost</div>
           </div>
         </div>
 
@@ -205,6 +241,17 @@ export const TracesDashboard: FCX<Props> = ({
 
           {activeTab === 'logs' && (
             <div className={styles.logsTab}>
+              {/* {Object.entries(logs).map(([logGroupName, logEntries]) => (
+                <LogCard
+                  key={logGroupName}
+                  stateName={logGroupName}
+                  logGroupResults={logEntries}
+                  level={log.level}
+                  service={log.service}
+                  id={log.id}
+                  timestamp={log.timestamp}
+                />
+              ))} */}
               {mockLogData.map((log) => (
                 <LogCard
                   key={log.id}
