@@ -66,7 +66,6 @@ export interface ProgressData {
   order: number;
   state_name: WorkflowNodeId;
   timestamp: string;
-  logs?: string[];
   // metrics?: {
   //   duration?: number;
   //   memory?: number;
@@ -171,7 +170,6 @@ export interface WorkflowNode {
 export interface NodeData {
   label: string;
   status: StateType;
-  // logs?: string[];
   metrics?: {
     duration?: number;
     memory?: number;
