@@ -151,7 +151,7 @@ export const initialNodes: Node[] = [
   {
     id: "sub-workflow",
     type: "subGroup",
-    position: { x: 1750, y: 1000 },
+    position: { x: 1700, y: 1000 },
     data: { 
       label: "Sub Workflow",
     },
@@ -205,7 +205,7 @@ export const initialNodes: Node[] = [
   {
     id: "validation-choice",
     type: "choice",
-    position: { x: 360, y: 1000 },
+    position: { x: 370, y: 970 },
     data: {
       condition: "Schema\nValidation",
     },
@@ -237,7 +237,7 @@ export const initialNodes: Node[] = [
   {
     id: "data-fix-lambda",
     type: "custom",
-    position: { x: 850, y: 978 },
+    position: { x: 840, y: 978 },
     data: {
       title: "Data Fix",
       description: "Fix thesis data",
@@ -364,7 +364,7 @@ export const initialNodes: Node[] = [
   {
     id: "end",
     type: "terminal",
-    position: { x: 550, y: 3400 },
+    position: { x: 560, y: 3400 },
     data: {
       type: "end"
     }
