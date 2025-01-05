@@ -1,16 +1,8 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
-import { WorkflowStatusType, WorkflowHistory } from '../types/types';
+import { WorkflowStatusType, WorkflowHistory, ActiveWorkflow } from '../types/types';
 
-type ActiveWorkflow = {
-  workflowId: string;
-  sessionId: string;  
-  title: string;
-  category: string;
-  timestamp: string;
-  status: WorkflowStatusType;
-};
 
 interface WorkflowState {
   activeWorkflows: Map<string, ActiveWorkflow>;
@@ -20,8 +12,8 @@ interface WorkflowState {
   hasActiveWorkflow: (sessionId: string) => boolean;
   isActiveWorkflow: (workflowId: string) => boolean;
   generateSessionId: () => string;
-  selectedWorkflow: WorkflowHistory | null;
-  setSelectedWorkflow: (workflow: WorkflowHistory | null) => void;
+  selectedWorkflow: WorkflowHistory | ActiveWorkflow | null;
+  setSelectedWorkflow: (workflow: WorkflowHistory | ActiveWorkflow | null) => void;
 }
 
 const SESSION_STORAGE_KEY = 'workflow_session_id';
@@ -70,12 +62,12 @@ export const useWorkflowStore = create<WorkflowState>()(
 
         set((state) => {
           const newWorkflows = new Map(state.activeWorkflows);
-          const newWorkflow = {
-            workflowId,
-            sessionId,
-            title,
-            category,
-            timestamp,
+          const newWorkflow: ActiveWorkflow = {
+            workflow_id: workflowId,
+            session_id: sessionId,
+            title: title,
+            category: category,
+            timestamp: timestamp,
             status: 'PROCESSING' as WorkflowStatusType
           };
           newWorkflows.set(workflowId, newWorkflow);
@@ -98,13 +90,13 @@ export const useWorkflowStore = create<WorkflowState>()(
       getWorkflowBySession: (sessionId) => {
         const { activeWorkflows } = get();
         return Array.from(activeWorkflows.values())
-          .find(workflow => workflow.sessionId === sessionId);
+          .find(workflow => workflow.session_id === sessionId);
       },
 
       hasActiveWorkflow: (sessionId) => {
         const { activeWorkflows } = get();
         return Array.from(activeWorkflows.values())
-          .some(workflow => workflow.sessionId === sessionId);
+          .some(workflow => workflow.session_id === sessionId);
       },
 
       isActiveWorkflow: (workflowId: string) => {

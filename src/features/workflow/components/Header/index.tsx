@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { ThemeToggle } from '../ThemeToggle';
 import { useSSEStore } from '../../stores/useSSEStore';
 import { useProgressStore } from '../../stores/useProgressStore';
-
+import { useWorkflowStore } from '../../stores/useWorkflowStore';
 interface Props {
   title: string;
   onStart: () => void;
@@ -14,7 +14,6 @@ interface Props {
   categories: Category[];
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
-  workflowId: string | null;
 }
 
 export const Header: FCX<Props> = memo(({ 
@@ -24,8 +23,8 @@ export const Header: FCX<Props> = memo(({
   categories,
   selectedCategory,
   onCategoryChange,
-  workflowId
 }) => {
+  const { selectedWorkflow } = useWorkflowStore();
   const { connectionStatus } = useSSEStore();
   const { progressBar } = useProgressStore();
   const getStatusDisplay = () => {
@@ -125,8 +124,8 @@ export const Header: FCX<Props> = memo(({
           styles.progressWrapper,
           (connectionStatus === 'connected' || connectionStatus === 'completed') && styles.active
         )}>
-          {workflowId && (
-              <span className={styles.workflowId}>ID: {workflowId}</span>
+          {selectedWorkflow?.workflow_id && (
+              <span className={styles.workflowId}>ID: {selectedWorkflow.workflow_id}</span>
             )}
           <div className={styles.progressContainer}>
             <div 

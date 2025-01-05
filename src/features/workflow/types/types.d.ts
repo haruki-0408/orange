@@ -152,6 +152,15 @@ export interface MetricsData {
   };
 }
 
+export interface ActiveWorkflow {
+  workflow_id: string;
+  session_id: string;  
+  title: string;
+  category: string;
+  timestamp: string;
+  status: WorkflowStatusType;
+};
+
 export interface WorkflowHistory {
   workflow_id: string;
   title: string;

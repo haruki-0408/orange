@@ -132,14 +132,15 @@
   margin-bottom: 1rem;
 
   .title {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 500;
     line-height: 1.4;
     color: var(--histories-title-color);
   }
 
   .timestamp {
-    font-size: 0.75rem;
+    flex-shrink: 0;
+    font-size: 0.7rem;
     color: var(--histories-timestamp-color);
   }
 }

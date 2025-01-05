@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from "react";
 import { useWorkflowStore } from "../stores/useWorkflowStore";
-import { ProgressData, StateType, WorkflowNodeId, NodeData, ProgressbarType } from "../types/types";
+import { ProgressData, StateType, WorkflowNodeId, NodeData } from "../types/types";
 import { useSSEStore } from "../stores/useSSEStore";
 import { getWorkflowProgress } from "@/app/actions/workflow";
 import { initialNodes } from "../const/initialNodes";
@@ -11,8 +11,9 @@ import { useLoadingStore } from '../stores/useLoadingStore';
 
 const PARALLEL_NODES = ["formula-gen-lambda", "table-gen-lambda", "graph-gen-lambda"];
 
-
-export const useWorkflowProgress = (workflowId: string | null) => {
+export const useWorkflowProgress = () => {
+  const { selectedWorkflow } = useWorkflowStore();
+  const workflowId = selectedWorkflow?.workflow_id;
   const { isActiveWorkflow } = useWorkflowStore();
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
@@ -219,11 +220,10 @@ export const useWorkflowProgress = (workflowId: string | null) => {
   );
 
   // 進捗率を計算する関数
-  const calculateProgress = useCallback((nodeId: string, status: StateType) => {
+  const calculateProgress = useCallback(() => {
     const totalNodes = 11; // 進行に数えるノードの総数
     const completedNodes = getNodes().filter(
-      node => node.data.status === 'success'
-      || (node.id === nodeId && status === 'success')
+      node => node.data.status === 'success' && node.id !== 'data-fix-lambda'
     ).length;
     return Math.round((completedNodes / totalNodes) * 100);
   }, [nodes]);
@@ -280,7 +280,7 @@ export const useWorkflowProgress = (workflowId: string | null) => {
       }
 
       // プログレスバーの更新
-      const newPercentage = calculateProgress(nodeId, status);
+      const newPercentage = calculateProgress();
       updateProgress(
         newPercentage,
         status === 'failed' ? 'FAILED' : 
@@ -305,21 +305,19 @@ export const useWorkflowProgress = (workflowId: string | null) => {
     }
 
     // 進捗状態を更新
-    let successCount = 0;
     let hasFailed = false;
 
     progressRecords.forEach((record) => {
-      if (record.status === "success") {
-        successCount++;
+      if (record.status === "success" || record.status === "validation-failed") {
         updateWorkflowState(record.state_name, "success");
-      } else if (record.status === "failed" || record.status === "validation-failed") {
+      } else if (record.status === "failed") {
         hasFailed = true;
         updateWorkflowState(record.state_name, "failed");
       }
     });
 
     // 進捗バーの状態を更新
-    const percentage = Math.round((successCount / 11) * 100);
+    const percentage = calculateProgress();
     useProgressStore.getState().updateProgress(
       percentage,
       hasFailed ? 'FAILED' : percentage === 100 ? 'SUCCESS' : 'PROCESSING'

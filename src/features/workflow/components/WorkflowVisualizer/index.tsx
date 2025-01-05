@@ -8,6 +8,7 @@ import {
   Background,
   BackgroundVariant
 } from "@xyflow/react";
+import { useWorkflowStore } from "../../stores/useWorkflowStore";
 import { useWorkflowProgress } from "../../hooks/useWorkflowProgress";
 import { useTheme } from "../../contexts/ThemeContext";
 import styles from "./style.module.scss";
@@ -23,7 +24,6 @@ import { useLoadingStore } from '../../stores/useLoadingStore';
 import { LoadingOverlay } from '../LoadingOverlay';
 
 interface Props {
-  workflowId: string | null;
   onNodeClick: (nodeId: string) => void;
   selectedNodeId: string | null;
 }
@@ -42,12 +42,12 @@ const edgeTypes: EdgeTypes = {
 };
 
 export const WorkflowVisualizer: FCX<Props> = ({
-  workflowId,
   onNodeClick,
   selectedNodeId,
 }) => {
+  const { selectedWorkflow } = useWorkflowStore();
   const { theme } = useTheme();
-  const { nodes, edges } = useWorkflowProgress(workflowId);
+  const { nodes, edges } = useWorkflowProgress();
   const { isLoading } = useLoadingStore();
 
   return (

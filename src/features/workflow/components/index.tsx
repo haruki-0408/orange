@@ -35,7 +35,7 @@ export const Workflow: FCX<Props> = ({
   const { progressBar } = useProgressStore();
   
   const [sessionId] = useState(() => generateSessionId());
-  const [workflowId, setWorkflowId] = useState<string | null>(null);
+  const { setSelectedWorkflow } = useWorkflowStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [thesisTitle, setThesisTitle] = useState('');
   const [histories, setHistories] = useState<WorkflowHistory[]>(initialHistories);
@@ -47,18 +47,19 @@ export const Workflow: FCX<Props> = ({
   const { theme } = useTheme();
   // 進行中のワークフローの復元
   useEffect(() => {
+    
     const activeWorkflow = getWorkflowBySession(sessionId);
     if (activeWorkflow) {
-      setWorkflowId(activeWorkflow.workflowId);
       setThesisTitle(activeWorkflow.title);
       setSelectedCategory(activeWorkflow.category);
+      setSelectedWorkflow(activeWorkflow);
 
       setHistories(prev => {
         const filteredHistories = prev.filter(
-          history => history.workflow_id !== activeWorkflow.workflowId
+          history => history.workflow_id !== activeWorkflow.workflow_id
         );
         return [{
-          workflow_id: activeWorkflow.workflowId,
+          workflow_id: activeWorkflow.workflow_id,
           title: activeWorkflow.title,
           category: activeWorkflow.category,
           status: 'PROCESSING',
@@ -81,7 +82,6 @@ export const Workflow: FCX<Props> = ({
       return;
     }
 
-    setWorkflowId(newWorkflowId);
     setHistories(prev => [{
       workflow_id: newWorkflowId,
       title: thesisTitle,
@@ -100,15 +100,10 @@ export const Workflow: FCX<Props> = ({
         categories={categories}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
-        workflowId={workflowId}
       />
       <div className="flex w-full">
         <WorkflowHistories
           histories={histories}
-          currentWorkflowId={workflowId}
-          onSelect={(history) => {
-            setWorkflowId(history.workflow_id);
-          }}
         />
         <div className="w-full relative flex overflow-hidden">
           <ReactFlowProvider>
@@ -132,7 +127,6 @@ export const Workflow: FCX<Props> = ({
                 transition: "width 0.5s ease",
               }}>
                 <WorkflowVisualizer
-                  workflowId={workflowId}
                   onNodeClick={setSelectedNodeId}
                   selectedNodeId={selectedNodeId}
                 />

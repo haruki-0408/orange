@@ -9,22 +9,18 @@ import { useWorkflowStore } from '../../stores/useWorkflowStore';
 
 interface Props {
   histories: WorkflowHistory[];
-  currentWorkflowId: string | null;
-  onSelect: (history: WorkflowHistory) => void;
 }
 
 export const WorkflowHistories: FCX<Props> = memo(({ 
   histories, 
-  currentWorkflowId,
-  onSelect,
 }) => {
   const { connectionStatus } = useSSEStore();
   const { selectedWorkflow, setSelectedWorkflow } = useWorkflowStore();
 
   // 進行中のワークフローかどうかを判定
   const isActiveWorkflow = useCallback((history: WorkflowHistory) => {
-    return history.status === 'PROCESSING' && history.workflow_id === currentWorkflowId;
-  }, [currentWorkflowId]);
+    return history.status === 'PROCESSING' && history.workflow_id === selectedWorkflow?.workflow_id;
+  }, [selectedWorkflow]);
 
   // ブラウザの戻る/進む操作を検知
   useEffect(() => {
@@ -77,7 +73,6 @@ export const WorkflowHistories: FCX<Props> = memo(({
   // 履歴選択時の処理
   const handleHistorySelect = (history: WorkflowHistory) => {
     setSelectedWorkflow(history);
-    onSelect(history);
   };
 
   return (
