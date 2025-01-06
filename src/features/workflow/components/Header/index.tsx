@@ -29,14 +29,11 @@ export const Header: FCX<Props> = memo(({
   const { progressBar } = useProgressStore();
   const getStatusDisplay = () => {
     switch (connectionStatus) {
-      case 'disconnected':
-        return { text: 'System Ready', color: 'neutral' };
+      
       case 'connecting':
         return { text: 'Establishing Connection...', color: 'warning' };
       case 'connected':
         return { text: 'System Active', color: 'success' };
-      case 'completed':
-        return { text: 'Process Completed', color: 'info' };
       case 'error':
         return { text: 'Connection Error', color: 'error' };
       default:
@@ -122,7 +119,7 @@ export const Header: FCX<Props> = memo(({
 
         <div className={clsx(
           styles.progressWrapper,
-          (connectionStatus === 'connected' || connectionStatus === 'completed') && styles.active
+          (connectionStatus === 'connected') && styles.active
         )}>
           {selectedWorkflow?.workflow_id && (
               <span className={styles.workflowId}>ID: {selectedWorkflow.workflow_id}</span>
@@ -132,7 +129,6 @@ export const Header: FCX<Props> = memo(({
               className={clsx(
                 styles.progressBar,
                 styles[progressBar.status],
-                connectionStatus === 'completed' && styles.completed
               )}
               style={{ 
                 '--progress': `${progressBar.percentage}%` 
@@ -144,9 +140,8 @@ export const Header: FCX<Props> = memo(({
             <span className={clsx(
               styles.status,
               styles[progressBar.status],
-              connectionStatus === 'completed' && styles.completed
             )}>
-              {connectionStatus === 'completed' ? 'Completed' : progressBar.status}
+              {progressBar.status}
             </span>
           </div>
         </div>

@@ -19,7 +19,7 @@ interface SSEState {
 }
 
 const initialState = {
-  connectionStatus: 'disconnected' as ConnectionStatus,
+  connectionStatus: null,
   activeWorkflowId: null
 };
 
@@ -65,7 +65,7 @@ export const useSSEStore = create<SSEState>()(
 
         return () => {
           eventSource.close();
-          set({ connectionStatus: 'disconnected' });
+          set({ connectionStatus: null });
         };
       },
 

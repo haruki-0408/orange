@@ -56,7 +56,7 @@ export const WorkflowHistories: FCX<Props> = memo(({
       return (
         <div className={clsx(styles.badge, styles.connection)}>
           <span className={styles.dot} />
-          {connectionStatus === 'connected' ? 'LIVE' : 'CONNECTING'}
+          {connectionStatus === 'error' ? 'ERROR' : (connectionStatus === 'connected' ? 'LIVE' : 'CONNECTING')}
         </div>
       );
     }
