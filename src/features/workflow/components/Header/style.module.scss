@@ -271,6 +271,9 @@
 
     &.FAILED {
       background: var(--progress-error-gradient);
+      &::after {
+        display: none;
+      }
     }
 
     &::after {
@@ -475,6 +478,18 @@
   font-weight: bold;
   color: var(--accent-primary);
   margin-right: 12px;
+  
+  &.PROCESSING {
+    color: var(--accent-primary);
+  }
+  
+  &.SUCCESS {
+    color: var(--progress-status-success-color);
+  }
+  
+  &.FAILED {
+    color: var(--progress-status-error-color);
+  }
 }
 
 .progressInfo {

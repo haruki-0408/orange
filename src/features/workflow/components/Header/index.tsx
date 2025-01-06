@@ -122,7 +122,10 @@ export const Header: FCX<Props> = memo(({
           (connectionStatus === 'connected') && styles.active
         )}>
           {selectedWorkflow?.workflow_id && (
-              <span className={styles.workflowId}>ID: {selectedWorkflow.workflow_id}</span>
+              <span className={clsx(
+                styles.workflowId,
+                styles[progressBar.status],
+              )}>ID: {selectedWorkflow.workflow_id}</span>
             )}
           <div className={styles.progressContainer}>
             <div 
