@@ -4,7 +4,8 @@ import { DynamoDB } from 'aws-sdk';
 import { revalidatePath, unstable_cache, revalidateTag } from 'next/cache';
 import { WorkflowHistory } from '@/features/workflow/types/types';
 import { CloudWatchLogs } from 'aws-sdk';
-import { LogGroupResults, LogGroupRequestIds, QueryResults, LogEntry, CloudWatchQueryResult } from '@/features/workflow/types/types';
+import { LogGroupResults, LogGroupRequestIds, QueryResults, LogEntry, CloudWatchQueryResult, WorkflowStatusType } from '@/features/workflow/types/types';
+
 
 const dynamodb = new DynamoDB.DocumentClient({
   region: process.env.AWS_REGION,
@@ -64,6 +65,7 @@ export async function createWorkflowHistory(data: {
   title: string;
   category: string;
   timestamp: string;
+  status: WorkflowStatusType;
 }) {
   try {
     const item = {
@@ -84,29 +86,6 @@ export async function createWorkflowHistory(data: {
   }
 }
 
-// ステータス更新
-export async function updateWorkflowStatus(workflowId: string, status: 'processing' | 'completed' | 'error') {
-  try {
-    await dynamodb.update({
-      TableName: process.env.WORKFLOW_HISTORIES_TABLE_NAME!,
-      Key: { workflow_id: workflowId },
-      UpdateExpression: 'SET #status = :status',
-      ExpressionAttributeNames: {
-        '#status': 'status'
-      },
-      ExpressionAttributeValues: {
-        ':status': status
-      }
-    }).promise();
-
-    revalidatePath('/');
-    return { success: true };
-  } catch (error) {
-    console.error('Failed to update workflow status:', error);
-    throw new Error('Failed to update status');
-  }
-}
-
 // ワクフローの進捗状況を取得
 export async function getWorkflowProgress(workflowId: string) {
   try {
@@ -115,7 +94,8 @@ export async function getWorkflowProgress(workflowId: string) {
       KeyConditionExpression: 'workflow_id = :workflowId',
       ExpressionAttributeValues: {
         ':workflowId': workflowId
-      }
+      },
+      ScanIndexForward: true // timestamp#orderの昇順でソート
     }).promise();
 
     if (!result.Items || result.Items.length === 0) {
@@ -151,8 +131,7 @@ export async function getWorkflowProgress(workflowId: string) {
           return null;
         }
       })
-      .filter((item): item is NonNullable<typeof item> => item !== null)
-      .sort((a, b) => a.order - b.order);
+      .filter((item): item is NonNullable<typeof item> => item !== null);
 
   } catch (error) {
     console.error('Failed to fetch workflow progress:', error);

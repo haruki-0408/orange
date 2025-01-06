@@ -1,34 +1,34 @@
-import { useEffect, useCallback, useState } from "react";
-import { useWorkflowStore } from "../stores/useWorkflowStore";
-import { ProgressData, StateType, WorkflowNodeId, NodeData } from "../types/types";
-import { useSSEStore } from "../stores/useSSEStore";
+import { useCallback } from "react";
+import { StateType, WorkflowNodeId, NodeData, ProgressbarType } from "../types/types";
 import { getWorkflowProgress } from "@/app/actions/workflow";
+import { useProgressStore } from '../stores/useProgressStore';
+import { Node, Edge } from "@xyflow/react";
 import { initialNodes } from "../const/initialNodes";
 import { initialEdges } from "../const/initialEdges";
-import { useReactFlow } from "@xyflow/react";
-import { useProgressStore } from '../stores/useProgressStore';
-import { useLoadingStore } from '../stores/useLoadingStore';
-import { useNodesState } from '@xyflow/react';
-import { useEdgesState } from '@xyflow/react';
+import { WorkflowHistory, ActiveWorkflow } from "../types/types";
 
-const PARALLEL_NODES = ["formula-gen-lambda", "table-gen-lambda", "graph-gen-lambda"];
+interface WorkflowProgressProps {
+  nodes: Node[];
+  edges: Edge[];
+  setNodes: (nodes: Node[] | ((prev: Node[]) => Node[])) => void;
+  setEdges: (edges: Edge[] | ((prev: Edge[]) => Edge[])) => void;
+  getNodes: () => Node[];
+  getNode: (id: string) => Node | undefined;
+  getEdge: (id: string) => Edge | undefined;
+  selectedWorkflow: WorkflowHistory | ActiveWorkflow | null;
+  updateProgress: (percentage: number, status: ProgressbarType['status']) => void;
+}
 
-export const useWorkflowProgress = () => {
-  const { selectedWorkflow } = useWorkflowStore();
-  const workflowId = selectedWorkflow?.workflow_id;
-  const { isActiveWorkflow } = useWorkflowStore();
-  const [nodes, setNodes] = useNodesState(initialNodes);
-  const [edges, setEdges] = useEdgesState(initialEdges);
-  const { getEdge, getNode, getNodes } = useReactFlow();
-  const { initializeSSE, terminateSSE } = useSSEStore();
-  const { updateProgress } = useProgressStore();
-  const { setLoading } = useLoadingStore();
+export const useWorkflowProgress = (props: WorkflowProgressProps) => {
+  const PARALLEL_NODES = ["formula-gen-lambda", "table-gen-lambda", "graph-gen-lambda"];
+  const workflowId = props.selectedWorkflow?.workflow_id;
+  // const { updateProgress } = useProgressStore();
 
   // ノードとエッジの状態をリセット
   const resetState = useCallback(async () => {
     return new Promise<void>(resolve => {
-      setNodes(initialNodes);
-      setEdges(initialEdges);
+      props.setNodes(initialNodes);
+      props.setEdges(initialEdges);
       // 次のレンダリングサイクルで状態が更新されるのを待つ
       setTimeout(resolve, 0);
     });
@@ -36,22 +36,22 @@ export const useWorkflowProgress = () => {
 
   // ノードの状態を更新
   const updateNode = useCallback((nodeId: string, data: Partial<NodeData>) => {
-    setNodes(nodes => nodes.map(node => 
+    props.setNodes(nodes => nodes.map(node => 
       node.id === nodeId ? { ...node, data: { ...node.data, ...data } } : node
     ));
   }, []);
 
   // エッジの状態を更新
   const updateEdge = useCallback((edgeId: string, data: any) => {
-    setEdges(edges => edges.map(edge => 
+    props.setEdges(edges => edges.map(edge => 
       edge.id === edgeId ? { ...edge, data: { ...edge.data, ...data } } : edge
     ));
   }, []);
 
   // ワークフロー全体を失敗状態に
-  const handleWorkflowToFailed = useCallback((failedNodeId: string) => {
+  const handleWorkflowToFailed = useCallback(() => {
     // 失敗したノードと既に状態が決まっているノード以外は状態ストップ
-    setNodes((nodes) =>
+    props.setNodes((nodes) =>
       nodes.map((node) => ({
         ...node,
         data: {
@@ -65,7 +65,7 @@ export const useWorkflowProgress = () => {
     );
 
     // 失敗したエッジと既に状態が決まっているエッジ以外は状態ストップ
-    setEdges((edges) =>
+    props.setEdges((edges) =>
       edges.map((edge) => ({
         ...edge,
         data: {
@@ -81,7 +81,7 @@ export const useWorkflowProgress = () => {
 
   // 特定のノードの状態更新処理
   const handleSpecificNodeUpdate = useCallback(
-    (nodeId: WorkflowNodeId, status: StateType) => {
+    (nodeId: WorkflowNodeId, status: StateType, validationCount?: number) => {
       const handlers: Partial<Record<WorkflowNodeId, () => void>> = {
         "callback-queue": () => {
           if (status === "success") {
@@ -99,13 +99,14 @@ export const useWorkflowProgress = () => {
             updateEdge("e-validation-choice", { targetNodeStatus: "success" });
             updateEdge("e-choice-success", { targetNodeStatus: "progress" });
             updateNode("callback-success-lambda", { status: "progress" });
-            if (getEdge("e-fix-validation")?.data?.targetNodeStatus === "progress") {
+            
+            if (props.getEdge("e-fix-validation")?.data?.targetNodeStatus === "progress" || validationCount! > 1) {
               updateEdge("e-fix-validation", { targetNodeStatus: "success" });
             }
           } else if (status === "validation-failed") {
             updateNode("validation-lambda", { status: "success" });
             updateEdge("e-ai-validation", { targetNodeStatus: "success" });
-            if (getEdge("e-fix-validation")?.data?.targetNodeStatus === "progress") {
+            if (props.getEdge("e-fix-validation")?.data?.targetNodeStatus === "progress" || validationCount! > 1) {
               updateEdge("e-fix-validation", { targetNodeStatus: "success" });
             }
             updateEdge("e-validation-choice", { targetNodeStatus: "success" });
@@ -113,10 +114,10 @@ export const useWorkflowProgress = () => {
             updateNode("data-fix-lambda", { status: "progress" });
           } else if (status === "failed") {
             // e-ai-validation か e-fix-validation のどちらからのfailedかを確認
-            if (getEdge("e-ai-validation")?.data?.targetNodeStatus === "progress") {
+            if (props.getEdge("e-ai-validation")?.data?.targetNodeStatus === "progress") {
               // AI Lambda からの失敗
               updateEdge("e-ai-validation", { targetNodeStatus: "failed" });
-            } else if (getEdge("e-fix-validation")?.data?.targetNodeStatus === "progress") {
+            } else if (props.getEdge("e-fix-validation")?.data?.targetNodeStatus === "progress") {
               // データ修正からの失敗
               updateEdge("e-fix-validation", { targetNodeStatus: "failed" });
             }
@@ -162,8 +163,8 @@ export const useWorkflowProgress = () => {
         "formula-gen-lambda": () => {
           if (status === "success") {
             // 他の2つのノードの状態を確認
-            const tableNode = getNode("table-gen-lambda");
-            const graphNode = getNode("graph-gen-lambda");
+            const tableNode = props.getNode("table-gen-lambda");
+            const graphNode = props.getNode("graph-gen-lambda");
             
             updateEdge("e-callback-formula", { targetNodeStatus: "success" });
             
@@ -180,8 +181,8 @@ export const useWorkflowProgress = () => {
         "table-gen-lambda": () => {
           if (status === "success") {
             // 他の2つのノードの状態を確認
-            const formulaNode = getNode("formula-gen-lambda");
-            const graphNode = getNode("graph-gen-lambda");
+            const formulaNode = props.getNode("formula-gen-lambda");
+            const graphNode = props.getNode("graph-gen-lambda");
             
             updateEdge("e-callback-table", { targetNodeStatus: "success" });
 
@@ -198,8 +199,8 @@ export const useWorkflowProgress = () => {
         "graph-gen-lambda": () => {
           if (status === "success") {
             // 他の2つのノードの状態を確認
-            const formulaNode = getNode("formula-gen-lambda");
-            const tableNode = getNode("table-gen-lambda");
+            const formulaNode = props.getNode("formula-gen-lambda");
+            const tableNode = props.getNode("table-gen-lambda");
             
             updateEdge("e-callback-graph", { targetNodeStatus: "success" });
             
@@ -218,12 +219,12 @@ export const useWorkflowProgress = () => {
 
       handlers[nodeId]?.();
     },
-    [getNode, updateNode, updateEdge]
+    [props.nodes, props.edges, props.getNode, props.getEdge, updateNode, updateEdge]
   );
 
   // プログレスバーの更新を行う関数
   const updateProgressBar = useCallback(() => {
-    const currentNodes = getNodes();
+    const currentNodes = props.getNodes();
     const failedNodes = currentNodes.filter(node => node.data.status === 'failed').length;
     const completedNodes = currentNodes.filter(
       node => node.data.status === 'success' && node.id !== 'data-fix-lambda'
@@ -232,18 +233,16 @@ export const useWorkflowProgress = () => {
     const totalNodes = 11;
     const percentage = Math.round((completedNodes / totalNodes) * 100);
     
-    console.log('currentNodes', currentNodes);
-    console.log('percentage', percentage);
-    
     const status = failedNodes > 0 ? 'FAILED' : 
                   percentage === 100 ? 'SUCCESS' : 'PROCESSING';
 
-    updateProgress(percentage, status);
-  }, [getNodes, updateProgress]);
+    console.log(percentage, status);
+    props.updateProgress(percentage, status);
+  }, [props.getNodes, props.updateProgress]);
 
   // ワークフローの状態更新
   const updateWorkflowState = useCallback(
-    async (nodeId: WorkflowNodeId, status: StateType) => {
+    async (nodeId: WorkflowNodeId, status: StateType, validationCount?: number) => {
       return new Promise<void>(resolve => {
         const isSpecialNode = [
           "callback-queue",
@@ -263,18 +262,18 @@ export const useWorkflowProgress = () => {
 
         // 通常Stateの成功時は次のノードを進行中に
         if (isSpecialNode) {
-          handleSpecificNodeUpdate(nodeId, status);
+          handleSpecificNodeUpdate(nodeId, status, validationCount);
         } else {
-          edges.forEach(edge => {
+          props.edges.forEach(edge => {
             if (edge.target === nodeId) {
               updateEdge(edge.id, { targetNodeStatus: status });
             }
           });
 
           if (status === "success") {
-            edges.filter(e => e.source === nodeId)
+            props.edges.filter(e => e.source === nodeId)
                  .forEach(edge => {
-                   const targetNode = nodes.find(n => n.id === edge.target);
+                   const targetNode = props.nodes.find(n => n.id === edge.target);
                    if (targetNode?.data?.status === "ready") {
                      updateNode(edge.target, { status: "progress" });
                      updateEdge(edge.id, { targetNodeStatus: "progress" });
@@ -285,14 +284,14 @@ export const useWorkflowProgress = () => {
 
         // 失敗時の共通処理
         if (status === "failed") {
-          handleWorkflowToFailed(nodeId);
+          handleWorkflowToFailed();
         }
         
         // 次のレンダリングサイクルで状態更新を確実に反映
         setTimeout(resolve, 0);
       });
     },
-    [edges, nodes, updateNode, updateEdge, handleSpecificNodeUpdate, handleWorkflowToFailed]
+    [props.edges, props.nodes, updateNode, updateEdge, handleSpecificNodeUpdate, handleWorkflowToFailed]
   );
 
   // 進捗状況を反映
@@ -304,77 +303,36 @@ export const useWorkflowProgress = () => {
 
     // ワークフローの進捗状況を取得
     const progressRecords = await getWorkflowProgress(workflowId);
+    
     if (progressRecords.length === 0) {
       updateNode("api-gateway", { status: "progress" });
       updateEdge("e-start-api", { targetNodeStatus: "progress" });
+      
+      // プログレスバーの更新
       updateProgressBar();
       return;
     }
 
     for (const record of progressRecords) {
-      if (record.status === "success" || record.status === "validation-failed") {
-        await updateWorkflowState(record.state_name, "success");
+      if (record.status === "success") {
+        const validationCount = progressRecords.filter(r => r.state_name === "validation-lambda").length;
+        await updateWorkflowState(record.state_name, "success", validationCount);
       } else if (record.status === "failed") {
-        await updateWorkflowState(record.state_name, "failed");
+        const validationCount = progressRecords.filter(r => r.state_name === "validation-lambda").length;
+        await updateWorkflowState(record.state_name, "failed", validationCount);
+      } else if (record.status === "validation-failed") {
+        await updateWorkflowState(record.state_name, "success");
       }
     }
 
+    // プログレスバーの更新
     updateProgressBar();
   }, [workflowId, updateWorkflowState, updateNode, updateEdge, updateProgressBar]);
 
-  // 初期化処理
-  useEffect(() => {
-    if (!workflowId) return;
-    
-    // ローディング
-    setLoading(true);
-
-    const initializeWorkflow = async () => {
-      try {
-        // 1. まず状態をリセット
-        await resetState();
-        useProgressStore.getState().resetProgress();
-
-        // 少し待機して状態の更新を確実にする
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        // 2. 進捗状況を反映
-        await reflectWorkflowProgress();
-
-        // 3. アクティブなワークフローの場合のみSSE接続を開始
-        if (isActiveWorkflow(workflowId)) {
-          const handleMessage = (data: ProgressData) => {
-            if (!["success", "failed", "validation-failed", "progress"].includes(data.status)) return;
-
-            // ワークフローの状態を更新
-            updateWorkflowState(data.state_name, data.status as StateType);
-
-            // プログレスバーの更新
-            updateProgressBar();
-          };
-
-          // SSE接続
-          const cleanup = initializeSSE(workflowId, handleMessage);
-          return () => {
-            cleanup();
-            terminateSSE();
-          };
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    try {
-      // 進捗状況の初期化処理
-      initializeWorkflow();
-    } finally {
-      setLoading(false);
-    }
-  }, [workflowId]);
-
   return {
-    nodes,
-    edges
-  };
+    resetState,
+    reflectWorkflowProgress,
+    updateProgressBar,
+    updateWorkflowState
+  }
 };

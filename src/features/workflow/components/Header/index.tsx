@@ -24,7 +24,7 @@ export const Header: FCX<Props> = memo(({
   selectedCategory,
   onCategoryChange,
 }) => {
-  const { selectedWorkflow } = useWorkflowStore();
+  const { selectedWorkflow, isActiveWorkflow } = useWorkflowStore();
   const { connectionStatus } = useSSEStore();
   const { progressBar } = useProgressStore();
   const getStatusDisplay = () => {
@@ -43,6 +43,7 @@ export const Header: FCX<Props> = memo(({
 
   const status = getStatusDisplay();
 
+  console.log(progressBar.status);
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -119,7 +120,7 @@ export const Header: FCX<Props> = memo(({
 
         <div className={clsx(
           styles.progressWrapper,
-          (connectionStatus === 'connected') && styles.active
+          ((isActiveWorkflow(selectedWorkflow?.workflow_id!) && connectionStatus === 'connected') || progressBar.status === 'SUCCESS' || progressBar.status === 'FAILED') && styles.active
         )}>
           {selectedWorkflow?.workflow_id && (
               <span className={clsx(

@@ -106,6 +106,7 @@ export const useWorkflowStore = create<WorkflowState>()(
 
       selectedWorkflow: null,
       setSelectedWorkflow: (workflow) => set({ selectedWorkflow: workflow }),
+
     }),
     { name: 'workflow-store' }
   )
