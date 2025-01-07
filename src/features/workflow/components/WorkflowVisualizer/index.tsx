@@ -126,10 +126,10 @@ export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) 
     
     initializeWorkflow();
 
-    return () => {
-      // resetState();
-      // useProgressStore.getState().resetProgress();
-    };
+    // return () => {
+    //   // resetState();
+    //   // useProgressStore.getState().resetProgress();
+    // };
   }, [selectedWorkflow, isReady]);
 
   return (
@@ -154,7 +154,6 @@ export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) 
           includeHiddenNodes: true,
           maxZoom: 1
         }}
-        // defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
       >
         <Controls showInteractive={false} className={styles.controls} />
         <MiniMap

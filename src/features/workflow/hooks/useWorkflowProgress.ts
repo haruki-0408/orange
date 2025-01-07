@@ -117,7 +117,7 @@ export const useWorkflowProgress = (props: WorkflowProgressProps) => {
             if (props.getEdge("e-ai-validation")?.data?.targetNodeStatus === "progress") {
               // AI Lambda からの失敗
               updateEdge("e-ai-validation", { targetNodeStatus: "failed" });
-            } else if (props.getEdge("e-fix-validation")?.data?.targetNodeStatus === "progress") {
+            } else if (props.getEdge("e-fix-validation")?.data?.targetNodeStatus === "progress" || validationCount! > 1) {
               // データ修正からの失敗
               updateEdge("e-fix-validation", { targetNodeStatus: "failed" });
             }
@@ -280,6 +280,7 @@ export const useWorkflowProgress = (props: WorkflowProgressProps) => {
                    }
                  });
           }
+
         }
 
         // 失敗時の共通処理
@@ -288,7 +289,8 @@ export const useWorkflowProgress = (props: WorkflowProgressProps) => {
         }
         
         // 次のレンダリングサイクルで状態更新を確実に反映
-        setTimeout(resolve, 0);
+        // setTimeout(resolve, 100);
+        resolve();
       });
     },
     [props.edges, props.nodes, updateNode, updateEdge, handleSpecificNodeUpdate, handleWorkflowToFailed]
@@ -325,8 +327,10 @@ export const useWorkflowProgress = (props: WorkflowProgressProps) => {
       }
     }
 
-    // プログレスバーの更新
-    updateProgressBar();
+    // プログレスバーの更新 マクロタスク
+    setTimeout(() => {
+      updateProgressBar();
+    }, 0);
   }, [workflowId, updateWorkflowState, updateNode, updateEdge, updateProgressBar]);
 
   return {
