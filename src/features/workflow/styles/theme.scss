@@ -502,6 +502,14 @@
     --modal-close-color: #64748b;
     --modal-close-hover-bg: #f1f5f9;
     --modal-close-hover-color: #0f172a;
+
+    --download-button-bg: rgba(37, 99, 235, 0.08);
+    --download-button-hover-bg: rgba(37, 99, 235, 0.12);
+    --download-button-text: #2563eb;
+    --download-button-border: rgba(37, 99, 235, 0.2);
+    --download-button-hover-border: rgba(37, 99, 235, 0.3);
+    --download-button-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+    --download-button-hover-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
   }
 
   // Dark theme
@@ -995,5 +1003,13 @@
     --modal-close-color: #94a3b8;
     --modal-close-hover-bg: #334155;
     --modal-close-hover-color: #f8fafc;
+
+    --download-button-bg: rgba(6, 182, 212, 0.1);
+    --download-button-hover-bg: rgba(6, 182, 212, 0.15);
+    --download-button-text: #06b6d4;
+    --download-button-border: rgba(6, 182, 212, 0.2);
+    --download-button-hover-border: rgba(6, 182, 212, 0.3);
+    --download-button-shadow: 0 4px 12px rgba(6, 182, 212, 0.12);
+    --download-button-hover-shadow: 0 6px 16px rgba(6, 182, 212, 0.2);
   }
 } 

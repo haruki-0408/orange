@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { Category } from '@/features/workflow/types/types';
@@ -27,14 +27,37 @@ export const Header: FCX<Props> = memo(({
   const { selectedWorkflow, isActiveWorkflow } = useWorkflowStore();
   const { connectionStatus } = useSSEStore();
   const { progressBar } = useProgressStore();
+  const [isStarting, setIsStarting] = useState(false);
+
+  // ワークフロー開始処理
+  const handleStart = async () => {
+    if (isStarting) return; // 既に開始処理中なら何もしない
+    
+    setIsStarting(true);
+    try {
+      await onStart();
+    } catch (error) {
+      console.error('Failed to start workflow:', error);
+    } finally {
+      setIsStarting(false);
+    }
+  };
+
+  // 開始ボタンの無効化条件
+  const isStartDisabled = 
+    isStarting || 
+    !title || 
+    !selectedCategory || 
+    connectionStatus === 'CONNECTING';
+
   const getStatusDisplay = () => {
     switch (connectionStatus) {
       
-      case 'connecting':
+      case 'CONNECTING':
         return { text: 'Establishing Connection...', color: 'warning' };
-      case 'connected':
+      case 'LIVE':
         return { text: 'System Active', color: 'success' };
-      case 'error':
+      case 'ERROR':
         return { text: 'Connection Error', color: 'error' };
       default:
         return { text: 'System Status', color: 'neutral' };
@@ -43,7 +66,6 @@ export const Header: FCX<Props> = memo(({
 
   const status = getStatusDisplay();
 
-  console.log(progressBar.status);
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -53,7 +75,7 @@ export const Header: FCX<Props> = memo(({
             <div className={clsx(styles.statusBadge, styles[status.color])}>
               <span className={clsx(styles.dot, styles[status.color])} />
               {status.text}
-              {connectionStatus === 'connecting' && (
+              {connectionStatus === 'CONNECTING' && (
                 <div className={styles.loadingDots}>
                   <span>.</span><span>.</span><span>.</span>
                 </div>
@@ -78,11 +100,13 @@ export const Header: FCX<Props> = memo(({
               onChange={(e) => onTitleChange(e.target.value)}
               placeholder="論文のタイトルを入力"
               className={styles.input}
+              disabled={isStarting}
             />
             <select 
               className={styles.select} 
               value={selectedCategory}
               onChange={(e) => onCategoryChange(e.target.value)}
+              disabled={isStarting}
             >
               <option value="" disabled>カテゴリを選択</option>
               {categories.map(cat => (
@@ -91,7 +115,11 @@ export const Header: FCX<Props> = memo(({
                 </option>
               ))}
             </select>
-            <button onClick={onStart} className={styles.button}>
+            <button 
+              onClick={handleStart} 
+              className={clsx(styles.button, isStartDisabled && styles.disabled)}
+              disabled={isStartDisabled}
+            >
               <svg 
                 className={styles.icon}
                 width="20" 
@@ -113,14 +141,14 @@ export const Header: FCX<Props> = memo(({
                   d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
                 />
               </svg>
-              <span>生成開始</span>
+              <span>{isStarting ? '開始中...' : '生成開始'}</span>
             </button>
           </div>
         </div>
 
         <div className={clsx(
           styles.progressWrapper,
-          ((isActiveWorkflow(selectedWorkflow?.workflow_id!) && connectionStatus === 'connected') || progressBar.status === 'SUCCESS' || progressBar.status === 'FAILED') && styles.active
+          ((isActiveWorkflow(selectedWorkflow?.workflow_id!) && connectionStatus === 'LIVE') || progressBar.status === 'SUCCESS' || progressBar.status === 'FAILED') && styles.active
         )}>
           {selectedWorkflow?.workflow_id && (
               <span className={clsx(

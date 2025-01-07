@@ -1,7 +1,7 @@
 export type ServiceType = 'Lambda' | 'SQS' | 'APIGateway' | 'DynamoDB' | 'S3';
 export type StateType = 'ready' | 'progress' | 'success' | 'failed' | 'stopped' | 'validation-failed';
 export type WorkflowStatusType = 'PROCESSING' | 'SUCCESS' | 'FAILED';
-export type ConnectionStatus = 'connecting' | 'connected' | 'error' | null;
+export type ConnectionStatus = 'CONNECTING' | 'LIVE' | 'ERROR' | null;
 
 export interface ProgressbarType {
   percentage: number;

@@ -5,6 +5,7 @@ import { revalidatePath, unstable_cache, revalidateTag } from 'next/cache';
 import { WorkflowHistory } from '@/features/workflow/types/types';
 import { CloudWatchLogs } from 'aws-sdk';
 import { LogGroupResults, LogGroupRequestIds, QueryResults, LogEntry, CloudWatchQueryResult, WorkflowStatusType } from '@/features/workflow/types/types';
+import { S3 } from 'aws-sdk';
 
 
 const dynamodb = new DynamoDB.DocumentClient({
@@ -16,6 +17,15 @@ const dynamodb = new DynamoDB.DocumentClient({
 });
 
 const cloudWatchLogs = new CloudWatchLogs({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+  }
+});
+
+// S3クライアントの初期化
+const s3 = new S3({
   region: process.env.AWS_REGION,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
@@ -43,16 +53,43 @@ export async function getCategories() {
   }
 }
 
+// ワークフロー開始
+export async function startWorkflow(workflowId: string, title: string, category: string) {
+  try {
+    const response = await fetch(`${process.env.APIGATEWAY_URL}/workflow`, {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.APIGATEWAY_API_KEY!
+    },
+    body: JSON.stringify({
+      workflow_id: workflowId,
+      title: title,
+      category: category
+    }),
+  });
+    return response.json();
+  } catch (error) {
+    console.error('Failed to start workflow:', error);
+    throw new Error('Failed to start workflow');
+  }
+}
+
 // 履歴取得
 export async function getWorkflowHistories() {
   try {
     const result = await dynamodb.scan({
       TableName: process.env.WORKFLOW_HISTORIES_TABLE_NAME!,
       ConsistentRead: true,
-      Limit: 10,
+      Limit: 10
     }).promise();
 
-    return result.Items as WorkflowHistory[];
+    // タイムスタンプでソート（降順）
+    const sortedHistories = (result.Items as WorkflowHistory[]).sort((a, b) => {
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+    });
+
+    return sortedHistories;
   } catch (error) {
     console.error('Failed to fetch workflow histories:', error);
     return [];
@@ -70,7 +107,7 @@ export async function createWorkflowHistory(data: {
   try {
     const item = {
       ...data,
-      status: 'processing'
+      status: data.status
     };
 
     await dynamodb.put({
@@ -86,7 +123,7 @@ export async function createWorkflowHistory(data: {
   }
 }
 
-// ワクフローの進捗状況を取得
+// ワ-クフローの進捗状況を取得
 export async function getWorkflowProgress(workflowId: string) {
   try {
     const result = await dynamodb.query({
@@ -298,4 +335,37 @@ export async function getWorkflowLogs(queryResult: QueryResults): Promise<LogEnt
 // キャッシュを無効化する関数
 export async function invalidateWorkflowLogs() {
   revalidateTag('workflow-logs');
+}
+
+// 署名付きURLを生成する関数
+export async function generatePresignedUrl(workflowId: string) {
+  try {
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME!,
+      Key: `${workflowId}/fake_thesis.pdf`,
+      Expires: 60 * 5 // 5分間有効
+    };
+
+    const url = await s3.getSignedUrlPromise('getObject', params);
+    
+    // URLが生成できたかチェック
+    if (!url) {
+      throw new Error('Failed to generate presigned URL');
+    }
+
+    return {
+      url,
+      expires: new Date(Date.now() + 60 * 5 * 1000).toISOString() // 有効期限
+    };
+
+  } catch (error) {
+    console.error('Error generating presigned URL:', error);
+    
+    // S3オブジェクトが存在しない場合
+    if (error instanceof Error && error.name === 'NoSuchKey') {
+      throw new Error('PDF file not found');
+    }
+    
+    throw new Error('Failed to generate download URL');
+  }
 } 

@@ -7,6 +7,8 @@ interface SSEState {
   connectionStatus: ConnectionStatus;
   // アクティブなワークフローID
   activeWorkflowId: string | null;
+  // EventSourceインスタンスを保持
+  eventSource: EventSource | null;
   // SSE接続の初期化
   initializeSSE: (
     workflowId: string,
@@ -20,19 +22,21 @@ interface SSEState {
 
 const initialState = {
   connectionStatus: null,
-  activeWorkflowId: null
+  activeWorkflowId: null,
+  eventSource: null
 };
 
 export const useSSEStore = create<SSEState>()(
   devtools(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
 
       initializeSSE: (workflowId: string, onMessage: (data: ProgressData & { isFirstMessage?: boolean }) => void) => {
         const eventSource = new EventSource(`/api/sse/${workflowId}`);
         set({ 
           activeWorkflowId: workflowId,
-          connectionStatus: 'connecting'
+          connectionStatus: 'CONNECTING',
+          eventSource  // EventSourceインスタンスを保存
         });
 
         let isFirstMessage = true;
@@ -44,7 +48,7 @@ export const useSSEStore = create<SSEState>()(
             
             if (isFirstMessage) {
               isFirstMessage = false;
-              set({ connectionStatus: 'connected' });
+              set({ connectionStatus: 'LIVE' });
               onMessage({ ...data, isFirstMessage: true });
               return;
             }
@@ -53,23 +57,36 @@ export const useSSEStore = create<SSEState>()(
 
           } catch (error) {
             console.error("Error processing SSE message:", error);
-            set({ connectionStatus: 'error' });
+            set({ connectionStatus: 'ERROR' });
             eventSource.close();
           }
         };
 
         eventSource.onerror = () => {
-          set({ connectionStatus: 'error' });
+          set({ connectionStatus: 'ERROR' });
           eventSource.close();
         };
 
         return () => {
           eventSource.close();
-          set({ connectionStatus: null });
+          set({ 
+            connectionStatus: null,
+            eventSource: null 
+          });
         };
       },
 
       terminateSSE: () => {
+        // 既存のEventSourceがあれば接続を閉じる
+        const currentEventSource = get().eventSource;
+        if (currentEventSource) {
+          console.log("SSE接続終了");
+          currentEventSource.close();
+          set({ 
+            connectionStatus: null,
+            eventSource: null 
+          });
+        }
         set(initialState);
       },
 

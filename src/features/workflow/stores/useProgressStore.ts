@@ -5,7 +5,8 @@ interface ProgressStore {
   progressBar: ProgressbarType;
   updateProgress: (percentage: number, status: ProgressbarType['status']) => void;
   resetProgress: () => void;
-  onProgressComplete?: (status: ProgressbarType['status']) => void;
+  onProgressComplete: ((status: ProgressbarType['status']) => void) | undefined;
+  setOnProgressComplete: (callback: ((status: ProgressbarType['status']) => void) | undefined) => void;
 }
 
 export const useProgressStore = create<ProgressStore>((set, get) => ({
@@ -16,7 +17,6 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
   updateProgress: (percentage, status) => {
     set({ progressBar: { percentage, status } });
     
-    // 完了時のコールバック実行
     if ((status === 'SUCCESS' && percentage === 100) || status === 'FAILED') {
       get().onProgressComplete?.(status);
     }
@@ -24,7 +24,8 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
   resetProgress: () => set({
     progressBar: { percentage: 0, status: 'PROCESSING' }
   }),
-  onProgressComplete: (status) => {
-    console.log('onProgressComplete', status);
-  },
+  onProgressComplete: undefined,
+  setOnProgressComplete: (callback) => set({ 
+    onProgressComplete: callback 
+  })
 })); 

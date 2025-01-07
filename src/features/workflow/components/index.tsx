@@ -11,12 +11,16 @@ import { useTheme } from '../contexts/ThemeContext';
 import '../styles/theme.scss';
 import { 
   Category, 
-  WorkflowHistory
+  WorkflowHistory,
+  ProgressbarType
 } from '../types/types';
 import { WorkflowHistories } from './WorkflowHistories';
 import { useWorkflowStore } from '../stores/useWorkflowStore';
 import { WorkflowVisualizer } from './WorkflowVisualizer';
 import { useProgressStore } from '../stores/useProgressStore';
+import { startWorkflow } from "@/app/actions/workflow";
+import { useWorkflowHistories } from '../hooks/useWorkflowHistories';
+import { useSSEStore } from '../stores/useSSEStore';
 
 interface Props { 
   className?: string;
@@ -31,23 +35,62 @@ export const Workflow: FCX<Props> = ({
 }) => {
   
   const { addWorkflow, getWorkflowBySession, generateSessionId } = useWorkflowStore();
-  
   const { progressBar } = useProgressStore();
-  
   const [sessionId] = useState(() => generateSessionId());
   const { setSelectedWorkflow } = useWorkflowStore();
+  const { selectedWorkflow, isActiveWorkflow } = useWorkflowStore();
+  const { initializeSSE, terminateSSE } = useSSEStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [thesisTitle, setThesisTitle] = useState('');
-  const [histories, setHistories] = useState<WorkflowHistory[]>(initialHistories);
 
   // ReactFlow states
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const { theme } = useTheme();
+
+  const { histories, setHistories, handleUpdate } = useWorkflowHistories({
+    initialHistories,
+  });
+
+  // ワークフロー成功/失敗時の処理 登録
+  useEffect(() => {
+    useProgressStore.getState().setOnProgressComplete(async (status: ProgressbarType['status']) => {
+      if (!selectedWorkflow) return;
+
+      console.log(`Workflow completed with status: ${status}`);
+      
+      try {
+        // SSE接続を終了
+        terminateSSE();
+        
+        // DynamoDBの履歴を更新
+        handleUpdate(selectedWorkflow, status);
+
+        if (isActiveWorkflow(selectedWorkflow.workflow_id)) {
+          // 選択中のワークフローのステータスを更新
+          useWorkflowStore.getState().setSelectedWorkflow({
+            ...selectedWorkflow,
+            status: status
+          });
+
+          // アクティブワークフローを削除
+          useWorkflowStore.getState().removeWorkflow(selectedWorkflow.workflow_id);
+        }
+        
+      } catch (error) {
+        console.error('Failed to update workflow history:', error);
+      }
+    });
+
+    return () => {
+      useProgressStore.getState().setOnProgressComplete(undefined);
+    };
+  }, [selectedWorkflow, terminateSSE, isActiveWorkflow]);
+  
+  
   // 進行中のワークフローの復元
   useEffect(() => {
-    
     const activeWorkflow = getWorkflowBySession(sessionId);
     if (activeWorkflow) {
       setThesisTitle(activeWorkflow.title);
@@ -82,6 +125,8 @@ export const Workflow: FCX<Props> = ({
       return;
     }
 
+    // startWorkflow(newWorkflowId, thesisTitle, selectedCategory);
+
     setHistories(prev => [{
       workflow_id: newWorkflowId,
       title: thesisTitle,
@@ -89,6 +134,14 @@ export const Workflow: FCX<Props> = ({
       status: 'PROCESSING',
       timestamp: new Date().toISOString()
     }, ...prev]);
+
+    setSelectedWorkflow({
+      workflow_id: newWorkflowId,
+      title: thesisTitle,
+      category: selectedCategory,
+      status: 'PROCESSING',
+      timestamp: new Date().toISOString()
+    });
   };
 
   return (
@@ -101,7 +154,7 @@ export const Workflow: FCX<Props> = ({
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
       />
-      <div className="flex w-full">
+      <div className="flex w-full h-[calc(100vh-100px)]">
         <WorkflowHistories
           histories={histories}
         />

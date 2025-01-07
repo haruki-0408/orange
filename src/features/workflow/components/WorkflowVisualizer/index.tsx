@@ -29,7 +29,6 @@ import { initialEdges } from "../../const/initialEdges";
 import { useWorkflowStore } from "../../stores/useWorkflowStore";
 import { useProgressStore } from "../../stores/useProgressStore";
 import { useSSEStore } from "../../stores/useSSEStore";
-import { ProgressData, StateType } from "../../types/types";
 
 interface Props {
   onNodeClick: (nodeId: string) => void;
@@ -53,7 +52,7 @@ export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) 
   const { theme } = useTheme();
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
-  const { getEdge, getNode, getNodes } = useReactFlow();
+  const { getEdge, getNode, getNodes, getEdges } = useReactFlow();
   const { selectedWorkflow } = useWorkflowStore();
   const { isLoading, setLoading } = useLoadingStore();
   const { isActiveWorkflow } = useWorkflowStore();
@@ -62,7 +61,7 @@ export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) 
   const [isReady, setIsReady] = useState(false);
   
   // ワークフロープログレスの初期化
-  const { resetState, reflectWorkflowProgress, updateWorkflowState, updateProgressBar } = useWorkflowProgress({ 
+  const { resetState, reflectWorkflowProgress, handleMessage   } = useWorkflowProgress({ 
     nodes, 
     setNodes, 
     edges, 
@@ -70,6 +69,7 @@ export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) 
     getEdge, 
     getNode, 
     getNodes,
+    getEdges,
     selectedWorkflow,
     updateProgress
   });
@@ -80,12 +80,13 @@ export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) 
 
   // 初期化処理
   useEffect(() => {
+    // ワークフローが選択されていない場合は処理を終了
     if (!selectedWorkflow || !isReady) return;
     
     // ローディング
     setLoading(true);
 
-    const initializeWorkflow = async () => {
+    (async () => {
       try {
         // 1. まず状態をリセット
         await resetState();
@@ -93,25 +94,12 @@ export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) 
 
         // 少し待機して状態の更新を確実にする
         await new Promise(resolve => setTimeout(resolve, 100));
-
+        
         // 2. 進捗状況を反映
         await reflectWorkflowProgress();
 
         // 3. アクティブなワークフローの場合のみSSE接続を開始
         if (isActiveWorkflow(selectedWorkflow.workflow_id)) {
-
-          const handleMessage = (data: ProgressData) => {
-            if (!["success", "failed", "validation-failed", "progress"].includes(data.status)) return;
-
-            // ワークフローの状態を更新
-            updateWorkflowState(data.state_name, data.status as StateType);
-
-            // プログレスバーの更新
-            if (data.state_name !== "data-fix-lambda") {
-              updateProgressBar();
-            }
-          };
-
           // SSE接続
           const cleanup = initializeSSE(selectedWorkflow.workflow_id, handleMessage);
           return () => {
@@ -122,14 +110,7 @@ export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) 
       } finally {
         setLoading(false);
       }
-    };
-    
-    initializeWorkflow();
-
-    // return () => {
-    //   // resetState();
-    //   // useProgressStore.getState().resetProgress();
-    // };
+    })();
   }, [selectedWorkflow, isReady]);
 
   return (
