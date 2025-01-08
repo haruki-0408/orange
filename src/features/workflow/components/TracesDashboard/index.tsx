@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
-import { useReactFlow, Node } from '@xyflow/react';
+import { useReactFlow } from '@xyflow/react';
 import { TraceData } from '@/features/workflow/types/types';
 import clsx from 'clsx';
 import { MetricCard } from '../MetricCard';
@@ -33,7 +33,8 @@ export const TracesDashboard: FCX<Props> = ({
   className,
 }) => {
   const { selectedWorkflow } = useWorkflowStore();
-  const { setCenter, getNode } = useReactFlow();
+  const reactFlowInstance = useReactFlow();
+  const { getNode } = reactFlowInstance;
   const [activeTab, setActiveTab] = useState<TabType>('metrics');
   const { setLoading } = useLoadingStore();
   const [logs, setLogs] = useState<LogData[]>([]);
@@ -67,34 +68,16 @@ export const TracesDashboard: FCX<Props> = ({
     }
   }, [selectedWorkflow, activeTab]);
 
-  const calculateAbsolutePosition = (node: Node) => {
-    let absoluteX = node.position.x;
-    let absoluteY = node.position.y;
-    let currentNode = node;
-
-    while (currentNode.parentId) {
-      const parentNode = getNode(currentNode.parentId);
-      if (parentNode) {
-        absoluteX += parentNode.position.x;
-        absoluteY += parentNode.position.y;
-        currentNode = parentNode;
-      } else {
-        break;
-      }
-    }
-
-    return { x: absoluteX, y: absoluteY };
-  };
-
   const handleTraceClick = (nodeId: string) => {
     const node = getNode(nodeId);
     if (node) {
-      const position = calculateAbsolutePosition(node);
-      setCenter(
-        position.x + (node.width || 0) / 2,
-        position.y + (node.height || 0) / 2,
-        { zoom: 1.5, duration: 800 }
-      );
+      reactFlowInstance.fitView({
+        nodes: [node],
+        duration: 600,
+        padding: 0.2,
+        minZoom: 1.5,
+        maxZoom: 1.5,
+      });
     }
   };
 

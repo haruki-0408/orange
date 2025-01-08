@@ -264,7 +264,6 @@ export const useWorkflowProgress = (props: WorkflowProgressProps) => {
           handleSpecificNodeUpdate(nodeId, status, validationCount);
         } else {
           const currentEdges = props.getEdges();
-          const currentNodes = props.getNodes();
 
           // 通常Stateの成功時はそのノードと前のエッジを成功に
           for(const edge of currentEdges) {
@@ -277,7 +276,8 @@ export const useWorkflowProgress = (props: WorkflowProgressProps) => {
           if (status === "success") {
             const nextEdges = currentEdges.filter(e => e.source === nodeId);
             for(const edge of nextEdges) {
-                const targetNode = props.nodes.find(n => n.id === edge.target);
+                const targetNode = props.getNode(edge.target);
+
                 if (targetNode?.data?.status === "ready") {
                   updateNode(edge.target, { status: "progress" });
                   updateEdge(edge.id, { targetNodeStatus: "progress" });

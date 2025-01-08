@@ -510,6 +510,32 @@
     --download-button-hover-border: rgba(37, 99, 235, 0.3);
     --download-button-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
     --download-button-hover-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+
+    // Connection Status Styles
+    --connection-status-bg: rgba(255, 255, 255, 0.95);
+    --connection-status-border: rgba(37, 99, 235, 0.15);
+    --connection-status-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    
+    // LIVE状態
+    --connection-status-live-bg: rgba(16, 185, 129, 0.1);
+    --connection-status-live-border: rgba(16, 185, 129, 0.2);
+    --connection-status-live-text: #059669;
+    --connection-status-live-icon: #10b981;
+    --connection-status-live-glow: 0 0 12px rgba(16, 185, 129, 0.2);
+    
+    // CONNECTING状態
+    --connection-status-connecting-bg: rgba(245, 158, 11, 0.1);
+    --connection-status-connecting-border: rgba(245, 158, 11, 0.2);
+    --connection-status-connecting-text: #d97706;
+    --connection-status-connecting-icon: #f59e0b;
+    --connection-status-connecting-glow: 0 0 12px rgba(245, 158, 11, 0.2);
+    
+    // ERROR状態
+    --connection-status-error-bg: rgba(239, 68, 68, 0.1);
+    --connection-status-error-border: rgba(239, 68, 68, 0.2);
+    --connection-status-error-text: #dc2626;
+    --connection-status-error-icon: #ef4444;
+    --connection-status-error-glow: 0 0 12px rgba(239, 68, 68, 0.2);
   }
 
   // Dark theme
@@ -990,19 +1016,19 @@
     --modal-content-bg: #1e293b;
     --modal-content-border: rgba(51, 65, 85, 1);
     --modal-content-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 20px 25px -5px rgba(0, 0, 0, 0.5),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2);
+      0 0 0 1px rgba(0, 0, 0, 0.05),
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
     
-    --modal-header-bg: #1e293b;
-    --modal-header-border: rgba(51, 65, 85, 1);
-    --modal-header-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --modal-header-bg: #ffffff;
+    --modal-header-border: rgba(226, 232, 240, 1);
+    --modal-header-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     
-    --modal-title-color: #f8fafc;
-    --modal-text-color: #e2e8f0;
-    --modal-close-color: #94a3b8;
-    --modal-close-hover-bg: #334155;
-    --modal-close-hover-color: #f8fafc;
+    --modal-title-color: #1e293b;
+    --modal-text-color: #334155;
+    --modal-close-color: #64748b;
+    --modal-close-hover-bg: #f1f5f9;
+    --modal-close-hover-color: #0f172a;
 
     --download-button-bg: rgba(6, 182, 212, 0.1);
     --download-button-hover-bg: rgba(6, 182, 212, 0.15);
@@ -1011,5 +1037,31 @@
     --download-button-hover-border: rgba(6, 182, 212, 0.3);
     --download-button-shadow: 0 4px 12px rgba(6, 182, 212, 0.12);
     --download-button-hover-shadow: 0 6px 16px rgba(6, 182, 212, 0.2);
+
+    // Connection Status Styles
+    --connection-status-bg: rgba(255, 255, 255, 0.95);
+    --connection-status-border: rgba(37, 99, 235, 0.15);
+    --connection-status-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    
+    // LIVE状態
+    --connection-status-live-bg: rgba(16, 185, 129, 0.1);
+    --connection-status-live-border: rgba(16, 185, 129, 0.2);
+    --connection-status-live-text: #059669;
+    --connection-status-live-icon: #10b981;
+    --connection-status-live-glow: 0 0 12px rgba(16, 185, 129, 0.2);
+    
+    // CONNECTING状態
+    --connection-status-connecting-bg: rgba(245, 158, 11, 0.1);
+    --connection-status-connecting-border: rgba(245, 158, 11, 0.2);
+    --connection-status-connecting-text: #d97706;
+    --connection-status-connecting-icon: #f59e0b;
+    --connection-status-connecting-glow: 0 0 12px rgba(245, 158, 11, 0.2);
+    
+    // ERROR状態
+    --connection-status-error-bg: rgba(239, 68, 68, 0.15);
+    --connection-status-error-border: rgba(239, 68, 68, 0.25);
+    --connection-status-error-text: #f87171;
+    --connection-status-error-icon: #ef4444;
+    --connection-status-error-glow: 0 0 12px rgba(239, 68, 68, 0.3);
   }
 } 

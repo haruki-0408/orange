@@ -13,14 +13,10 @@
 .header {
   padding: 1.5rem;
   height: 110px;
-  // position: sticky;
-  // top: 0;
-  // z-index: 10;
   background: var(--histories-header-bg);
   border-bottom: 1px solid var(--histories-border);
 
   .headerContent {
-
     h3 {
       font-size: 1.5rem;
       font-weight: 600;
@@ -110,20 +106,7 @@
 
   &.active {
     background: var(--histories-card-active-bg);
-    border-color: var(--histories-card-active-border);
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 12px;
-      padding: 1px;
-      background: var(--histories-card-active-gradient);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-      -webkit-mask-composite: destination-out;
-    }
+    border: 1px solid var(--histories-card-active-border);
   }
 
   &:focus {
@@ -140,15 +123,22 @@
 .cardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 1rem;
+  gap: 0.75rem;
 
   .category {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    background: var(--histories-category-bg);
-    color: var(--histories-category-text);
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border-radius: 6px;
+    background: var(--accent-tertiary);
+    border: 1px solid var(--accent-primary);
+    color: var(--accent-primary);
+    box-shadow: 0 2px 4px var(--accent-tertiary);
   }
 
   .timestamp {
@@ -160,11 +150,18 @@
 }
 
 .title {
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
   margin-bottom: 1rem;
-  line-height: 1.4;
   color: var(--histories-title-color);
+  
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cardContent {
@@ -290,31 +287,77 @@
 .connectionStatus {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
   
-  &.connected {
-    background-color: var(--color-success-bg);
-    color: var(--color-success);
-  }
-  
-  &.connecting {
-    background-color: var(--color-warning-bg);
-    color: var(--color-warning);
-  }
-  
-  &.error {
-    background-color: var(--color-error-bg);
-    color: var(--color-error);
+  svg {
+    width: 12px;
+    height: 12px;
   }
 
-  svg {
-    &.spinning {
-      animation: spin 1s linear infinite;
+  &.LIVE {
+    background: var(--connection-status-live-bg);
+    border: 1px solid var(--connection-status-live-border);
+    color: var(--connection-status-live-text);
+    box-shadow: var(--connection-status-live-glow);
+
+    svg {
+      color: var(--connection-status-live-icon);
+      animation: pulse 2s infinite;
     }
+  }
+  
+  &.CONNECTING {
+    background: var(--connection-status-connecting-bg);
+    border: 1px solid var(--connection-status-connecting-border);
+    color: var(--connection-status-connecting-text);
+    box-shadow: var(--connection-status-connecting-glow);
+
+    svg {
+      color: var(--connection-status-connecting-icon);
+      animation: spin 1.5s linear infinite;
+    }
+  }
+  
+  &.ERROR {
+    background: var(--connection-status-error-bg);
+    border: 1px solid var(--connection-status-error-border);
+    color: var(--connection-status-error-text);
+    box-shadow: var(--connection-status-error-glow);
+
+    svg {
+      color: var(--connection-status-error-icon);
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -329,32 +372,9 @@
   }
 }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
-  }
-}
-
-
-
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 

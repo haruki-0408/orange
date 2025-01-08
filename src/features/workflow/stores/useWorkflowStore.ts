@@ -6,9 +6,10 @@ import { WorkflowStatusType, WorkflowHistory, ActiveWorkflow } from '../types/ty
 
 interface WorkflowState {
   activeWorkflows: Map<string, ActiveWorkflow>;
+  getActiveWorkflowStatus: (workflowId: string) => WorkflowStatusType | undefined;
   addWorkflow: (title: string, category: string) => string | null;
   removeWorkflow: (workflowId: string) => void;
-  getWorkflowBySession: (sessionId: string) => ActiveWorkflow | undefined;
+  getActiveWorkflowBySession: (sessionId: string) => ActiveWorkflow | undefined;
   hasActiveWorkflow: (sessionId: string) => boolean;
   isActiveWorkflow: (workflowId: string) => boolean;
   generateSessionId: () => string;
@@ -30,6 +31,7 @@ const generateWorkflowId = (): string => {
 export const useWorkflowStore = create<WorkflowState>()(
   devtools(
     (set, get) => ({
+      sessionId: '',
       activeWorkflows: (() => {
         if (typeof window === 'undefined') return new Map();
         const stored = sessionStorage.getItem(WORKFLOW_STORAGE_KEY);
@@ -87,10 +89,16 @@ export const useWorkflowStore = create<WorkflowState>()(
         });
       },
 
-      getWorkflowBySession: (sessionId) => {
+      getActiveWorkflowBySession: (sessionId) => {
         const { activeWorkflows } = get();
+        set
         return Array.from(activeWorkflows.values())
           .find(workflow => workflow.session_id === sessionId);
+      },
+
+      getActiveWorkflowStatus: (workflowId: string) => {
+        const { activeWorkflows } = get();
+        return activeWorkflows.get(workflowId)?.status;
       },
 
       hasActiveWorkflow: (sessionId) => {

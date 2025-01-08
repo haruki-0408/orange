@@ -37,7 +37,7 @@ export const useWorkflowHistories = ({
     }
   };
 
-  const refetch = async () => {
+  const refetchHistories = async () => {
     setWorkflowHistoriesLoading(true);
     try {
       const latest = await getWorkflowHistories();
@@ -54,7 +54,7 @@ export const useWorkflowHistories = ({
     histories, // 履歴一覧
     setHistories, // 履歴の更新(DB更新を伴わない)
     handleUpdate, // 履歴の更新(DB更新を伴う)
-    refetch, // 履歴の再取得
+    refetchHistories, // 履歴の再取得
     workflowHistoriesLoading // ローディング中かどうか
   };
 };

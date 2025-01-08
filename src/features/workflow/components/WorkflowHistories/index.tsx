@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback } from "react";
 import { FCX } from "@/types/types";
 import styles from "./style.module.scss";
 import { WorkflowHistory } from "@/features/workflow/types/types";
@@ -7,14 +7,74 @@ import { formatJstDistance } from "@/utils/date";
 import { useSSEStore } from "../../stores/useSSEStore";
 import { useWorkflowStore } from "../../stores/useWorkflowStore";
 import { generatePresignedUrl } from "@/app/actions/workflow";
+import { mapping } from "@/features/workflow/const/categoryEnToJpMapping";
+import { ConnectionStatus } from "@/features/workflow/types/types";
 
 interface Props {
   histories: WorkflowHistory[];
 }
 
+// 接続状態に応�たアイコンコンポーネント
+const ConnectionStatusIcon = ({ status }: { status: ConnectionStatus }) => {
+  switch (status) {
+    case "LIVE":
+      return (
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+          <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+          <circle cx="12" cy="20" r="2" />
+        </svg>
+      );
+    case "CONNECTING":
+      return (
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+        </svg>
+      );
+    case "ERROR":
+      return (
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 8v4" />
+          <path d="M12 16h.01" />
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+};
+
 export const WorkflowHistories: FCX<Props> = ({ histories }) => {
   const { connectionStatus } = useSSEStore();
-  const { selectedWorkflow, isActiveWorkflow, setSelectedWorkflow } = useWorkflowStore();
+  const { selectedWorkflow, isActiveWorkflow, setSelectedWorkflow, getActiveWorkflowStatus } = useWorkflowStore();
 
   // ブラウザの戻る/進む操作を検知
   useEffect(() => {
@@ -49,9 +109,9 @@ export const WorkflowHistories: FCX<Props> = ({ histories }) => {
 
       if (isActiveWorkflow(history.workflow_id)) {
         return (
-          <div className={clsx(styles.badge, styles[selectedWorkflow?.status || "PROCESSING"])}>
+          <div className={clsx(styles.badge, styles[getActiveWorkflowStatus(history.workflow_id) || "PROCESSING"])}>
             <span className={styles.dot} />
-            {selectedWorkflow?.status || "PROCESSING"}
+            {getActiveWorkflowStatus(history.workflow_id) || "PROCESSING"}
           </div>
         );
       }
@@ -125,7 +185,7 @@ export const WorkflowHistories: FCX<Props> = ({ histories }) => {
           >
             <div className={styles.cardHeader}>
               {/* <div className={styles.id}>ID: {history.workflow_id}</div> */}
-              <div className={styles.category}>{history.category}</div>
+              <div className={styles.category}>{mapping[history.category as keyof typeof mapping]}</div>
               <div className={styles.timestamp}>{formatJstDistance(history.timestamp)}</div>
             </div>
             <div className={styles.title}>{history.title}</div>
@@ -155,30 +215,13 @@ export const WorkflowHistories: FCX<Props> = ({ histories }) => {
               )}
               {selectedWorkflow?.workflow_id === history.workflow_id &&
                 isActiveWorkflow(history.workflow_id) && (
-                  <div className={clsx(styles.connectionStatus, styles.connected)}>
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="12" cy="12" r="10" />
-                      <line x1="12" y1="16" x2="12" y2="12" />
-                      <line x1="12" y1="8" x2="12" y2="8" />
-                    </svg>
+                  <div className={clsx(styles.connectionStatus, styles[connectionStatus || "CONNECTING"])}>
+                    <ConnectionStatusIcon status={connectionStatus} />
                     <span>{connectionStatus}</span>
                   </div>
                 )}
               {getStatusBadge(history)}
             </div>
-            {/* <div className={styles.cardFooter}>
-              
-              
-            </div> */}
           </div>
         ))}
       </div>
