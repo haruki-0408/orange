@@ -1,5 +1,5 @@
-export const mapping =  {
-  "api-gateway": "/aws/lambda/melon_dev_api-gateway",
+export const stateNameLogGroupNameMapping =  {
+  // "api-gateway": "API-Gateway-Execution-Logs_ru9vhkupwa/dev",
   "format-lambda": "/aws/lambda/melon_dev_get_fake_thesis_title_category_format",
   "prompt-lambda": "/aws/lambda/melon_dev_generate_prompt_parameters",
   "ai-request-lambda": "/aws/lambda/melon_dev_request_generative_ai_model_api",

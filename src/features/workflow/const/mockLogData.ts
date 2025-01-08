@@ -7,8 +7,8 @@ export const mockLogData: LogData[] = [
     timestamp: '2024-03-14T10:00:01.782Z',
     service: 'Lambda',
     stateName: 'AI Request',
-    logGroupResults: {
-      "/aws/lambda/melon_dev_request_generative_ai_model_api": [
+    logGroupName: '/aws/lambda/melon_dev_request_generative_ai_model_api',
+    logEntries: [
         {
           timestamp: "2024-12-08T08:48:59.536Z",
           ingestionTime: "2024-12-08T08:49:00.376Z",
@@ -46,5 +46,4 @@ export const mockLogData: LogData[] = [
         }
       ]
     }
-  },
 ]; 

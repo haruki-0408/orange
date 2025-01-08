@@ -20,12 +20,14 @@
   max-width: 1000px;
   max-height: calc(100vh - 48px);
   margin: auto;
-  overflow: auto;
+  overflow: hidden;
   box-shadow: var(--modal-content-shadow);
   transform: translateY(10px);
   animation: slideUp 0.4s ease forwards;
   display: flex;
   flex-direction: column;
+  width: 95vw;
+  min-width: 320px;
 }
 
 .header {
@@ -86,29 +88,16 @@
 
 .body {
   flex: 1;
-  overflow: auto;
   padding: 24px;
   color: var(--modal-text-color);
   font-size: 0.95rem;
   line-height: 1.6;
-  min-width: min-content;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--modal-content-border);
-    border-radius: 4px;
-
-    &:hover {
-      background: var(--modal-close-color);
-    }
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  > * {
+    max-width: 100%;
+    word-wrap: break-word;
   }
 }
 

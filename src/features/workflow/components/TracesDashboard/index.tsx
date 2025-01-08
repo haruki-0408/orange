@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { useReactFlow } from '@xyflow/react';
@@ -10,10 +10,12 @@ import { mockTraceData } from '../../const/mockTraceData';
 import { mockLogData } from '../../const/mockLogData';
 import { mockMetricsData } from '../../const/mockMetricsData';
 import { LogCard } from '../LogCard';
-import { startAndWaitLogQueries } from '@/app/actions/workflow';
+import { startAndWaitLogQueries, getWorkflowProgress } from '@/app/actions/workflow';
 import { useLoadingStore } from '../../stores/useLoadingStore';
 import { LogData } from '@/features/workflow/types/types';
 import { useWorkflowStore } from '../../stores/useWorkflowStore';
+import { stateNameLogGroupNameMapping } from '../../const/stateNameLogGroupNameMapping';
+import { LoadingSpinner } from '@/components/ui-parts/LoadingSpinner';
 
 interface Props {
   traces?: TraceData[];
@@ -35,38 +37,86 @@ export const TracesDashboard: FCX<Props> = ({
   const { selectedWorkflow } = useWorkflowStore();
   const reactFlowInstance = useReactFlow();
   const { getNode } = reactFlowInstance;
-  const [activeTab, setActiveTab] = useState<TabType>('metrics');
-  const { setLoading } = useLoadingStore();
+  const [activeTab, setActiveTab] = useState<TabType>('logs');
+  // const { setTimeliLoading } = useLoadingStore();
   const [logs, setLogs] = useState<LogData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleWorkflowProgress = useCallback(async () => {    
+    try {
+      if (!selectedWorkflow) return;
+      setIsLoading(true); // ローディング開始
+
+      const workflowProgressData = await getWorkflowProgress(
+        selectedWorkflow.workflow_id,
+      );
+
+      // ワークフローの進行状況から、各ステートのリクエストIDを取得
+      const logGroupRequests: { [key: string]: string } = {};
+      if (workflowProgressData.length > 0) {
+        workflowProgressData.forEach(event => {
+          // ステート名からログループ名を取得
+          const logGroupName = stateNameLogGroupNameMapping[event.state_name as keyof typeof stateNameLogGroupNameMapping];
+          if (logGroupName && event.request_id) {
+            logGroupRequests[logGroupName] = event.request_id;
+          }
+        });
+      }
+
+      console.log('logGroupRequests', logGroupRequests);
+      
+      // ログデータを取得
+      const logsData = await startAndWaitLogQueries(
+        selectedWorkflow.workflow_id,
+        logGroupRequests,
+        selectedWorkflow.timestamp
+      );
+
+      console.log('logsData', logsData);
+
+      // LogData[]形式に変換
+      const formattedLogs: LogData[] = Object.entries(logsData).map(([logGroupName, entries]) => {
+        // 最初のログエントリか�レベルを判定
+        const level = entries[0]?.message.includes('ERROR') ? 'error' : 
+                     entries[0]?.message.includes('WARN') ? 'warning' : 'info';
+
+        // ステート名を逆引き
+        const stateName = Object.entries(stateNameLogGroupNameMapping).find(
+          ([_, value]) => value === logGroupName
+        )?.[0] || 'Unknown State';
+
+        // RequestIdを抽出
+        const requestId = entries[0]?.message.match(/RequestId: ([a-f0-9-]+)/)?.[1] || '';
+
+        return {
+          id: requestId,
+          level,
+          timestamp: entries[0]?.timestamp || new Date().toISOString(),
+          service: 'Lambda', // ログループ名からサービス名を抽出することも可能
+          stateName,
+          logGroupName,
+          logEntries: entries.map(entry => ({
+            timestamp: entry.timestamp,
+            ingestionTime: entry.ingestionTime,
+            message: entry.message
+          }))
+        };
+      });
+
+      setLogs(formattedLogs.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()));
+      
+    } catch (error) {
+      console.error('Failed to fetch logs:', error);
+    } finally {
+      setIsLoading(false); // ローディング終了
+    }
+  }, [selectedWorkflow]);
 
   useEffect(() => {
-    const fetchLogs = async () => {
-      if (!selectedWorkflow) return;
-
-      try {
-        setLoading(true);
-        const logGroupRequests = {
-          '/aws/lambda/melon_dev_request_generative_ai_model_api': 'c1b29677-26bc-4373-b9fc-d0d767fe22d3'
-        };
-
-        const logsData = await startAndWaitLogQueries(
-          selectedWorkflow.workflow_id,
-          logGroupRequests,
-          selectedWorkflow.timestamp
-        );
-        
-        // setLogs(logsData);
-      } catch (error) {
-        console.error('Failed to fetch logs:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (activeTab === 'logs') {
-      fetchLogs();
+    if (selectedWorkflow) {
+      handleWorkflowProgress();
     }
-  }, [selectedWorkflow, activeTab]);
+  }, [selectedWorkflow]);
 
   const handleTraceClick = (nodeId: string) => {
     const node = getNode(nodeId);
@@ -224,28 +274,25 @@ export const TracesDashboard: FCX<Props> = ({
 
           {activeTab === 'logs' && (
             <div className={styles.logsTab}>
-              {/* {Object.entries(logs).map(([logGroupName, logEntries]) => (
-                <LogCard
-                  key={logGroupName}
-                  stateName={logGroupName}
-                  logGroupResults={logEntries}
-                  level={log.level}
-                  service={log.service}
-                  id={log.id}
-                  timestamp={log.timestamp}
-                />
-              ))} */}
-              {mockLogData.map((log) => (
-                <LogCard
-                  key={log.id}
-                  stateName={log.stateName}
-                  logGroupResults={log.logGroupResults}
-                  level={log.level}
-                  service={log.service}
-                  id={log.id}
-                  timestamp={log.timestamp}
-                />
-              ))}
+              {isLoading ? (
+                <div className={styles.logsLoading}>
+                  <LoadingSpinner size="medium" />
+                  <span>Loading logs...</span>
+                </div>
+              ) : (
+                logs.map((log) => (
+                  <LogCard
+                    key={log.id}
+                    stateName={log.stateName}
+                    logGroupName={log.logGroupName}
+                    logEntries={log.logEntries}
+                    level={log.level}
+                    service={log.service}
+                    id={log.id}
+                    timestamp={log.timestamp}
+                  />
+                ))
+              )}
             </div>
           )}
         </div>

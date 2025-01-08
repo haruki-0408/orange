@@ -78,8 +78,9 @@ export interface LogData {
   level: 'error' | 'warning' | 'info';
   timestamp: string;
   stateName: string;
+  logGroupName: string;
   service: string;
-  logGroupResults: LogGroupResults;
+  logEntries: LogEntry[];
 }
 
 export interface TraceData {

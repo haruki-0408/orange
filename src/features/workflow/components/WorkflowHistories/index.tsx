@@ -14,7 +14,7 @@ interface Props {
   histories: WorkflowHistory[];
 }
 
-// 接続状態に応�たアイコンコンポーネント
+// 接続状態に応じたアイコンコンポーネント
 const ConnectionStatusIcon = ({ status }: { status: ConnectionStatus }) => {
   switch (status) {
     case "LIVE":

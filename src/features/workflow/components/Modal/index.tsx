@@ -22,7 +22,24 @@ export const Modal: FCX<Props> = ({
   children,
   className
 }) => {
-  const { theme } = useTheme(); // 現在のテーマを取得
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (isOpen) {
+      // モーダルが開いたときにbodyのスクロールを禁止
+      document.body.style.overflow = 'hidden';
+      // スクロールバーの幅だけ右にずれるのを防ぐためのパディングを追加
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+      // モーダルが閉じたときにスクロールを再有効化
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
