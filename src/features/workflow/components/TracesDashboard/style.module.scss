@@ -812,4 +812,104 @@
       font-size: 0.875rem;
     }
   }
+
+  .logsEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 200px;
+    color: var(--text-secondary);
+    
+    svg {
+      color: var(--text-tertiary);
+    }
+    
+    span {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.logsStatus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  margin: 0 0 16px;
+  background: var(--logs-status-complete-bg);
+  border: 1px solid var(--logs-status-complete-border);
+  border-radius: 6px;
+
+  &.collecting {
+    background: var(--logs-status-bg);
+    border-color: var(--logs-status-border);
+  }
+
+  .message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    span {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--logs-status-text);
+
+      &.counter {
+        padding: 2px 8px;
+        background: var(--logs-status-button-bg);
+        border: 1px solid var(--logs-status-button-border);
+        border-radius: 12px;
+        color: var(--logs-status-counter);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+    }
+  }
+
+  .refetchButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--logs-status-button-bg);
+    border: 1px solid var(--logs-status-button-border);
+    border-radius: 4px;
+    color: var(--logs-status-button-text);
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+
+    .icon {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover:not(:disabled) {
+      background: var(--logs-status-button-hover-bg);
+      border-color: var(--logs-status-button-hover-border);
+
+      .icon {
+        transform: rotate(180deg);
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      .icon {
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

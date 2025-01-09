@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import useSWR from 'swr';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { useReactFlow } from '@xyflow/react';
@@ -7,15 +8,15 @@ import clsx from 'clsx';
 import { MetricCard } from '../MetricCard';
 import { TimelineCard } from '../TimelineCard';
 import { mockTraceData } from '../../const/mockTraceData';
-import { mockLogData } from '../../const/mockLogData';
 import { mockMetricsData } from '../../const/mockMetricsData';
 import { LogCard } from '../LogCard';
 import { startAndWaitLogQueries, getWorkflowProgress } from '@/app/actions/workflow';
-import { useLoadingStore } from '../../stores/useLoadingStore';
-import { LogData } from '@/features/workflow/types/types';
+import { LogData, LogGroupResults } from '@/features/workflow/types/types';
 import { useWorkflowStore } from '../../stores/useWorkflowStore';
 import { stateNameLogGroupNameMapping } from '../../const/stateNameLogGroupNameMapping';
 import { LoadingSpinner } from '@/components/ui-parts/LoadingSpinner';
+import { useWorkflowLogs } from '../../hooks/useWorkflowLogs';
+import { RefreshIcon } from '@/components/ui-parts/RefreshIcon';
 
 interface Props {
   traces?: TraceData[];
@@ -26,6 +27,46 @@ interface Props {
 }
 
 type TabType = 'metrics' | 'timeline' | 'logs';
+
+// ステートの状態に基づいてログレベルを判定する関数
+const determineLogLevel = (state: string): 'error' | 'warning' | 'info' => {
+  if (state === 'Failed' || state === 'failed') return 'error';
+  if (state === 'Success' || state === 'success') return 'info';
+  return 'warning'; // その他の状態の場合
+};
+
+// Fetcher関数は配列の形で引数を受け取る
+const workflowProgressFetcher = async ([_, workflowId]: [string, string]) => {
+  return getWorkflowProgress(workflowId);
+};
+
+// ログデータの整形ロジックを分離
+const formatLogData = (
+  logGroupResults: LogGroupResults,
+  stateStatuses: Record<string, string>
+): LogData[] => {
+  return Object.entries(logGroupResults)
+    .map(([logGroupName, entries]) => {
+      const stateName = Object.entries(stateNameLogGroupNameMapping).find(
+        ([_, value]) => value === logGroupName
+      )?.[0] || 'Unknown State';
+
+      return {
+        id: entries[0]?.message.match(/RequestId: ([a-f0-9-]+)/)?.[1] || '',
+        level: determineLogLevel(stateStatuses[stateName] || ''),
+        timestamp: entries[0]?.timestamp || new Date().toISOString(),
+        service: 'Lambda',
+        stateName,
+        logGroupName,
+        logEntries: entries.map(entry => ({
+          timestamp: entry.timestamp,
+          ingestionTime: entry.ingestionTime,
+          message: entry.message
+        }))
+      };
+    })
+    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+};
 
 export const TracesDashboard: FCX<Props> = ({ 
   traces = mockTraceData, 
@@ -38,85 +79,59 @@ export const TracesDashboard: FCX<Props> = ({
   const reactFlowInstance = useReactFlow();
   const { getNode } = reactFlowInstance;
   const [activeTab, setActiveTab] = useState<TabType>('logs');
-  // const { setTimeliLoading } = useLoadingStore();
   const [logs, setLogs] = useState<LogData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleWorkflowProgress = useCallback(async () => {    
-    try {
-      if (!selectedWorkflow) return;
-      setIsLoading(true); // ローディング開始
-
-      const workflowProgressData = await getWorkflowProgress(
-        selectedWorkflow.workflow_id,
-      );
-
-      // ワークフローの進行状況から、各ステートのリクエストIDを取得
-      const logGroupRequests: { [key: string]: string } = {};
-      if (workflowProgressData.length > 0) {
-        workflowProgressData.forEach(event => {
-          // ステート名からログループ名を取得
-          const logGroupName = stateNameLogGroupNameMapping[event.state_name as keyof typeof stateNameLogGroupNameMapping];
-          if (logGroupName && event.request_id) {
-            logGroupRequests[logGroupName] = event.request_id;
-          }
-        });
-      }
-
-      console.log('logGroupRequests', logGroupRequests);
-      
-      // ログデータを取得
-      const logsData = await startAndWaitLogQueries(
-        selectedWorkflow.workflow_id,
-        logGroupRequests,
-        selectedWorkflow.timestamp
-      );
-
-      console.log('logsData', logsData);
-
-      // LogData[]形式に変換
-      const formattedLogs: LogData[] = Object.entries(logsData).map(([logGroupName, entries]) => {
-        // 最初のログエントリか�レベルを判定
-        const level = entries[0]?.message.includes('ERROR') ? 'error' : 
-                     entries[0]?.message.includes('WARN') ? 'warning' : 'info';
-
-        // ステート名を逆引き
-        const stateName = Object.entries(stateNameLogGroupNameMapping).find(
-          ([_, value]) => value === logGroupName
-        )?.[0] || 'Unknown State';
-
-        // RequestIdを抽出
-        const requestId = entries[0]?.message.match(/RequestId: ([a-f0-9-]+)/)?.[1] || '';
-
-        return {
-          id: requestId,
-          level,
-          timestamp: entries[0]?.timestamp || new Date().toISOString(),
-          service: 'Lambda', // ログループ名からサービス名を抽出することも可能
-          stateName,
-          logGroupName,
-          logEntries: entries.map(entry => ({
-            timestamp: entry.timestamp,
-            ingestionTime: entry.ingestionTime,
-            message: entry.message
-          }))
-        };
-      });
-
-      setLogs(formattedLogs.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()));
-      
-    } catch (error) {
-      console.error('Failed to fetch logs:', error);
-    } finally {
-      setIsLoading(false); // ローディング終了
+  // Step 1: ワークフローの進行状況を取得
+  const { data: progressData } = useSWR(
+    selectedWorkflow?.workflow_id ? ['workflow-progress', selectedWorkflow.workflow_id] : null,
+    workflowProgressFetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 5000,
     }
-  }, [selectedWorkflow]);
+  );
 
+  // Step 2: 進行状況からリクエストパラメータを生成
+  const { logGroupRequests, stateStatuses } = useMemo(() => {
+    if (!progressData?.length) {
+      return { logGroupRequests: {}, stateStatuses: {} };
+    }
+
+    return progressData.reduce<{
+      logGroupRequests: Record<string, string>;
+      stateStatuses: Record<string, string>;
+    }>(
+      (acc, event) => {
+        const logGroupName = stateNameLogGroupNameMapping[event.state_name as keyof typeof stateNameLogGroupNameMapping];
+        if (logGroupName && event.request_id) {
+          acc.logGroupRequests[logGroupName] = event.request_id;
+          acc.stateStatuses[event.state_name] = event.status;
+        }
+        return acc;
+      },
+      { logGroupRequests: {}, stateStatuses: {} }
+    );
+  }, [progressData]);
+
+  // Step 3: ログデータを取得（カスタムフックを使用）
+  const { logGroupResults, isLoading, isComplete, refetchLogs, logStatus } = useWorkflowLogs(
+    selectedWorkflow?.workflow_id,
+    {
+      logGroupRequests,
+      timestamp: selectedWorkflow?.timestamp || ''
+    }
+  );
+
+  // Step 4: ログデータを整形
+  const formattedLogs = useMemo(() => {
+    if (!logGroupResults) return [];
+    return formatLogData(logGroupResults, stateStatuses);
+  }, [logGroupResults, stateStatuses]);
+
+  // ログの更新
   useEffect(() => {
-    if (selectedWorkflow) {
-      handleWorkflowProgress();
-    }
-  }, [selectedWorkflow]);
+    setLogs(formattedLogs);
+  }, [formattedLogs]);
 
   const handleTraceClick = (nodeId: string) => {
     const node = getNode(nodeId);
@@ -279,19 +294,39 @@ export const TracesDashboard: FCX<Props> = ({
                   <LoadingSpinner size="medium" />
                   <span>Loading logs...</span>
                 </div>
+              ) : logs.length === 0 ? (
+                <div className={styles.logsEmpty}>
+                  <span>Not found logs</span>
+                </div>
               ) : (
-                logs.map((log) => (
-                  <LogCard
-                    key={log.id}
-                    stateName={log.stateName}
-                    logGroupName={log.logGroupName}
-                    logEntries={log.logEntries}
-                    level={log.level}
-                    service={log.service}
-                    id={log.id}
-                    timestamp={log.timestamp}
-                  />
-                ))
+                <div>
+                  <div className={clsx(styles.logsStatus, !isComplete && styles.collecting)}>
+                    <div className={styles.message}>
+                      <span>
+                        {isComplete ? 'Logs collected' : 'Collecting logs'}
+                      </span>
+                      <span className={styles.counter}>
+                        {logStatus?.current}/{logStatus?.expected}
+                      </span>
+                    </div>
+                    {!isComplete && (
+                      <button
+                        className={styles.refetchButton}
+                        onClick={refetchLogs}
+                        disabled={isLoading}
+                      >
+                        <RefreshIcon className={styles.icon} />
+                        Refresh
+                      </button>
+                    )}
+                  </div>
+                  {logs.map((log) => (
+                    <LogCard
+                      key={log.id}
+                      {...log}
+                    />
+                  ))}
+                </div>
               )}
             </div>
           )}

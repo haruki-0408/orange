@@ -536,6 +536,21 @@
     --connection-status-error-text: #dc2626;
     --connection-status-error-icon: #ef4444;
     --connection-status-error-glow: 0 0 12px rgba(239, 68, 68, 0.2);
+
+    // Logs Collection Status
+    --logs-status-complete-bg: linear-gradient(98deg, rgba(16, 185, 129, 0.02) 0%, rgba(16, 185, 129, 0.05) 100%);
+    --logs-status-complete-border: rgba(16, 185, 129, 0.1);
+    
+    --logs-status-bg: linear-gradient(98deg, rgba(37, 99, 235, 0.02) 0%, rgba(37, 99, 235, 0.05) 100%);
+    --logs-status-border: rgba(37, 99, 235, 0.1);
+    --logs-status-text: #2563eb;
+    --logs-status-counter: rgba(37, 99, 235, 0.8);
+    
+    --logs-status-button-bg: #ffffff;
+    --logs-status-button-border: rgba(37, 99, 235, 0.2);
+    --logs-status-button-text: #2563eb;
+    --logs-status-button-hover-bg: rgba(37, 99, 235, 0.04);
+    --logs-status-button-hover-border: rgba(37, 99, 235, 0.3);
   }
 
   // Dark theme
@@ -1063,5 +1078,20 @@
     --connection-status-error-text: #f87171;
     --connection-status-error-icon: #ef4444;
     --connection-status-error-glow: 0 0 12px rgba(239, 68, 68, 0.3);
+
+    // Logs Collection Status
+    --logs-status-complete-bg: linear-gradient(98deg, rgba(16, 185, 129, 0.03) 0%, rgba(16, 185, 129, 0.06) 100%);
+    --logs-status-complete-border: rgba(16, 185, 129, 0.15);
+    
+    --logs-status-bg: linear-gradient(98deg, rgba(6, 182, 212, 0.03) 0%, rgba(6, 182, 212, 0.06) 100%);
+    --logs-status-border: rgba(6, 182, 212, 0.15);
+    --logs-status-text: #22d3ee;
+    --logs-status-counter: rgba(6, 182, 212, 0.9);
+    
+    --logs-status-button-bg: rgba(6, 182, 212, 0.06);
+    --logs-status-button-border: rgba(6, 182, 212, 0.2);
+    --logs-status-button-text: #22d3ee;
+    --logs-status-button-hover-bg: rgba(6, 182, 212, 0.1);
+    --logs-status-button-hover-border: rgba(6, 182, 212, 0.3);
   }
 } 

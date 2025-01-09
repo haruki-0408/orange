@@ -125,6 +125,7 @@ export async function createWorkflowHistory(data: {
 
 // ワ-クフローの進捗状況を取得
 export async function getWorkflowProgress(workflowId: string) {
+  console.log('getWorkflowProgress', workflowId);
   try {
     const result = await dynamodb.query({
       TableName: process.env.WORKFLOW_PROGRESS_MANAGEMENT_TABLE_NAME!,
@@ -176,13 +177,12 @@ export async function getWorkflowProgress(workflowId: string) {
   }
 }
 
-// キャッシュされたログ取得関数
-export const startAndWaitLogQueries = unstable_cache(
-  async (
-    workflowId: string,
-    logGroupRequests: LogGroupRequestIds,
-    timestamp: string
-  ): Promise<LogGroupResults> => {
+// ログ取得関数
+export async function startAndWaitLogQueries(
+  workflowId: string,
+  logGroupRequests: LogGroupRequestIds,
+  timestamp: string
+  ): Promise<LogGroupResults> {
     try {
       const workflowStartTime = new Date(timestamp).getTime();
       console.log('Fetching logs for workflow:', workflowId);
@@ -285,13 +285,7 @@ export const startAndWaitLogQueries = unstable_cache(
       console.error('Failed to execute log queries:', error);
       throw error instanceof Error ? error : new Error('Failed to execute log queries');
     }
-  },
-  ['workflow-logs'],  // タグ
-  {
-    revalidate: 60 * 60 * 24,  // 24時間キャッシュ
-    tags: ['workflow-logs']     // キャッシュの無効化に使用できるタグ
-  }
-);
+}
 
 // 個別のログ取得関数
 export async function getWorkflowLogs(queryResult: QueryResults): Promise<LogEntry[]> {
