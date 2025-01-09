@@ -188,6 +188,25 @@ export interface NodeData {
   timestamp?: string;
 } 
 
+export interface CategoryItem {
+  category_type_en: string;
+  category_type_jp: string;
+}
+
+export interface PresignedUrlResponse {
+  url: string;
+  expires: string;
+}
+
+export interface WorkflowProgressItem {
+  workflow_id: string;
+  state_name: WorkflowNodeId;
+  timestamp: string;
+  request_id: string;
+  order: number;
+  status: string;
+}
+
 export interface CloudWatchQueryResult {
   results?: {
     field: string;

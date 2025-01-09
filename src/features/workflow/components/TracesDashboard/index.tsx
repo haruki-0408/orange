@@ -10,13 +10,14 @@ import { TimelineCard } from '../TimelineCard';
 import { mockTraceData } from '../../const/mockTraceData';
 import { mockMetricsData } from '../../const/mockMetricsData';
 import { LogCard } from '../LogCard';
-import { startAndWaitLogQueries, getWorkflowProgress } from '@/app/actions/workflow';
+import { getWorkflowProgress, getXRayTraces } from '@/app/actions/workflow';
 import { LogData, LogGroupResults } from '@/features/workflow/types/types';
 import { useWorkflowStore } from '../../stores/useWorkflowStore';
 import { stateNameLogGroupNameMapping } from '../../const/stateNameLogGroupNameMapping';
 import { LoadingSpinner } from '@/components/ui-parts/LoadingSpinner';
 import { useWorkflowLogs } from '../../hooks/useWorkflowLogs';
 import { RefreshIcon } from '@/components/ui-parts/RefreshIcon';
+import { Trace } from "@aws-sdk/client-xray";
 
 interface Props {
   traces?: TraceData[];
@@ -68,6 +69,111 @@ const formatLogData = (
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 };
 
+// X-Rayトレース解析用のユーティリティ関数
+interface TraceMetrics {
+  executionTime: string;
+  serviceCount: number;
+  metrics: {
+    averageLatency: number;
+    p95Latency: number;
+    averageMemory: number;
+    maxMemory: number;
+    lambdaInvocations: number;
+    apiRequests: number;
+    coldStarts: number;
+  };
+}
+
+const analyzeXRayTrace = (traces: Trace[]): TraceMetrics => {
+  const metrics: TraceMetrics = {
+    executionTime: '0分0秒',
+    serviceCount: 0,
+    metrics: {
+      averageLatency: 0,
+      p95Latency: 0,
+      averageMemory: 0,
+      maxMemory: 0,
+      lambdaInvocations: 0,
+      apiRequests: 0,
+      coldStarts: 0
+    }
+  };
+
+  if (!traces.length) return metrics;
+
+  // サービス一覧を収集
+  const services = new Set<string>();
+  const latencies: number[] = [];
+  const memories: number[] = [];
+  
+  traces.forEach(trace => {
+    // 実行時間の計算
+    if (trace.Duration) {
+      const seconds = Math.floor(trace.Duration);
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      metrics.executionTime = `${minutes}分${remainingSeconds}秒`;
+    }
+
+    trace.Segments?.forEach(segment => {
+      const doc = JSON.parse(segment.Document || '{}');
+      
+      // サービスの収集
+      if (doc.origin) {
+        services.add(doc.origin);
+      }
+
+      // Lambda関連の指標を収集
+      if (doc.origin === 'AWS::Lambda') {
+        metrics.metrics.lambdaInvocations++;
+        
+        // メモリ使用量
+        const memoryUsed = doc.aws?.lambda?.memory_used;
+        if (memoryUsed) {
+          memories.push(memoryUsed);
+          metrics.metrics.maxMemory = Math.max(metrics.metrics.maxMemory, memoryUsed);
+        }
+
+        // コールドスタート検出
+        if (doc.aws?.lambda?.cold_start === true) {
+          metrics.metrics.coldStarts++;
+        }
+
+        // レイテンシー
+        if (doc.end_time && doc.start_time) {
+          const latency = (new Date(doc.end_time).getTime() - new Date(doc.start_time).getTime());
+          latencies.push(latency);
+        }
+      }
+
+      // API Gateway リクエストのカウント
+      if (doc.origin === 'AWS::ApiGateway::Stage') {
+        metrics.metrics.apiRequests++;
+      }
+    });
+  });
+
+  // 集計結果の計算
+  metrics.serviceCount = services.size;
+  
+  if (latencies.length > 0) {
+    metrics.metrics.averageLatency = Math.round(
+      latencies.reduce((a, b) => a + b, 0) / latencies.length
+    );
+    latencies.sort((a, b) => a - b);
+    const p95Index = Math.floor(latencies.length * 0.95);
+    metrics.metrics.p95Latency = Math.round(latencies[p95Index]);
+  }
+
+  if (memories.length > 0) {
+    metrics.metrics.averageMemory = Math.round(
+      memories.reduce((a, b) => a + b, 0) / memories.length
+    );
+  }
+
+  return metrics;
+};
+
 export const TracesDashboard: FCX<Props> = ({ 
   traces = mockTraceData, 
   currentNodeId,
@@ -80,6 +186,8 @@ export const TracesDashboard: FCX<Props> = ({
   const { getNode } = reactFlowInstance;
   const [activeTab, setActiveTab] = useState<TabType>('logs');
   const [logs, setLogs] = useState<LogData[]>([]);
+  const [xrayTraces, setXrayTraces] = useState<Trace[]>([]);
+  const [traceMetrics, setTraceMetrics] = useState<TraceMetrics | null>(null);
 
   // Step 1: ワークフローの進行状況を取得
   const { data: progressData } = useSWR(
@@ -145,6 +253,33 @@ export const TracesDashboard: FCX<Props> = ({
       });
     }
   };
+
+  // X-Rayトレース情報を取得して解析
+  useEffect(() => {
+    const fetchXRayTraces = async () => {
+      try {
+        const sampleTraceIds = ['1-677faf89-09a6b95269c6e56c4d1ab356'];
+        const traces = await getXRayTraces(sampleTraceIds);
+        setXrayTraces(traces);
+        
+        // トレースの解析
+        const metrics = analyzeXRayTrace(traces);
+        setTraceMetrics(metrics);
+        
+        console.log('Trace Analysis:', {
+          executionTime: metrics.executionTime,
+          serviceCount: metrics.serviceCount,
+          metrics: metrics.metrics
+        });
+      } catch (error) {
+        console.error('Failed to fetch X-Ray traces:', error);
+      }
+    };
+
+    if (selectedWorkflow?.workflow_id) {
+      fetchXRayTraces();
+    }
+  }, [selectedWorkflow?.workflow_id]);
 
   return (
     <div className={clsx(styles.dashboardWrapper, className)}>

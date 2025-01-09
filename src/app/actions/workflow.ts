@@ -1,13 +1,30 @@
 'use server'
 
 import { DynamoDB } from 'aws-sdk';
-import { revalidatePath, unstable_cache, revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { WorkflowHistory } from '@/features/workflow/types/types';
 import { CloudWatchLogs } from 'aws-sdk';
-import { LogGroupResults, LogGroupRequestIds, QueryResults, LogEntry, CloudWatchQueryResult, WorkflowStatusType } from '@/features/workflow/types/types';
+import { 
+  LogGroupResults,  
+  CategoryItem,
+  PresignedUrlResponse,
+  WorkflowProgressItem,
+  LogGroupRequestIds, 
+  QueryResults, 
+  LogEntry, 
+  CloudWatchQueryResult, 
+  WorkflowStatusType 
+} from '@/features/workflow/types/types';
 import { S3 } from 'aws-sdk';
+import { 
+  XRayClient, 
+  BatchGetTracesCommand,
+  Trace,
+  Segment,
+  ValueWithServiceIds
+} from "@aws-sdk/client-xray";
 
-
+// AWS Clients initialization
 const dynamodb = new DynamoDB.DocumentClient({
   region: process.env.AWS_REGION,
   credentials: {
@@ -24,7 +41,6 @@ const cloudWatchLogs = new CloudWatchLogs({
   }
 });
 
-// S3クライアントの初期化
 const s3 = new S3({
   region: process.env.AWS_REGION,
   credentials: {
@@ -33,41 +49,53 @@ const s3 = new S3({
   }
 });
 
-// カテゴリ取得
-export async function getCategories() {
+const xrayClient = new XRayClient({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  }
+});
+
+
+
+/**
+ * カテゴリ一覧を取得
+ */
+export async function getCategories(): Promise<CategoryItem[]> {
   try {
     const result = await dynamodb.scan({
       TableName: process.env.CATEGORIES_TABLE_NAME!,
       ConsistentRead: true
     }).promise();
 
-    const categories = result.Items?.map(item => ({
-        category_type_en: item.category_type_en,
-        category_type_jp: item.category_type_jp
-      })) || [];
-
-    return categories;
+    return result.Items?.map(item => ({
+      category_type_en: item.category_type_en,
+      category_type_jp: item.category_type_jp
+    })) || [];
   } catch (error) {
     console.error('Failed to fetch categories:', error);
     return [];
   }
 }
 
-// ワークフロー開始
-export async function startWorkflow(workflowId: string, title: string, category: string) {
+/**
+ * ワークフローを開始
+ */
+export async function startWorkflow(
+  workflowId: string,
+  title: string,
+  category: string
+): Promise<any> {
   try {
     const response = await fetch(`${process.env.APIGATEWAY_URL}/workflow`, {
       method: 'POST',
       headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.APIGATEWAY_API_KEY!
-    },
-    body: JSON.stringify({
-      workflow_id: workflowId,
-      title: title,
-      category: category
-    }),
-  });
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.APIGATEWAY_API_KEY!
+      },
+      body: JSON.stringify({ workflow_id: workflowId, title, category }),
+    });
     return response.json();
   } catch (error) {
     console.error('Failed to start workflow:', error);
@@ -75,8 +103,10 @@ export async function startWorkflow(workflowId: string, title: string, category:
   }
 }
 
-// 履歴取得
-export async function getWorkflowHistories() {
+/**
+ * ワークフロー履歴一覧を取得
+ */
+export async function getWorkflowHistories(): Promise<WorkflowHistory[]> {
   try {
     const result = await dynamodb.scan({
       TableName: process.env.WORKFLOW_HISTORIES_TABLE_NAME!,
@@ -84,32 +114,32 @@ export async function getWorkflowHistories() {
       Limit: 10
     }).promise();
 
-    // タイムスタンプでソート（降順）
-    const sortedHistories = (result.Items as WorkflowHistory[]).sort((a, b) => {
-      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-    });
-
-    return sortedHistories;
+    return (result.Items as WorkflowHistory[])
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   } catch (error) {
     console.error('Failed to fetch workflow histories:', error);
     return [];
   }
 }
 
-// 履歴作成
+/**
+ * ワークフロー履歴を作成
+ */
 export async function createWorkflowHistory(data: {
   workflow_id: string;
   title: string;
   category: string;
   timestamp: string;
   status: WorkflowStatusType;
-}) {
+}): Promise<{
+  workflow_id: string;
+  title: string;
+  category: string;
+  timestamp: string;
+  status: WorkflowStatusType;
+}> {
   try {
-    const item = {
-      ...data,
-      status: data.status
-    };
-
+    const item = { ...data, status: data.status };
     await dynamodb.put({
       TableName: process.env.WORKFLOW_HISTORIES_TABLE_NAME!,
       Item: item
@@ -123,39 +153,38 @@ export async function createWorkflowHistory(data: {
   }
 }
 
-// ワ-クフローの進捗状況を取得
-export async function getWorkflowProgress(workflowId: string) {
-  console.log('getWorkflowProgress', workflowId);
+/**
+ * ワークフローの進捗状況を取得
+ */
+export async function getWorkflowProgress(
+  workflowId: string
+): Promise<WorkflowProgressItem[]> {
   try {
     const result = await dynamodb.query({
       TableName: process.env.WORKFLOW_PROGRESS_MANAGEMENT_TABLE_NAME!,
       KeyConditionExpression: 'workflow_id = :workflowId',
-      ExpressionAttributeValues: {
-        ':workflowId': workflowId
-      },
-      ScanIndexForward: true // timestamp#orderの昇順でソート
+      ExpressionAttributeValues: { ':workflowId': workflowId },
+      ScanIndexForward: true
     }).promise();
 
-    if (!result.Items || result.Items.length === 0) {
-      return [];
-    }
+    if (!result.Items?.length) return [];
 
     return result.Items
       .map(item => {
-        
         try {
           const [timestamp, order] = item['timestamp#order'].split('#');
           // JST形式に変換
           const jstDate = new Date(timestamp);
           const formattedTimestamp = jstDate.toLocaleString('ja-JP', {
             year: 'numeric',
-            month: '2-digit', 
+            month: '2-digit',
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
             hour12: false
           }).replace(/\//g, '-');
+
           return {
             workflow_id: item.workflow_id,
             state_name: item.state_name,
@@ -170,137 +199,126 @@ export async function getWorkflowProgress(workflowId: string) {
         }
       })
       .filter((item): item is NonNullable<typeof item> => item !== null);
-
   } catch (error) {
     console.error('Failed to fetch workflow progress:', error);
     return [];
   }
 }
 
-// ログ取得関数
+/**
+ * CloudWatch Logsのクエリを開始し、結果を待機
+ */
 export async function startAndWaitLogQueries(
   workflowId: string,
   logGroupRequests: LogGroupRequestIds,
   timestamp: string
-  ): Promise<LogGroupResults> {
-    try {
-      const workflowStartTime = new Date(timestamp).getTime();
-      console.log('Fetching logs for workflow:', workflowId);
+): Promise<LogGroupResults> {
+  try {
+    const workflowStartTime = new Date(timestamp).getTime();
 
-      // クエリを開始
-      const startedQueries = await Promise.all(
-        Object.entries(logGroupRequests).map(async ([logGroupName, requestId]) => {
-          const query = await cloudWatchLogs.startQuery({
-            logGroupName,
-            startTime: workflowStartTime,
-            endTime: Date.now(),
-            queryString: `
-              fields @timestamp, @logStream
-              | filter @requestId = '${requestId}'
-              | stats earliest(@logStream) as logStream,
-                      latest(@timestamp) as endTime,
-                      earliest(@timestamp) as startTime
-            `
-          }).promise();
+    // 各ロググループのクエリを開始
+    const startedQueries = await Promise.all(
+      Object.entries(logGroupRequests).map(async ([logGroupName, requestId]) => {
+        const query = await cloudWatchLogs.startQuery({
+          logGroupName,
+          startTime: workflowStartTime,
+          endTime: Date.now(),
+          queryString: `
+            fields @timestamp, @logStream
+            | filter @requestId = '${requestId}'
+            | stats earliest(@logStream) as logStream,
+                    latest(@timestamp) as endTime,
+                    earliest(@timestamp) as startTime
+          `
+        }).promise();
 
-          return {
-            logGroupName,
-            queryId: query.queryId!,
-            requestId
-          };
+        return { logGroupName, queryId: query.queryId!, requestId };
+      })
+    );
+
+    // クエリの完了を監視し結果を収集
+    const allLogs: LogGroupResults = {};
+    const pendingQueries = new Set(startedQueries.map(q => q.logGroupName));
+
+    while (pendingQueries.size > 0) {
+      await Promise.all(
+        Array.from(pendingQueries).map(async (logGroupName) => {
+          const query = startedQueries.find(q => q.logGroupName === logGroupName)!;
+          
+          try {
+            const result = await cloudWatchLogs.getQueryResults({
+              queryId: query.queryId
+            }).promise() as CloudWatchQueryResult;
+
+            if (result.status === 'Complete') {
+              console.log('Query results:', {
+                logGroupName,
+                status: result.status,
+                resultsCount: result.results?.length,
+                firstResult: result.results?.[0]
+              });
+
+              if (result.results?.[0]) {
+                // 各フィールドの値を取得
+                const logStream = result.results[0].find(r => r.field === 'logStream')?.value;
+                const startTime = result.results[0].find(r => r.field === 'startTime')?.value;
+                const endTime = result.results[0].find(r => r.field === 'endTime')?.value;
+
+                if (logStream && startTime && endTime) {
+                  const queryResult: QueryResults = {
+                    logGroupName,
+                    queryId: query.queryId,
+                    logStream,
+                    startTime: Number(startTime),
+                    endTime: Number(endTime)
+                  };
+
+                  // ログを取得して格納
+                  allLogs[logGroupName] = await getWorkflowLogs(queryResult);
+                  console.log(`Completed logs for ${logGroupName}`);
+                } else {
+                  console.log(`Missing required fields for ${logGroupName}`, { logStream, startTime, endTime });
+                }
+              } else {
+                console.log(`No logs found for ${logGroupName}`);
+              }
+              pendingQueries.delete(logGroupName);
+            }
+
+            // エラー状態の確認
+            if (result.status === 'Failed' || result.status === 'Cancelled' || result.status === 'Timeout') {
+              console.error(`Query failed for ${logGroupName} with status: ${result.status}`);
+              pendingQueries.delete(logGroupName);
+            }
+          } catch (error) {
+            console.error(`Error processing ${logGroupName}:`, error);
+            pendingQueries.delete(logGroupName);
+          }
         })
       );
 
-      console.log('Started queries for workflow:', workflowId, startedQueries);
-
-      // 結果を格納するオブジェクト
-      const allLogs: LogGroupResults = {};
-      const pendingQueries = new Set(startedQueries.map(q => q.logGroupName));
-
-      // クエリの完了を監視し、完了したものからログを取得
-      while (pendingQueries.size > 0) {
-        await Promise.all(
-          Array.from(pendingQueries).map(async (logGroupName) => {
-            const query = startedQueries.find(q => q.logGroupName === logGroupName)!;
-            
-            try {
-              const result = await cloudWatchLogs.getQueryResults({
-                queryId: query.queryId
-              }).promise() as CloudWatchQueryResult;
-
-              if (result.status === 'Complete') {
-                console.log('Query results:', {
-                  logGroupName,
-                  status: result.status,
-                  resultsCount: result.results?.length,
-                  firstResult: result.results?.[0]
-                });
-
-                if (result.results?.[0]) {
-                  // 結果から各フィールドの値を取得
-                  const logStream = result.results[0].find(r => r.field === 'logStream')?.value;
-                  const startTime = result.results[0].find(r => r.field === 'startTime')?.value;
-                  const endTime = result.results[0].find(r => r.field === 'endTime')?.value;
-
-                  if (logStream && startTime && endTime) {
-                    const queryResult: QueryResults = {
-                      logGroupName,
-                      queryId: query.queryId,
-                      logStream,
-                      startTime: Number(startTime),
-                      endTime: Number(endTime)
-                    };
-
-                    // ログを取得して直接格納
-                    allLogs[logGroupName] = await getWorkflowLogs(queryResult);
-                    console.log(`Completed logs for ${logGroupName}`);
-                  } else {
-                    console.log(`Missing required fields for ${logGroupName}`, { logStream, startTime, endTime });
-                  }
-                } else {
-                  console.log(`No logs found for ${logGroupName}`);
-                }
-                pendingQueries.delete(logGroupName);
-              }
-
-              if (result.status === 'Failed' || result.status === 'Cancelled' || result.status === 'Timeout') {
-                console.error(`Query failed for ${logGroupName} with status: ${result.status}`);
-                pendingQueries.delete(logGroupName);
-              }
-            } catch (error) {
-              console.error(`Error processing ${logGroupName}:`, error);
-              pendingQueries.delete(logGroupName);
-            }
-          })
-        );
-
-        if (pendingQueries.size > 0) {
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        }
+      // 待機中のクエリがある場合は1秒待機
+      if (pendingQueries.size > 0) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
-
-      return allLogs;
-
-    } catch (error) {
-      console.error('Failed to execute log queries:', error);
-      throw error instanceof Error ? error : new Error('Failed to execute log queries');
     }
+
+    return allLogs;
+  } catch (error) {
+    console.error('Failed to execute log queries:', error);
+    throw error instanceof Error ? error : new Error('ログクエリの実行に失敗しました');
+  }
 }
 
-// 個別のログ取得関数
-export async function getWorkflowLogs(queryResult: QueryResults): Promise<LogEntry[]> {
+/**
+ * 特定のワークフローログを取得
+ */
+export async function getWorkflowLogs(
+  queryResult: QueryResults
+): Promise<LogEntry[]> {
   try {
     const { logGroupName, logStream, startTime, endTime } = queryResult;
 
-    // パラメータのログ出力を追加
-    console.log('Fetching logs with params:', {
-      logGroupName,
-      logStream,
-      startTime: new Date(startTime).toISOString(),
-      endTime: new Date(endTime).toISOString()
-    });
-
-    // logStreamが存在することを確認
     if (!logStream) {
       console.error('LogStream is empty');
       return [];
@@ -319,20 +337,25 @@ export async function getWorkflowLogs(queryResult: QueryResults): Promise<LogEnt
       ingestionTime: new Date(event.ingestionTime!).toISOString(),
       message: event.message!
     }));
-
   } catch (error) {
     console.error('Failed to fetch workflow logs:', error);
     throw error instanceof Error ? error : new Error('Failed to fetch workflow logs');
   }
 }
 
-// キャッシュを無効化する関数
-export async function invalidateWorkflowLogs() {
+/**
+ * ワークフローログのキャッシュを無効化
+ */
+export async function invalidateWorkflowLogs(): Promise<void> {
   revalidateTag('workflow-logs');
 }
 
-// 署名付きURLを生成する関数
-export async function generatePresignedUrl(workflowId: string) {
+/**
+ * S3の署名付きURLを生成
+ */
+export async function generatePresignedUrl(
+  workflowId: string
+): Promise<PresignedUrlResponse> {
   try {
     const params = {
       Bucket: process.env.S3_BUCKET_NAME!,
@@ -342,24 +365,36 @@ export async function generatePresignedUrl(workflowId: string) {
 
     const url = await s3.getSignedUrlPromise('getObject', params);
     
-    // URLが生成できたかチェック
-    if (!url) {
-      throw new Error('Failed to generate presigned URL');
-    }
+    if (!url) throw new Error('Failed to generate presigned URL');
 
     return {
       url,
       expires: new Date(Date.now() + 60 * 5 * 1000).toISOString() // 有効期限
     };
-
   } catch (error) {
     console.error('Error generating presigned URL:', error);
-    
-    // S3オブジェクトが存在しない場合
     if (error instanceof Error && error.name === 'NoSuchKey') {
       throw new Error('PDF file not found');
     }
-    
     throw new Error('Failed to generate download URL');
   }
-} 
+}
+
+/**
+ * X-Rayのトレース情報を取得
+ */
+export async function getXRayTraces(
+  traceIds: string[]
+): Promise<Trace[]> {
+  try {
+    const command = new BatchGetTracesCommand({ TraceIds: traceIds });
+    const response = await xrayClient.send(command);
+
+    if (!response.Traces) throw new Error('No traces found');
+
+    return response.Traces;
+  } catch (error) {
+    console.error('Failed to get X-Ray traces:', error);
+    throw error instanceof Error ? error : new Error('X-Rayトレースの取得に失敗しました');
+  }
+}
