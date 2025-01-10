@@ -1,0 +1,152 @@
+.metricsData {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  
+  &.lambda {
+    .sectionTitle {
+      color: var(--metrics-lambda-accent);
+    }
+    
+    .sectionTitle::before {
+      background: var(--metrics-lambda-accent);
+    }
+
+    .metricCard {
+      background: var(--metrics-lambda-card-bg);
+      border-color: var(--metrics-lambda-card-border);
+    }
+  }
+  
+  &.dynamodb {
+    .sectionTitle {
+      color: var(--metrics-dynamodb-accent);
+    }
+    
+    .sectionTitle::before {
+      background: var(--metrics-dynamodb-accent);
+    }
+
+    .metricCard {
+      background: var(--metrics-dynamodb-card-bg);
+      border-color: var(--metrics-dynamodb-card-border);
+    }
+  }
+  
+  &.s3 {
+    .sectionTitle {
+      color: var(--metrics-s3-accent);
+    }
+    
+    .sectionTitle::before {
+      background: var(--metrics-s3-accent);
+    }
+
+    .metricCard {
+      background: var(--metrics-s3-card-bg);
+      border-color: var(--metrics-s3-card-border);
+    }
+  }
+}
+
+.sectionTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding-left: 0.5rem;
+  position: relative;
+  margin-bottom: 0.5rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 0.875rem;
+    border-radius: 2px;
+  }
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.metricCard {
+  padding: 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.metricHeader {
+  margin-bottom: 0.375rem;
+}
+
+.metricTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--metric-title-color);
+  opacity: 0.7;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.metricValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--metric-value-color);
+  line-height: 1;
+  text-align: right;
+
+  .unit {
+    font-size: 0.875rem;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-left: 0.375rem;
+    color: var(--metric-unit-color);
+  }
+}
+
+.subValue {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--metric-divider-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.subLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--metric-title-color);
+  opacity: 0.6;
+  letter-spacing: 0.02em;
+}
+
+.subValueText {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--metric-value-color);
+  text-align: right;
+
+  .unit {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-left: 0.25rem;
+    color: var(--metric-unit-color);
+  }
+}

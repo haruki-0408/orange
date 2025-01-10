@@ -125,22 +125,35 @@
     --traces-stats-value: #1e293b;
     --traces-stats-label: #64748b;
 
-    --traces-section-title: #1e293b;
+    --traces-section-title: #2563eb;
     --traces-section-border: #2563eb;
 
-    // MetricCard
-    --metric-card-bg: #ffffff;
-    --metric-card-border: rgba(37, 99, 235, 0.1);
-    --metric-card-title: #64748b;
-    --metric-card-value: #1e293b;
-    --metric-card-unit: #64748b;
-    
-    --trend-up-color: #10b981;
-    --trend-up-bg: rgba(16, 185, 129, 0.1);
-    --trend-down-color: #ef4444;
-    --trend-down-bg: rgba(239, 68, 68, 0.1);
-    --trend-stable-color: #64748b;
-    --trend-stable-bg: rgba(100, 116, 139, 0.1);
+    // Stats セクション用の追加変数
+    --traces-stats-highlight: rgba(6, 182, 212, 0.6);
+    --traces-stats-gradient-start: rgba(6, 182, 212, 0.08);
+    --traces-stats-gradient-end: rgba(6, 182, 212, 0.02);
+    --traces-stats-value-shadow: rgba(15, 23, 42, 0.7);
+
+    // MetricsData
+    --metrics-lambda-accent: rgb(234, 179, 8);
+    --metrics-lambda-card-bg: rgba(234, 179, 8, 0.02);
+    --metrics-lambda-card-border: rgba(234, 179, 8, 0.08);
+
+    --metrics-dynamodb-accent: rgb(59, 130, 246);
+    --metrics-dynamodb-card-bg: rgba(59, 130, 246, 0.02);
+    --metrics-dynamodb-card-border: rgba(59, 130, 246, 0.08);
+
+    --metrics-s3-accent: rgb(34, 197, 94);
+    --metrics-s3-card-bg: rgba(34, 197, 94, 0.02);
+    --metrics-s3-card-border: rgba(34, 197, 94, 0.08);
+
+    --metric-card-bg: rgba(255, 255, 255, 0.6);
+    --metric-card-border: rgba(0, 0, 0, 0.05);
+
+    --metric-title-color: #64748b;
+    --metric-value-color: #1e293b;
+    --metric-unit-color: #64748b;
+    --metric-divider-color: rgba(0, 0, 0, 0.06);
 
     // LogCard
     --log-card-bg: #ffffff;
@@ -676,22 +689,35 @@
     --traces-stats-value: #e2e8f0;
     --traces-stats-label: #94a3b8;
 
-    --traces-section-title: #e2e8f0;
+    --traces-section-title: #06b6d4;
     --traces-section-border: #06b6d4;
 
-    // MetricCard
-    --metric-card-bg: rgba(255, 255, 255, 0.03);
-    --metric-card-border: rgba(6, 182, 212, 0.1);
-    --metric-card-title: #94a3b8;
-    --metric-card-value: #e2e8f0;
-    --metric-card-unit: #94a3b8;
+    --traces-stats-highlight: rgba(6, 182, 212, 0.8);
+    --traces-stats-gradient-start: rgba(6, 182, 212, 0.08);
+    --traces-stats-gradient-end: rgba(6, 182, 212, 0.02);
+    --traces-stats-value-shadow: rgba(6, 182, 212, 0.7);
+
+    // MetricsData
+    --metrics-lambda-accent: rgb(234, 179, 8);
+    --metrics-lambda-card-bg: rgba(234, 179, 8, 0.03);
+    --metrics-lambda-card-border: rgba(234, 179, 8, 0.1);
     
-    --trend-up-color: #10b981;
-    --trend-up-bg: rgba(16, 185, 129, 0.1);
-    --trend-down-color: #ef4444;
-    --trend-down-bg: rgba(239, 68, 68, 0.1);
-    --trend-stable-color: #94a3b8;
-    --trend-stable-bg: rgba(148, 163, 184, 0.1);
+    --metrics-dynamodb-accent: rgb(59, 130, 246);
+    --metrics-dynamodb-card-bg: rgba(59, 130, 246, 0.03);
+    --metrics-dynamodb-card-border: rgba(59, 130, 246, 0.1);
+    
+    --metrics-s3-accent: rgb(34, 197, 94);
+    --metrics-s3-card-bg: rgba(34, 197, 94, 0.03);
+    --metrics-s3-card-border: rgba(34, 197, 94, 0.1);
+    
+    --metric-card-bg: rgba(255, 255, 255, 0.03);
+    --metric-card-border: rgba(255, 255, 255, 0.1);
+
+    --metric-title-color: #94a3b8;
+    --metric-value-color: #f8fafc;
+    --metric-unit-color: #94a3b8;
+    --metric-divider-color: rgba(255, 255, 255, 0.1);
+
 
     // LogCard
     --log-card-bg: rgba(17, 17, 21, 0.4);

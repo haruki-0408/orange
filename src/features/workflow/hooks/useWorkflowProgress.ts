@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { StateType, WorkflowNodeId, NodeData, ProgressbarType, ProgressData } from "../types/types";
+import { StateType, WorkflowNodeId, NodeData, ProgressbarType, ProgressData, EdgeData } from "../types/types";
 import { getWorkflowProgress } from "@/app/actions/workflow";
 import { useProgressStore } from '../stores/useProgressStore';
 import { Node, Edge } from "@xyflow/react";
@@ -43,7 +43,7 @@ export const useWorkflowProgress = (props: WorkflowProgressProps) => {
   }, []);
 
   // エッジの状態を更新
-  const updateEdge = useCallback((edgeId: string, data: any) => {
+  const updateEdge = useCallback((edgeId: string, data: Partial<EdgeData>) => {
     props.setEdges(edges => edges.map(edge => 
       edge.id === edgeId ? { ...edge, data: { ...edge.data, ...data } } : edge
     ));

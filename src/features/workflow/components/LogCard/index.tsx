@@ -89,11 +89,11 @@ export const LogCard: FCX<Props> = ({
           <div className={styles.requestInfo}>
             <div className={styles.mainInfo}>
               <div className={styles.serviceLevel}>
-                <div className={styles.logService}>
-                  <span className={styles.value}>{service}</span>
-                </div>
                 <div className={styles.logLevel}>
                   <span className={clsx(styles.value, styles[level])}>{level.toUpperCase()}</span>
+                </div>
+                <div className={styles.logService}>
+                  <span className={styles.value}>{service}</span>
                 </div>
               </div>
               <div className={styles.stateInfo}>

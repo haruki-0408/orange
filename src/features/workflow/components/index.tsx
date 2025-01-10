@@ -3,7 +3,6 @@ import { ReactFlowProvider } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { FCX } from "@/types/types";
 import { TracesDashboard } from "./TracesDashboard";
-import { mockTraceData } from "../const/mockTraceData";
 import { Header } from "./Header";
 import { useTheme } from "../contexts/ThemeContext";
 import "../styles/theme.scss";
@@ -192,7 +191,7 @@ export const Workflow: FCX<Props> = ({ className, categories, initialHistories }
                   }}
                 >
                   <TracesDashboard
-                    traces={mockTraceData}
+                    // traces={mockTraceData}
                     currentNodeId={selectedNodeId || undefined}
                     isOpen={isSidebarOpen}
                     onToggle={() => setIsSidebarOpen(!isSidebarOpen)}

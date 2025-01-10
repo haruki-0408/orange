@@ -153,6 +153,7 @@
 
   .input, .select {
     flex: 2;
+    cursor: pointer;
     background: var(--input-bg);
     border: 1px solid var(--input-border);
     backdrop-filter: blur(10px);

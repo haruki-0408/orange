@@ -66,11 +66,6 @@ export interface ProgressData {
   order: number;
   state_name: WorkflowNodeId;
   timestamp: string;
-  // metrics?: {
-  //   duration?: number;
-  //   memory?: number;
-  //   [key: string]: any;
-  // };
 }
 
 export interface LogData {
@@ -170,22 +165,28 @@ export interface WorkflowHistory {
   status: WorkflowStatusType;
 }
 
+export interface EdgeData {
+  targetNodeStatus: StateType;
+  animated?: boolean;
+}
+
 export interface WorkflowNode {
   id: string;
   type: string;
-  status: NodeStatus;
-  data: Record<string, any>;
+  status: StateType;
+  data: NodeData;
+  position?: {
+    x: number;
+    y: number;
+  };
 }
 
 export interface NodeData {
   label: string;
   status: StateType;
-  metrics?: {
-    duration?: number;
-    memory?: number;
-    [key: string]: any;
-  };
   timestamp?: string;
+  service?: ServiceType;
+  details?: ServiceDetails[keyof ServiceDetails];
 } 
 
 export interface CategoryItem {
@@ -235,4 +236,68 @@ export interface QueryResults {
 
 export interface LogGroupResults {
   [logGroupName: string]: LogEntry[];
+}
+
+export interface TimelineTraceData {
+  state_name: string;
+  duration: number;      // 実行時間(ms)
+  memory_size?: number | null;  // 設定されたメモリ(MB)
+  memory_used?: number | null;  // 使用されたメモリ(MB)
+  start_at: string;      // 開始時間
+  is_cold_start?: boolean | null;
+  request_id: string | null; // SQSの場合はnullを許容
+}
+
+export interface TraceMetricsData {
+  averageLatency: number;
+  p95Latency: number;
+  lambdaAverageMemory: number;
+  maxMemory: number;
+  lambdaInvocations: number;
+  coldStarts: number;
+  dynamoDB: {
+    totalReadCount: number;
+    totalWriteCount: number;
+    totalReadTime: number;
+    totalWriteTime: number;
+    averageReadTime: number;
+    averageWriteTime: number;
+  };
+  s3: {
+    totalReadCount: number;
+    totalWriteCount: number;
+    totalReadTime: number;
+    totalWriteTime: number;
+    averageReadTime: number;
+    averageWriteTime: number;
+  };
+}
+
+export interface WorkflowTraceResult {
+  timelines: TimelineTraceData[];
+  metrics: TraceMetricsData;
+  executionTime: string; // 数値から文字列に変更
+  isLoading: boolean;
+  error: Error | null;
+}
+
+export interface WorkflowData {
+  workflow_id: string;
+  timestamp: string;
+  trace_ids: {
+    mainTraceId: string;
+    subTraceId: string;
+  };
+}
+
+export interface StartWorkflowResponse {
+  workflow_id: string;
+  execution_arn: string;
+  start_date: string;
+  status: WorkflowStatusType;
+}
+
+export interface LogStatus {
+  current: number;
+  expected: number;
 }

@@ -13,7 +13,8 @@ import {
   QueryResults, 
   LogEntry, 
   CloudWatchQueryResult, 
-  WorkflowStatusType 
+  WorkflowStatusType,
+  StartWorkflowResponse
 } from '@/features/workflow/types/types';
 import { S3 } from 'aws-sdk';
 import { 
@@ -86,7 +87,7 @@ export async function startWorkflow(
   workflowId: string,
   title: string,
   category: string
-): Promise<any> {
+): Promise<StartWorkflowResponse> {
   try {
     const response = await fetch(`${process.env.APIGATEWAY_URL}/workflow`, {
       method: 'POST',
@@ -96,6 +97,11 @@ export async function startWorkflow(
       },
       body: JSON.stringify({ workflow_id: workflowId, title, category }),
     });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     return response.json();
   } catch (error) {
     console.error('Failed to start workflow:', error);
