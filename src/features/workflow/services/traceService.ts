@@ -20,10 +20,10 @@ export const traceService = {
     const result = await getXRayTraces(allTraceIds);
     console.log('X-Ray Trace 収集');
     // X-Rayトレースデータをコンソールに出力
-    console.log('X-Ray Trace Data:', {
-      mainTrace: result.find(trace => trace.Id === traceIds.mainTraceId),
-      subTrace: result.find(trace => trace.Id === traceIds.subTraceId)
-    });
+    // console.log('X-Ray Trace Data:', {
+    //   mainTrace: result.find(trace => trace.Id === traceIds.mainTraceId),
+    //   subTrace: result.find(trace => trace.Id === traceIds.subTraceId)
+    // });
     
     return result;
   },
@@ -345,15 +345,15 @@ export const traceService = {
       : '';
 
     // デバッグ用のログ出力
-    if (process.env.NODE_ENV === 'development') {
-      this.outputDebugLogs({
-        timelines,
-        metrics,
-        executionTime,
-        traces,
-        traceIds
-      });
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   this.outputDebugLogs({
+    //     timelines,
+    //     metrics,
+    //     executionTime,
+    //     traces,
+    //     traceIds
+    //   });
+    // }
 
     return { timelines, metrics, executionTime };
   },

@@ -50,28 +50,26 @@ const edgeTypes: EdgeTypes = {
 
 export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) => {
   const { theme } = useTheme();
-  const [nodes, setNodes] = useNodesState(initialNodes);
-  const [edges, setEdges] = useEdgesState(initialEdges);
-  const { getEdge, getNode, getNodes, getEdges } = useReactFlow();
+  
   const { selectedWorkflow } = useWorkflowStore();
   const { isLoading, setLoading } = useLoadingStore();
   const { isActiveWorkflow } = useWorkflowStore();
   const { initializeSSE, terminateSSE } = useSSEStore();
-  const { updateProgress } = useProgressStore();
+  // const { updateProgress } = useProgressStore();
   const [isReady, setIsReady] = useState(false);
 
   // ワークフロープログレスの初期化
-  const { resetState, reflectWorkflowProgress, handleMessage } = useWorkflowProgress({
-    nodes,
-    setNodes,
-    edges,
-    setEdges,
-    getEdge,
-    getNode,
-    getNodes,
-    getEdges,
+  const { nodes, edges, resetState, reflectWorkflowProgress, handleMessage } = useWorkflowProgress({
+    // nodes,
+    // setNodes,
+    // edges,
+    // setEdges,
+    // getEdge,
+    // getNode,
+    // getNodes,
+    // getEdges,
     selectedWorkflow,
-    updateProgress
+    // updateProgress
   });
 
   const onInit = () => {

@@ -18,6 +18,7 @@ import { mockTimelineData } from '../../const/mockTimelineData';
 import { mockMetricsData } from '../../const/mockMetricsData';
 import { mockLogData } from '../../const/mockLogData';
 import { usingServices } from '../../const/usingServicesMapping';
+import { useWorkflowProgress } from '../../hooks/useWorkflowProgress';
 
 import Image from 'next/image';
 
@@ -32,9 +33,6 @@ interface Props {
 type TabType = 'logs' | 'timeline' | 'metrics';
 
 // Fetcher関数は配列の形で引数を受け取る
-const workflowProgressFetcher = async ([_, workflowId]: [string, string]) => {
-  return getWorkflowProgress(workflowId);
-};
 
 export const TracesDashboard: FCX<Props> = ({ 
   // traces,
@@ -49,14 +47,14 @@ export const TracesDashboard: FCX<Props> = ({
   const [activeTab, setActiveTab] = useState<TabType>('logs');
 
   // Step 1: ワークフローの進行状況を取得
-  const { data: progressData } = useSWR(
-    selectedWorkflow?.workflow_id ? ['workflow-progress', selectedWorkflow.workflow_id] : null,
-    workflowProgressFetcher,
-    {
-      revalidateOnFocus: false,
-      dedupingInterval: 5000,
-    }
-  );
+  const { workflowProgressData } = useWorkflowProgress({
+    // nodes: getNodes(),
+    // edges: getEdges(),
+    // getNode,
+    // getEdge,
+    selectedWorkflow,
+    // updateProgress
+  });
 
   // Step 2: ログデータの取得と処理（カスタムフック）
   const { 
@@ -67,7 +65,7 @@ export const TracesDashboard: FCX<Props> = ({
     logStatus 
   } = useWorkflowLogs(
     selectedWorkflow?.workflow_id,
-    progressData,
+    workflowProgressData,
     selectedWorkflow?.timestamp || ''
   );
 
@@ -79,7 +77,7 @@ export const TracesDashboard: FCX<Props> = ({
     isLoading: isLoadingTraces,
     error: tracesError
   } = useWorkflowTraces(
-    progressData || [],
+    workflowProgressData || [],
     {
       mainTraceId: '1-677faf89-09a6b95269c6e56c4d1ab356', // メインワークフロー
       subTraceId: '1-677faf92-cb722f47d43ddf5b002a4b18'  // サブワークフロー

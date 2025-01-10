@@ -21,8 +21,6 @@ import {
   XRayClient, 
   BatchGetTracesCommand,
   Trace,
-  Segment,
-  ValueWithServiceIds
 } from "@aws-sdk/client-xray";
 
 // AWS Clients initialization
