@@ -78,10 +78,6 @@ export const TracesDashboard: FCX<Props> = ({
     error: tracesError
   } = useWorkflowTraces(
     workflowProgressData || [],
-    {
-      mainTraceId: '1-677faf89-09a6b95269c6e56c4d1ab356', // メインワークフロー
-      subTraceId: '1-677faf92-cb722f47d43ddf5b002a4b18'  // サブワークフロー
-    },
     logs
   );
 
@@ -165,7 +161,7 @@ export const TracesDashboard: FCX<Props> = ({
           <div className={styles.timelineTab}>
             {timelines.map((timeline: TimelineTraceData) => (
               <TimelineCard
-                key={timeline.state_name}
+                key={timeline.state_name+timeline.start_at}
                 timeline={timeline}
                 isActive={timeline.state_name === currentNodeId}
                 onClick={() => handleTraceClick(timeline.state_name)}

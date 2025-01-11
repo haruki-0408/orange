@@ -6,15 +6,16 @@ import { WorkflowHistory } from '@/features/workflow/types/types';
 import { CloudWatchLogs } from 'aws-sdk';
 import { 
   LogGroupResults,  
-  CategoryItem,
+  Category,
   PresignedUrlResponse,
   WorkflowProgressItem,
-  LogGroupRequestIds, 
+  LogGroupRequests, 
   QueryResults, 
   LogEntry, 
   CloudWatchQueryResult, 
   WorkflowStatusType,
-  StartWorkflowResponse
+  StartWorkflowResponse,
+  TraceIds
 } from '@/features/workflow/types/types';
 import { S3 } from 'aws-sdk';
 import { 
@@ -61,7 +62,7 @@ const xrayClient = new XRayClient({
 /**
  * カテゴリ一覧を取得
  */
-export async function getCategories(): Promise<CategoryItem[]> {
+export async function getCategories(): Promise<Category[]> {
   try {
     const result = await dynamodb.scan({
       TableName: process.env.CATEGORIES_TABLE_NAME!,
@@ -96,10 +97,11 @@ export async function startWorkflow(
       body: JSON.stringify({ workflow_id: workflowId, title, category }),
     });
     
+    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     return response.json();
   } catch (error) {
     console.error('Failed to start workflow:', error);
@@ -213,16 +215,15 @@ export async function getWorkflowProgress(
  * CloudWatch Logsのクエリを開始し、結果を待機
  */
 export async function startAndWaitLogQueries(
-  workflowId: string,
-  logGroupRequests: LogGroupRequestIds,
+  logGroupRequests: LogGroupRequests,
   timestamp: string
 ): Promise<LogGroupResults> {
   try {
     const workflowStartTime = new Date(timestamp).getTime();
 
-    // 各ロググループのクエリを開始
+    // 各リクエストIDのクエリを開始
     const startedQueries = await Promise.all(
-      Object.entries(logGroupRequests).map(async ([logGroupName, requestId]) => {
+      Object.entries(logGroupRequests).map(async ([requestId, logGroupName]) => {
         const query = await cloudWatchLogs.startQuery({
           logGroupName,
           startTime: workflowStartTime,
@@ -236,18 +237,18 @@ export async function startAndWaitLogQueries(
           `
         }).promise();
 
-        return { logGroupName, queryId: query.queryId!, requestId };
+        return { requestId, logGroupName, queryId: query.queryId! };
       })
     );
 
     // クエリの完了を監視し結果を収集
     const allLogs: LogGroupResults = {};
-    const pendingQueries = new Set(startedQueries.map(q => q.logGroupName));
+    const pendingQueries = new Set(startedQueries.map(q => q.requestId));
 
     while (pendingQueries.size > 0) {
       await Promise.all(
-        Array.from(pendingQueries).map(async (logGroupName) => {
-          const query = startedQueries.find(q => q.logGroupName === logGroupName)!;
+        Array.from(pendingQueries).map(async (requestId) => {
+          const query = startedQueries.find(q => q.requestId === requestId)!;
           
           try {
             const result = await cloudWatchLogs.getQueryResults({
@@ -256,7 +257,7 @@ export async function startAndWaitLogQueries(
 
             if (result.status === 'Complete') {
               console.log('Query results:', {
-                logGroupName,
+                requestId,
                 status: result.status,
                 resultsCount: result.results?.length,
                 firstResult: result.results?.[0]
@@ -270,33 +271,28 @@ export async function startAndWaitLogQueries(
 
                 if (logStream && startTime && endTime) {
                   const queryResult: QueryResults = {
-                    logGroupName,
+                    requestId: requestId,
+                    logGroupName: query.logGroupName,
                     queryId: query.queryId,
                     logStream,
                     startTime: Number(startTime),
                     endTime: Number(endTime)
                   };
 
-                  // ログを取得して格納
-                  allLogs[logGroupName] = await getWorkflowLogs(queryResult);
-                  console.log(`Completed logs for ${logGroupName}`);
-                } else {
-                  console.log(`Missing required fields for ${logGroupName}`, { logStream, startTime, endTime });
+                  // requestIdをキーとしてログを格納
+                  allLogs[requestId] = await getWorkflowLogs(queryResult);
                 }
-              } else {
-                console.log(`No logs found for ${logGroupName}`);
               }
-              pendingQueries.delete(logGroupName);
+              pendingQueries.delete(requestId);
             }
 
             // エラー状態の確認
             if (result.status === 'Failed' || result.status === 'Cancelled' || result.status === 'Timeout') {
-              console.error(`Query failed for ${logGroupName} with status: ${result.status}`);
-              pendingQueries.delete(logGroupName);
+              pendingQueries.delete(requestId);
             }
           } catch (error) {
-            console.error(`Error processing ${logGroupName}:`, error);
-            pendingQueries.delete(logGroupName);
+            console.error(`Error processing ${requestId}:`, error);
+            pendingQueries.delete(requestId);
           }
         })
       );
@@ -350,9 +346,9 @@ export async function getWorkflowLogs(
 /**
  * ワークフローログのキャッシュを無効化
  */
-export async function invalidateWorkflowLogs(): Promise<void> {
-  revalidateTag('workflow-logs');
-}
+// export async function invalidateWorkflowLogs(): Promise<void> {
+//   revalidateTag('workflow-logs');
+// }
 
 /**
  * S3の署名付きURLを生成

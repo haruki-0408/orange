@@ -4,18 +4,21 @@ import {
   WorkflowProgressItem,
   LogData,
   WorkflowTraceResult,
+  TraceIds,
 } from '../types/types';
 import { traceService } from '../services/traceService';
 
 export const useWorkflowTraces = (
   workflowProgress: WorkflowProgressItem[],
-  traceIds: { mainTraceId: string; subTraceId: string },
   logData: LogData[]
 ): WorkflowTraceResult => {
+  // トレースIDを取得
+  const traceIds:TraceIds = traceService.getTraceIds(logData);
+
   // トレースデータのフェッチ
   const { data: traces, error, isLoading: isLoadingTraces } = useSWR(
     // ログデータが空の場合はフェッチしない
-    traceIds.mainTraceId && traceIds.subTraceId && logData.length > 0
+    traceIds.mainTraceId && logData.length > 0
       ? ['workflow-traces', traceIds.mainTraceId, traceIds.subTraceId]
       : null,
     () => traceService.fetchTraces(traceIds),
@@ -23,10 +26,7 @@ export const useWorkflowTraces = (
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,
-      dedupingInterval: 5000,
-      onError: (err) => {
-        console.error('Failed to fetch traces:', err);
-      }
+      dedupingInterval: 2000,
     }
   );
 

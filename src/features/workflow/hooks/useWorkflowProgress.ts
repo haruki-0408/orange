@@ -50,6 +50,7 @@ export const useWorkflowProgress = ({
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,
+      dedupingInterval: 2000,
     }
   );
 
@@ -237,7 +238,6 @@ export const useWorkflowProgress = ({
               updateEdge("e-graph-pdf", { targetNodeStatus: "progress" });
             }
 
-            console.log(formulaNode?.data.status, tableNode?.data.status);
             if (formulaNode?.data.status === "success" && tableNode?.data.status === "success") {
               updateNode("pdf-format-lambda", { status: "progress" });
             }
@@ -354,7 +354,6 @@ export const useWorkflowProgress = ({
     }
 
     for (const record of progressRecords) {
-      console.log(record.state_name);
       if (record.status === "success") {
         const validationCount = progressRecords.filter(r => r.state_name === "validation-lambda").length;
         await updateWorkflowState(record.state_name, "success", validationCount);

@@ -3,27 +3,53 @@ import {
   TraceMetricsData,
   WorkflowProgressItem,
   LogData,
+  TraceIds,
 } from '../types/types';
-import { Trace } from '@aws-sdk/client-xray';
+import { Trace, Segment } from '@aws-sdk/client-xray';
 import { getXRayTraces } from '@/app/actions/workflow';
 
 export const traceService = {
   /**
+   * ログデータからトレースIDを抽出
+   */
+  getTraceIds(logData: LogData[]): TraceIds {
+    const defaultTraceIds: TraceIds = {
+      mainTraceId: null,
+      subTraceId: null
+    };
+
+    if (!logData || logData.length === 0) {
+      return defaultTraceIds;
+    }
+
+    // format-lambdaのログからmainTraceIdを検索
+    const formatLambdaLog = logData.find(log => log.stateName === 'format-lambda');
+    const mainTraceId = formatLambdaLog?.logEntries
+      .find(entry => entry.message.includes('XRAY TraceId:'))
+      ?.message.match(/XRAY TraceId: (1-[a-f0-9]{8}-[a-f0-9]{24})/)?.[1] || null;
+
+    // ai-request-lambdaのログからsubTraceIdを検索
+    const aiRequestLambdaLog = logData.find(log => log.stateName === 'ai-request-lambda');
+    const subTraceId = aiRequestLambdaLog?.logEntries
+      .find(entry => entry.message.includes('XRAY TraceId:'))
+      ?.message.match(/XRAY TraceId: (1-[a-f0-9]{8}-[a-f0-9]{24})/)?.[1] || null;
+
+    return {
+      mainTraceId: mainTraceId ?? null,
+      subTraceId: subTraceId ?? null
+    };
+  },
+
+  /**
    * X-Rayトレースの取得
    */
-  async fetchTraces(traceIds: { mainTraceId: string; subTraceId: string }) {
-    if (!traceIds.mainTraceId && !traceIds.subTraceId) {
+  async fetchTraces(traceIds: TraceIds) {
+    if (!traceIds.mainTraceId) {
       throw new Error('No trace IDs provided');
     }
 
-    const allTraceIds = [traceIds.mainTraceId, traceIds.subTraceId];
+    const allTraceIds = [traceIds.mainTraceId, traceIds.subTraceId].filter(Boolean) as string[];
     const result = await getXRayTraces(allTraceIds);
-    console.log('X-Ray Trace 収集');
-    // X-Rayトレースデータをコンソールに出力
-    // console.log('X-Ray Trace Data:', {
-    //   mainTrace: result.find(trace => trace.Id === traceIds.mainTraceId),
-    //   subTrace: result.find(trace => trace.Id === traceIds.subTraceId)
-    // });
     
     return result;
   },
@@ -34,7 +60,7 @@ export const traceService = {
   processTimelineData(
     workflowProgress: WorkflowProgressItem[],
     traces: Trace[],
-    traceIds: { mainTraceId: string; subTraceId: string },
+    traceIds: TraceIds,
     logData: LogData[]
   ): TimelineTraceData[] {
     return workflowProgress.map(progress => {
@@ -119,34 +145,65 @@ export const traceService = {
       }
 
       // その他のLambda関数の処理
-      const matchingSegment = traces.flatMap(trace => trace.Segments || [])
+      const matchingLog = logData.find(log => 
+        log.logEntries.some(entry => entry.message.includes(progress.request_id ?? ''))
+      );
+
+      // Duration計算用のLambdaセグメント検索
+      const lambdaSegment = traces.flatMap(trace => trace.Segments || [])
         .find(segment => {
           try {
             const doc = JSON.parse(segment.Document || '{}');
-            return doc.aws?.request_id === progress.request_id;
+            return doc.aws?.request_id === progress.request_id &&
+                   doc.origin === 'AWS::Lambda';
           } catch (e) {
-            console.error('Failed to parse segment document:', e);
+            console.error('Failed to parse Lambda segment document:', e);
             return false;
           }
         });
 
       let duration = 0;
-      if (matchingSegment) {
+      if (lambdaSegment) {
         try {
-          const doc = JSON.parse(matchingSegment.Document || '{}');
+          const doc = JSON.parse(lambdaSegment.Document || '{}');
           const startTime = doc.start_time;
           const endTime = doc.end_time;
           if (startTime && endTime) {
             duration = Math.round((endTime - startTime) * 1000);
           }
         } catch (e) {
-          console.error('Failed to parse segment duration:', e);
+          console.error('Failed to parse Lambda duration:', e);
         }
       }
 
-      const matchingLog = logData.find(log => 
-        log.logEntries.some(entry => entry.message.includes(progress.request_id ?? ''))
-      );
+      // コールドスタート判定用のセグメント検索
+      let isColdStart = false;
+      const functionSegment = traces.flatMap(trace => trace.Segments || [])
+        .find(segment => {
+          try {
+            const doc = JSON.parse(segment.Document || '{}');
+            return doc.origin === 'AWS::Lambda::Function' && 
+                   doc.aws?.cloudwatch_logs?.[0]?.log_group === matchingLog?.logGroupName;
+          } catch (e) {
+            console.error('Failed to parse function segment document:', e);
+            return false;
+          }
+        });
+
+      if (functionSegment) {
+        try {
+          const doc = JSON.parse(functionSegment.Document || '{}');
+          const handlerSubsegment = doc.subsegments?.find(
+            (subsegment: any) => subsegment?.name === '## lambda_handler'
+          );
+          
+          if (handlerSubsegment?.annotations?.ColdStart === true) {
+            isColdStart = true;
+          }
+        } catch (e) {
+          console.error('Failed to parse cold start data:', e);
+        }
+      }
 
       const reportEntry = matchingLog?.logEntries.find(entry => 
         entry.message.startsWith('REPORT RequestId: ' + progress.request_id)
@@ -154,7 +211,6 @@ export const traceService = {
 
       let memorySize = null;
       let memoryUsed = null;
-      let isColdStart = false;
 
       if (reportEntry) {
         const memoryMatch = reportEntry.message.match(/Memory Size: (\d+) MB/);
@@ -162,10 +218,6 @@ export const traceService = {
         
         if (memoryMatch) memorySize = parseInt(memoryMatch[1], 10);
         if (usedMemoryMatch) memoryUsed = parseInt(usedMemoryMatch[1], 10);
-        
-        isColdStart = matchingLog?.logEntries.some(entry => 
-          entry.message.includes('Init Duration')
-        ) ?? false;
       }
 
       return {
@@ -279,8 +331,8 @@ export const traceService = {
    */
   formatExecutionTime(durationInSeconds: number): string {
     // 秒単位の値を分と秒に変換
-    const minutes = Math.round(durationInSeconds / 60);
-    const seconds = Math.round(durationInSeconds % 60);
+    const minutes = Math.floor(durationInSeconds / 60);
+    const seconds = Math.floor(durationInSeconds % 60);
     const milliseconds = Math.round((durationInSeconds % 1) * 1000);
 
     if (minutes > 0) {
@@ -295,7 +347,7 @@ export const traceService = {
   processTraceData(
     workflowProgress: WorkflowProgressItem[],
     traces: Trace[] | undefined,
-    traceIds: { mainTraceId: string; subTraceId: string },
+    traceIds: TraceIds,
     logData: LogData[]
   ) {
     if (!traces) return {
@@ -375,5 +427,6 @@ export const traceService = {
       mainTrace: data.traces.find(trace => trace.Id === data.traceIds.mainTraceId),
       subTrace: data.traces.find(trace => trace.Id === data.traceIds.subTraceId)
     });
-  }
+  },
+
 }; 

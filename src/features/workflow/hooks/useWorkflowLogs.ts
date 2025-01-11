@@ -23,21 +23,21 @@ export function useWorkflowLogs(
     workflowId && expectedLogCount > 0
       ? ['workflow-logs', workflowId]
       : null,
-    () => logService.fetchLogs(workflowId!, logGroupRequests, timestamp),
+    () => logService.fetchLogs(logGroupRequests, timestamp),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,
-      dedupingInterval: 200,
+      dedupingInterval: 2000,
     }
   );
 
   // ログデータの整形
   const formattedLogs = useMemo(
     () => logGroupResults?.results 
-      ? logService.formatLogData(logGroupResults.results, stateStatuses)
+      ? logService.formatLogData(logGroupRequests, logGroupResults.results, stateStatuses)
       : [],
-    [logGroupResults?.results, stateStatuses]
+    [logGroupRequests, logGroupResults?.results, stateStatuses]
   );
 
   const refetchLogs = useCallback(async () => {

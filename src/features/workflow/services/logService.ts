@@ -2,7 +2,7 @@ import {
   LogGroupResults, 
   LogData, 
   LogStatus,
-  LogGroupRequestIds,
+  LogGroupRequests,
   WorkflowProgressItem
 } from '../types/types';
 import { startAndWaitLogQueries } from '@/app/actions/workflow';
@@ -32,17 +32,19 @@ export const logService = {
    * ログデータを整形
    */
   formatLogData(
+    logGroupRequests: LogGroupRequests,
     logGroupResults: LogGroupResults,
     stateStatuses: Record<string, string>
   ): LogData[] {
     return Object.entries(logGroupResults)
-      .map(([logGroupName, entries]) => {
+      .map(([requestId, entries]) => {
+        const logGroupName = logGroupRequests[requestId] || '';
         const stateName = Object.entries(stateNameLogGroupNameMapping).find(
           ([_, value]) => value === logGroupName
         )?.[0] || 'Unknown State';
 
         return {
-          id: entries[0]?.message.match(/RequestId: ([a-f0-9-]+)/)?.[1] || '',
+          id: requestId,
           level: this.determineLogLevel(stateStatuses[stateName] || ''),
           timestamp: entries[0]?.timestamp || new Date().toISOString(),
           service: 'Lambda',
@@ -73,7 +75,7 @@ export const logService = {
       (acc, event) => {
         const logGroupName = stateNameLogGroupNameMapping[event.state_name as keyof typeof stateNameLogGroupNameMapping];
         if (logGroupName && event.request_id) {
-          acc.logGroupRequests[logGroupName] = event.request_id;
+          acc.logGroupRequests[event.request_id] = logGroupName;
           acc.stateStatuses[event.state_name] = event.status;
         }
         return acc;
@@ -86,12 +88,10 @@ export const logService = {
    * ログクエリの実行と結果の取得
    */
   async fetchLogs(
-    workflowId: string,
-    logGroupRequests: LogGroupRequestIds,
+    logGroupRequests: LogGroupRequests,
     timestamp: string
   ) {
     const results = await startAndWaitLogQueries(
-      workflowId,
       logGroupRequests,
       timestamp
     );

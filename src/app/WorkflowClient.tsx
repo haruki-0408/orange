@@ -16,7 +16,7 @@ export default function WorkflowClient({ initialCategories, initialHistories }: 
       <div className="w-full">
         {/* <MultiplayerLayer> */}
           <ThemeProvider>
-            <div className="relative max-w-[1280px] mx-auto">
+            <div className="relative max-w-[1440px] mx-auto">
               <Workflow
                 categories={initialCategories}
                 initialHistories={initialHistories}

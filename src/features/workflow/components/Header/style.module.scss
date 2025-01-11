@@ -39,7 +39,6 @@
 }
 
 .container {
-  max-width: 1200px;
   margin: 0 auto;
   padding: 1.75rem 2rem;
   position: relative;
@@ -153,7 +152,6 @@
 
   .input, .select {
     flex: 2;
-    cursor: pointer;
     background: var(--input-bg);
     border: 1px solid var(--input-border);
     backdrop-filter: blur(10px);
@@ -178,6 +176,10 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+  }
+
+  .select {
+    cursor: pointer;
   }
 
   .button {

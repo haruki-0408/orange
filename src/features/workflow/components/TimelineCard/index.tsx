@@ -68,10 +68,10 @@ export const TimelineCard: FCX<Props> = ({
               <code className={styles.detailValue}>{timeline.memory_size}MB</code>
             </div>
           )}
-          {timeline.is_cold_start && (
+          {timeline.is_cold_start !== null && (
             <div className={styles.detailItem}>
               <span className={styles.detailLabel}>Cold Start</span>
-              <code className={styles.detailValue}>Yes</code>
+              <code className={styles.detailValue}>{timeline.is_cold_start ? 'Yes' : 'No'}</code>
             </div>
           )}
         </div>
