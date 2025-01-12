@@ -142,10 +142,9 @@ export interface WorkflowData {
 }
 
 export interface StartWorkflowResponse {
-  workflow_id: string;
-  execution_arn: string;
-  start_date: string;
-  status: WorkflowStatusType;
+  error?: string;
+  message: string;
+  event_id?: string;
 }
 
 /**

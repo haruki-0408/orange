@@ -6,8 +6,9 @@ import { WorkflowStatusType, WorkflowHistory, ActiveWorkflow } from '../types/ty
 
 interface WorkflowState {
   activeWorkflows: Map<string, ActiveWorkflow>;
+  generateWorkflowId: () => string;
   getActiveWorkflowStatus: (workflowId: string) => WorkflowStatusType | undefined;
-  addWorkflow: (title: string, category: string) => string | null;
+  addWorkflow: (workflowId: string, title: string, category: string) => string | null;
   removeWorkflow: (workflowId: string) => void;
   getActiveWorkflowBySession: (sessionId: string) => ActiveWorkflow | undefined;
   hasActiveWorkflow: (sessionId: string) => boolean;
@@ -19,14 +20,6 @@ interface WorkflowState {
 
 const SESSION_STORAGE_KEY = 'workflow_session_id';
 const WORKFLOW_STORAGE_KEY = 'active_workflows';
-
-// 8文字の小文字英数字を生成する関数
-const generateWorkflowId = (): string => {
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  return Array.from(crypto.getRandomValues(new Uint8Array(8)))
-    .map(n => chars[n % chars.length])
-    .join('');
-};
 
 export const useWorkflowStore = create<WorkflowState>()(
   devtools(
@@ -50,7 +43,15 @@ export const useWorkflowStore = create<WorkflowState>()(
         return sessionId;
       },
 
-      addWorkflow: (title, category) => {
+      // 8文字の小文字英数字を生成する関数
+      generateWorkflowId: () => {
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        return Array.from(crypto.getRandomValues(new Uint8Array(8)))
+          .map(n => chars[n % chars.length])
+          .join('');
+      },
+
+      addWorkflow: (workflowId, title, category) => {
         const sessionId = sessionStorage.getItem(SESSION_STORAGE_KEY);
         if (!sessionId) return null;
 
@@ -59,7 +60,6 @@ export const useWorkflowStore = create<WorkflowState>()(
           return null;
         }
 
-        const workflowId = generateWorkflowId();
         const timestamp = new Date().toISOString();
 
         set((state) => {

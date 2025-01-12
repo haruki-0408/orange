@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ReactFlowProvider } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { FCX } from "@/types/types";
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const Workflow: FCX<Props> = ({ className, categories, initialHistories }) => {
-  const { addWorkflow, getActiveWorkflowBySession, generateSessionId } = useWorkflowStore();
+  const { addWorkflow, hasActiveWorkflow, getActiveWorkflowBySession, generateWorkflowId, generateSessionId } = useWorkflowStore();
   const { progressBar } = useProgressStore();
   const [sessionId] = useState(() => generateSessionId());
   const { setSelectedWorkflow } = useWorkflowStore();
@@ -95,40 +95,81 @@ export const Workflow: FCX<Props> = ({ className, categories, initialHistories }
     }
   }, [sessionId, getActiveWorkflowBySession]);
 
+  // タイトル入力のバリデーション
+  const validateTitle = (title: string): { isValid: boolean; message?: string } => {
+    // 前後の空白を除去した値でチェック
+    const trimmedTitle = title.trim();
+    
+    if (!trimmedTitle) {
+      return { isValid: false, message: '論文タイトルを入力してください' };
+    }
+    if (trimmedTitle.length > 50) {
+      return { isValid: false, message: '論文タイトルは50文字以内で入力してください' };
+    }
+    // 禁止文字のチェック
+    if (/[\\`'"|;"]/.test(trimmedTitle)) {
+      return { 
+        isValid: false, 
+        message: '次の文字は使用できません: \\ ` \' " | ;' 
+        //　使用できる特殊文字　< > { } [ ] + = , ? ! @ # $ % ^ & * ( ) ~ / : . -
+      };
+    }
+    return { isValid: true };
+  };
+
   // ワークフロー生成開始
-  const handleStartWorkflow = async () => {
-    if (!thesisTitle.trim() || !selectedCategory) {
-      alert("論文タイトルとカテゴリを選択してください");
+  const handleStartWorkflow = useCallback(async () => {
+    // バリデーションチェック
+    const titleValidation = validateTitle(thesisTitle);
+    if (!titleValidation.isValid) {
+      alert(titleValidation.message);
+      return;
+    }
+    if (!selectedCategory) {
+      alert("カテゴリを選択してください");
       return;
     }
 
-    const newWorkflowId = addWorkflow(thesisTitle, selectedCategory);
-    if (!newWorkflowId) {
+    if (hasActiveWorkflow(sessionId)) {
       alert("現在処理中のワークフローがあります。完了後に新しい生成を開始してください。");
       return;
     }
 
-    startWorkflow(newWorkflowId, thesisTitle, selectedCategory);
+    try {
+      // ワークフローIDの生成
+    const newWorkflowId = generateWorkflowId();
+      // タイトルの最終サニタイズ
+      const sanitizedTitle = thesisTitle;
+      
+      const response = await startWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
+      
+      addWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
 
-    setHistories((prev) => [
-      {
+      setHistories((prev) => [
+        {
+          workflow_id: newWorkflowId,
+          title: sanitizedTitle,
+          category: selectedCategory,
+          status: "PROCESSING",
+          timestamp: new Date().toISOString()
+        },
+        ...prev
+      ]);
+
+      setSelectedWorkflow({
         workflow_id: newWorkflowId,
-        title: thesisTitle,
+        title: sanitizedTitle,
         category: selectedCategory,
         status: "PROCESSING",
-        timestamp: new Date().toISOString()
-      },
-      ...prev
-    ]);
+        timestamp: new Date().toISOString(),
+        session_id: sessionId
+      });
 
-    setSelectedWorkflow({
-      workflow_id: newWorkflowId,
-      title: thesisTitle,
-      category: selectedCategory,
-      status: "PROCESSING",
-      timestamp: new Date().toISOString()
-    });
-  };
+    } catch (error) {
+      console.error('Failed to start workflow:', error);
+      alert('ワークフローの開始に失敗しました。');
+    }
+  }, [thesisTitle, selectedCategory, sessionId, generateWorkflowId, addWorkflow, setSelectedWorkflow, setHistories, hasActiveWorkflow]);
 
   return (
     <div className={`${className} w-full h-full`}>

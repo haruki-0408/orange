@@ -88,15 +88,23 @@ export async function startWorkflow(
   category: string
 ): Promise<StartWorkflowResponse> {
   try {
-    const response = await fetch(`${process.env.APIGATEWAY_URL}/workflow`, {
+    // ダブルクォートをエスケープ
+    const sanitizedTitle = title.replace(/"/g, '\\"');
+
+    const body = {
+      workflow_id: workflowId,
+      title: sanitizedTitle,
+      category: category
+    }
+
+    const response = await fetch( `${process.env.APIGATEWAY_URL}/workflow`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': process.env.APIGATEWAY_API_KEY!
       },
-      body: JSON.stringify({ workflow_id: workflowId, title, category }),
+      body: JSON.stringify(body)
     });
-    
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -117,7 +125,7 @@ export async function getWorkflowHistories(): Promise<WorkflowHistory[]> {
     const result = await dynamodb.scan({
       TableName: process.env.WORKFLOW_HISTORIES_TABLE_NAME!,
       ConsistentRead: true,
-      Limit: 10
+      Limit: 30
     }).promise();
 
     return (result.Items as WorkflowHistory[])
