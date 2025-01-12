@@ -16,6 +16,7 @@ import {
   WorkflowStatusType,
   StartWorkflowResponse,
 } from '@/features/workflow/types/types';
+import { maskAccountId } from '@/utils/other';
 import { S3 } from 'aws-sdk';
 import { 
   XRayClient, 
@@ -342,7 +343,7 @@ export async function getWorkflowLogs(
     return (logs.events || []).map(event => ({
       timestamp: new Date(event.timestamp!).toISOString(),
       ingestionTime: new Date(event.ingestionTime!).toISOString(),
-      message: event.message!
+      message: maskAccountId(event.message!)
     }));
   } catch (error) {
     console.error('Failed to fetch workflow logs:', error);

@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { Modal } from "@/features/workflow/components/Modal";
 import { LogEntry } from "@/features/workflow/types/types";
 import Image from "next/image";
-import { copyToClipboard } from '@/utils/date';
+import { copyToClipboard } from '@/utils/other';
 
 interface Props {
   stateName: string;
