@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState } from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import styles from "./style.module.scss";
 import clsx from "clsx";
@@ -21,8 +21,6 @@ export type CustomNode = Node<
 >;
 
 export default function CustomNode(props: NodeProps<CustomNode>) {
-  const [isOpen, setIsOpen] = useState(false);
-
   const renderServiceDetails = () => {
     switch (props.data.serviceType) {
       case "Lambda":

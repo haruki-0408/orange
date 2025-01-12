@@ -1009,25 +1009,16 @@
     .icon {
       width: 14px;
       height: 14px;
-      transition: transform 0.3s ease;
     }
 
     &:hover:not(:disabled) {
       background: var(--logs-status-button-hover-bg);
       border-color: var(--logs-status-button-hover-border);
-
-      .icon {
-        transform: rotate(180deg);
-      }
     }
 
     &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-
-      .icon {
-        animation: spin 1s linear infinite;
-      }
+      opacity: 0.7;
+      cursor: wait;
     }
   }
 }

@@ -17,9 +17,9 @@ export function useWorkflowLogs(
   );
 
   const expectedLogCount = Object.keys(logGroupRequests).length;
-
+  
   // ログデータのフェッチ
-  const { data: logGroupResults, isLoading, mutate: refetch } = useSWR(
+  const { data: logGroupResults, isValidating, mutate: refetch } = useSWR(
     workflowId && expectedLogCount > 0
       ? ['workflow-logs', workflowId]
       : null,
@@ -48,7 +48,7 @@ export function useWorkflowLogs(
   return {
     logs: formattedLogs,
     logGroupRequests,
-    isLoading,
+    isValidating: isValidating,
     isComplete: logGroupResults?.isComplete ?? false,
     logStatus: logGroupResults?.status,
     refetchLogs

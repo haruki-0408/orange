@@ -26,8 +26,6 @@ export const CustomEdge: FCX<EdgeProps> = ({
   });
 
   const edgeStatus: StateType = (data as { targetNodeStatus?: StateType })?.targetNodeStatus || 'ready';
-  
-  const markerId = `edge-arrow-${id}`;
 
   return (
     <>

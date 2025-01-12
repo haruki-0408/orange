@@ -56,6 +56,12 @@ export const Workflow: FCX<Props> = ({ className, categories, initialHistories }
         // 履歴を再取得
         refetchHistories();
 
+        // 選択しているワークフローのステータスを更新
+        setSelectedWorkflow({
+          ...selectedWorkflow,
+          status: status
+        });
+
         // アクティブワークフローを削除
         useWorkflowStore.getState().removeWorkflow(selectedWorkflow.workflow_id);
 
@@ -232,7 +238,6 @@ export const Workflow: FCX<Props> = ({ className, categories, initialHistories }
                   }}
                 >
                   <TracesDashboard
-                    // traces={mockTraceData}
                     currentNodeId={selectedNodeId || undefined}
                     isOpen={isSidebarOpen}
                     onToggle={() => setIsSidebarOpen(!isSidebarOpen)}

@@ -1,51 +1,43 @@
 import { useCallback } from "react";
-import { StateType, WorkflowNodeId, NodeData, ProgressbarType, ProgressData, EdgeData } from "../types/types";
+import { StateType, WorkflowNodeId, NodeData, ProgressData, EdgeData } from "../types/types";
 import { getWorkflowProgress } from "@/app/actions/workflow";
 import { useProgressStore } from '../stores/useProgressStore';
-import { Node, Edge, useReactFlow, useNodesState, useEdgesState } from "@xyflow/react";
+import { useReactFlow, useNodesState, useEdgesState } from "@xyflow/react";
 import { initialNodes } from "../const/initialNodes";
 import { initialEdges } from "../const/initialEdges";
 import { WorkflowHistory, ActiveWorkflow } from "../types/types";
 import { progressService } from "../services/progressService";
 import useSWR from 'swr';
+import { useWorkflowStore } from "../stores/useWorkflowStore";
 
 interface WorkflowProgressProps {
-  // nodes: Node[];
-  // edges: Edge[];
-  // setNodes: (nodes: Node[] | ((prev: Node[]) => Node[])) => void;
-  // setEdges: (edges: Edge[] | ((prev: Edge[]) => Edge[])) => void;
-  // getNodes: () => Node[];
-  // getNode: (id: string) => Node | undefined;
-  // getEdges: () => Edge[];
-  // getEdge: (id: string) => Edge | undefined;
   selectedWorkflow: WorkflowHistory | ActiveWorkflow | null;
-  // updateProgress: (percentage: number, status: ProgressbarType['status']) => void;
 }
 
 // 進行状況を管理するフック
 export const useWorkflowProgress = ({
-  // nodes,
-  // edges,
-  // setNodes,
-  // setEdges,
-  // getNode,
-  // getEdge,
-  // getNodes,
-  // getEdges,
   selectedWorkflow,
-  // updateProgress
 }: WorkflowProgressProps) => {
   const [nodes, setNodes] = useNodesState(initialNodes);
   const [edges, setEdges] = useEdgesState(initialEdges);
   const { getEdge, getNode, getNodes, getEdges } = useReactFlow();
   const PARALLEL_NODES = ["formula-gen-lambda", "table-gen-lambda", "graph-gen-lambda"];
   const workflowId = selectedWorkflow?.workflow_id;
+  const workflowStatus = selectedWorkflow?.status;
   const { updateProgress } = useProgressStore();
+  const { isActiveWorkflow } = useWorkflowStore();
 
   // ワークフロー進行状況の取得
   const { data: workflowProgressData } = useSWR(
-    workflowId ? ['workflow-progress', workflowId] : null,
-    () => progressService.fetchWorkflowProgress(workflowId!),
+    // 完了を待ってからフェッチを開始
+    workflowId && workflowStatus !== "PROCESSING" 
+      ? ['workflow-progress', workflowId, workflowStatus] 
+      : null,
+    async () => {
+      // 完了後のデータ取得を確実にするため、少し待機
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return progressService.fetchWorkflowProgress(workflowId!);
+    },
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -346,7 +338,7 @@ export const useWorkflowProgress = ({
     // ワークフローの進捗状況を取得
     const progressRecords = await getWorkflowProgress(workflowId);
     
-    if (progressRecords.length === 0) {
+    if (progressRecords.length === 0 && isActiveWorkflow(workflowId)) {
       updateNode("api-gateway", { status: "progress" });
       updateEdge("e-start-api", { targetNodeStatus: "progress" });
       

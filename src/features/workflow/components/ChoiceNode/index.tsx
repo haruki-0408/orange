@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Handle, NodeProps, Position } from '@xyflow/react';
 import styles from './style.module.scss';
 import { Node } from '@xyflow/react';

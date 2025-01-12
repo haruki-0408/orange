@@ -7,9 +7,6 @@ import {
   MiniMap,
   Background,
   BackgroundVariant,
-  useReactFlow,
-  useNodesState,
-  useEdgesState
 } from "@xyflow/react";
 import { useWorkflowProgress } from "../../hooks/useWorkflowProgress";
 import { useTheme } from "../../contexts/ThemeContext";
@@ -24,8 +21,6 @@ import CustomEdge from "../CustomEdge";
 import { FCX } from "@/types/types";
 import { useLoadingStore } from "../../stores/useLoadingStore";
 import { LoadingOverlay } from "../LoadingOverlay";
-import { initialNodes } from "../../const/initialNodes";
-import { initialEdges } from "../../const/initialEdges";
 import { useWorkflowStore } from "../../stores/useWorkflowStore";
 import { useProgressStore } from "../../stores/useProgressStore";
 import { useSSEStore } from "../../stores/useSSEStore";
@@ -54,22 +49,12 @@ export const WorkflowVisualizer: FCX<Props> = ({ onNodeClick, selectedNodeId }) 
   const { selectedWorkflow } = useWorkflowStore();
   const { isLoading, setLoading } = useLoadingStore();
   const { isActiveWorkflow } = useWorkflowStore();
-  const { initializeSSE, terminateSSE } = useSSEStore();
-  // const { updateProgress } = useProgressStore();
+  const { initializeSSE } = useSSEStore();
   const [isReady, setIsReady] = useState(false);
 
   // ワークフロープログレスの初期化
   const { nodes, edges, resetState, reflectWorkflowProgress, handleMessage } = useWorkflowProgress({
-    // nodes,
-    // setNodes,
-    // edges,
-    // setEdges,
-    // getEdge,
-    // getNode,
-    // getNodes,
-    // getEdges,
     selectedWorkflow,
-    // updateProgress
   });
 
   const onInit = () => {

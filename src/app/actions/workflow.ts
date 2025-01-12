@@ -1,7 +1,7 @@
 'use server'
 
 import { DynamoDB } from 'aws-sdk';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { WorkflowHistory } from '@/features/workflow/types/types';
 import { CloudWatchLogs } from 'aws-sdk';
 import { 
@@ -15,7 +15,6 @@ import {
   CloudWatchQueryResult, 
   WorkflowStatusType,
   StartWorkflowResponse,
-  TraceIds
 } from '@/features/workflow/types/types';
 import { S3 } from 'aws-sdk';
 import { 

@@ -403,7 +403,7 @@ export const traceService = {
     //     metrics,
     //     executionTime,
     //     traces,
-    //     traceIds
+    //     traceIds: traceIds as { mainTraceId: string; subTraceId: string }
     //   });
     // }
 

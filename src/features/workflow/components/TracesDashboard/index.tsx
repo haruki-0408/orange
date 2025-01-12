@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import useSWR from 'swr';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { useReactFlow } from '@xyflow/react';
 import clsx from 'clsx';
 import { TimelineCard } from '../TimelineCard';
 import { LogCard } from '../LogCard';
-import { getWorkflowProgress } from '@/app/actions/workflow';
 import { TimelineTraceData } from '@/features/workflow/types/types';
 import { useWorkflowStore } from '../../stores/useWorkflowStore';
 import { useWorkflowLogs } from '../../hooks/useWorkflowLogs';
-import { RefreshIcon } from '@/components/ui-parts/RefreshIcon';
+import { RefreshButton } from '@/components/ui-parts/RefreshButton';
 import { useWorkflowTraces } from '../../hooks/useWorkflowTraces';
 import { TracesDashboardTabLoading } from '../TracesDashboardTabLoading';
 import { MetricsData } from '../MetricsData';
@@ -23,7 +21,6 @@ import { useWorkflowProgress } from '../../hooks/useWorkflowProgress';
 import Image from 'next/image';
 
 interface Props {
-  // traces?: TraceData[];
   currentNodeId?: string;
   isOpen: boolean;
   onToggle: () => void;
@@ -35,7 +32,6 @@ type TabType = 'logs' | 'timeline' | 'metrics';
 // Fetcher関数は配列の形で引数を受け取る
 
 export const TracesDashboard: FCX<Props> = ({ 
-  // traces,
   currentNodeId,
   isOpen,
   onToggle,
@@ -48,18 +44,13 @@ export const TracesDashboard: FCX<Props> = ({
 
   // Step 1: ワークフローの進行状況を取得
   const { workflowProgressData } = useWorkflowProgress({
-    // nodes: getNodes(),
-    // edges: getEdges(),
-    // getNode,
-    // getEdge,
     selectedWorkflow,
-    // updateProgress
   });
 
   // Step 2: ログデータの取得と処理（カスタムフック）
   const { 
     logs,
-    isLoading: isLoadingLogs,
+    isValidating: isLoadingLogs,
     isComplete: isLogsComplete, 
     refetchLogs, 
     logStatus 
@@ -75,7 +66,6 @@ export const TracesDashboard: FCX<Props> = ({
     metrics,
     executionTime,
     isLoading: isLoadingTraces,
-    error: tracesError
   } = useWorkflowTraces(
     workflowProgressData || [],
     logs
@@ -103,6 +93,24 @@ export const TracesDashboard: FCX<Props> = ({
       case 'logs':
         return (
           <div className={styles.logsTab}>
+            {logStatus && (
+              <div className={clsx(styles.logsStatus, !isLogsComplete && styles.collecting)}>
+                <div className={styles.message}>
+                  <span>{isLogsComplete ? 'Logs collected' : 'Collecting logs'}</span>
+                  <span className={styles.counter}>
+                    {logStatus.current}/{logStatus.expected}
+                  </span>
+                </div>
+                {!isLogsComplete && (
+                  <RefreshButton
+                    onClick={refetchLogs}
+                    isLoading={isLoadingLogs}
+                    size="small"
+                  />
+                )}
+              </div>
+            )}
+
             {isLoadingLogs ? (
               <TracesDashboardTabLoading 
                 message="Loading logs..." 
@@ -114,24 +122,6 @@ export const TracesDashboard: FCX<Props> = ({
               </div>
             ) : (
               <div>
-                <div className={clsx(styles.logsStatus, !isLogsComplete && styles.collecting)}>
-                  <div className={styles.message}>
-                    <span>{isLogsComplete ? 'Logs collected' : 'Collecting logs'}</span>
-                    <span className={styles.counter}>
-                      {logStatus?.current}/{logStatus?.expected}
-                    </span>
-                  </div>
-                  {!isLogsComplete && (
-                    <button
-                      className={styles.refetchButton}
-                      onClick={refetchLogs}
-                      disabled={isLoadingLogs}
-                    >
-                      <RefreshIcon className={styles.icon} />
-                      Refresh
-                    </button>
-                  )}
-                </div>
                 {logs.map((log) => (
                   <LogCard key={log.id} {...log} />
                 ))}
