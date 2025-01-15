@@ -106,6 +106,14 @@ export interface ProgressData {
   timestamp: string;
 }
 
+export interface WorkflowProgressRawItem {
+  workflow_id: string;
+  state_name: WorkflowNodeId;
+  'timestamp#order': string;
+  request_id: string;
+  status: string;
+}
+
 export interface WorkflowProgressItem {
   workflow_id: string;
   state_name: WorkflowNodeId;
@@ -186,14 +194,6 @@ export interface LogGroupResults {
 export interface LogStatus {
   current: number;
   expected: number;
-}
-
-export interface CloudWatchQueryResult {
-  results?: {
-    field: string;
-    value: string;
-  }[][];
-  status: 'Complete' | 'Failed' | 'Running' | 'Cancelled' | 'Timeout' | 'Unknown';
 }
 
 /**
