@@ -1,0 +1,1123 @@
+:root {
+  // Light theme
+  [data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
+    
+    --text-primary: #1e293b;
+    --text-secondary: #334155;
+    --text-tertiary: #64748b;
+    
+    --border-primary: rgba(0, 0, 0, 0.08);
+    --border-secondary: rgba(0, 0, 0, 0.04);
+    
+    --accent-primary: #2563eb;
+    --accent-secondary: #3b82f6;
+    --accent-gradient-secondary: rgba(37, 99, 235, 0.4);
+    --accent-tertiary: rgba(37, 99, 235, 0.1);
+    
+    --success-primary: #059669;
+    --success-secondary: rgba(5, 150, 105, 0.1);
+    --success-border: rgba(5, 150, 105, 0.2);
+    
+    --error-primary: #dc2626;
+    --error-secondary: rgba(220, 38, 38, 0.1);
+    --error-border: rgba(220, 38, 38, 0.2);
+    
+    --warning-primary: #d97706;
+    --warning-secondary: rgba(217, 119, 6, 0.1);
+    --warning-border: rgba(217, 119, 6, 0.2);
+    
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    --theme-toggle-bg: #ffffff;
+    --theme-toggle-border: rgba(37, 99, 235, 0.15);
+    --theme-toggle-icon: #2563eb;
+    --theme-toggle-hover-bg: rgba(37, 99, 235, 0.04);
+    
+    // Header specific
+    --bg-header: #ffffff;
+    --accent-gradient-start: rgba(37, 99, 235, 0.2);
+    --accent-gradient-middle: rgba(59, 130, 246, 0.3);
+    --accent-gradient-end: rgba(37, 99, 235, 0.2);
+    --accent-glow: rgba(37, 99, 235, 0.08);
+    --title-gradient: linear-gradient(to right, #1d4ed8, #2563eb, #1d4ed8);
+    
+    --status-badge-bg: #ffffff;
+    --status-badge-border: rgba(37, 99, 235, 0.2);
+    --status-badge-text: #059669;
+    --status-badge-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
+    --status-dot-color: #059669;
+    --status-dot-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+    
+    --text-divider: #94a3b8;
+    
+    --input-group-bg: rgba(37, 99, 235, 0.03);
+    --input-group-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(37, 99, 235, 0.08);
+    --input-bg: #ffffff;
+    --input-border: rgba(37, 99, 235, 0.15);
+    --input-focus-border: rgba(37, 99, 235, 0.3);
+    --input-focus-shadow: 0 0 0 1px rgba(37, 99, 235, 0.1), 0 0 20px rgba(37, 99, 235, 0.1);
+    --input-focus-bg: #ffffff;
+    --text-placeholder: #94a3b8;
+    
+    --button-gradient: linear-gradient(135deg, #2563eb, #1d4ed8);
+    --button-text: #ffffff;
+    --button-shadow: 0 0 20px rgba(37, 99, 235, 0.15), 0 0 0 1px rgba(37, 99, 235, 0.1);
+    --button-hover-shadow: 0 0 30px rgba(37, 99, 235, 0.2), 0 0 0 1px rgba(37, 99, 235, 0.15);
+    --button-shine: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    --button-icon-shadow: drop-shadow(0 0 8px rgba(37, 99, 235, 0.3));
+    
+    // プログレスバー
+    --progress-wrapper-bg: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(241, 245, 249, 0.95)
+    );
+    --progress-bg: rgba(37, 99, 235, 0.1);
+    --progress-gradient: linear-gradient(90deg, #2563eb, #3b82f6);
+    --progress-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+    --progress-shine: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+    
+    --progress-success-gradient: linear-gradient(90deg, #059669, #10b981);
+    --progress-error-gradient: linear-gradient(90deg, #dc2626, #ef4444);
+    
+    --progress-percentage-color: #2563eb;
+    --progress-percentage-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+    
+    --progress-status-processing: rgba(37, 99, 235, 0.08);
+    --progress-status-processing-border: rgba(37, 99, 235, 0.15);
+    --progress-status-processing-color: #2563eb;
+    
+    --progress-status-success: rgba(16, 185, 129, 0.08);
+    --progress-status-success-border: rgba(16, 185, 129, 0.15);
+    --progress-status-success-color: #059669;
+    
+    --progress-status-error: rgba(239, 68, 68, 0.08);
+    --progress-status-error-border: rgba(239, 68, 68, 0.15);
+    --progress-status-error-color: #dc2626;
+    
+
+    
+    // TracesDashboard
+    --traces-bg: #ffffff;
+    --traces-border: rgba(37, 99, 235, 0.1);
+    --traces-backdrop-blur: 20px;
+    --traces-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+    --traces-tab-bg: #f8fafc;
+    --traces-tab-hover: rgba(37, 99, 235, 0.05);
+    --traces-tab-active: #2563eb;
+    --traces-tab-text: #64748b;
+    --traces-tab-text-active: #2563eb;
+    --traces-tab-border: rgba(37, 99, 235, 0.1);
+
+    --traces-workflow-id-bg: rgba(37, 99, 235, 0.05);
+    --traces-workflow-id-text: #2563eb;
+    --traces-workflow-id-border: rgba(37, 99, 235, 0.1);
+
+    --traces-stats-bg: #ffffff;
+    --traces-stats-border: rgba(37, 99, 235, 0.1);
+    --traces-stats-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --traces-stats-value: #1e293b;
+    --traces-stats-label: #64748b;
+
+    --traces-section-title: #2563eb;
+    --traces-section-border: #2563eb;
+
+    // Stats セクション用の追加変数
+    --traces-stats-highlight: rgba(6, 182, 212, 0.6);
+    --traces-stats-gradient-start: rgba(6, 182, 212, 0.08);
+    --traces-stats-gradient-end: rgba(6, 182, 212, 0.02);
+    --traces-stats-value-shadow: rgba(15, 23, 42, 0.7);
+
+    // MetricsData
+    --metrics-lambda-accent: rgb(234, 179, 8);
+    --metrics-lambda-card-bg: rgba(234, 179, 8, 0.02);
+    --metrics-lambda-card-border: rgba(234, 179, 8, 0.08);
+
+    --metrics-dynamodb-accent: rgb(59, 130, 246);
+    --metrics-dynamodb-card-bg: rgba(59, 130, 246, 0.02);
+    --metrics-dynamodb-card-border: rgba(59, 130, 246, 0.08);
+
+    --metrics-s3-accent: rgb(34, 197, 94);
+    --metrics-s3-card-bg: rgba(34, 197, 94, 0.02);
+    --metrics-s3-card-border: rgba(34, 197, 94, 0.08);
+
+    --metric-card-bg: rgba(255, 255, 255, 0.6);
+    --metric-card-border: rgba(0, 0, 0, 0.05);
+
+    --metric-title-color: #64748b;
+    --metric-value-color: #1e293b;
+    --metric-unit-color: #64748b;
+    --metric-divider-color: rgba(0, 0, 0, 0.06);
+
+    // LogCard
+    --log-card-bg: #ffffff;
+    --log-card-border: rgba(37, 99, 235, 0.1);
+    --log-card-hover-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    --log-card-message: #1e293b;
+    --log-card-details: #64748b;
+    --log-card-service: #64748b;
+    --log-card-service-bg: rgba(37, 99, 235, 0.05);
+    
+    --log-gradient-start: rgba(37, 99, 235, 0.2);
+    --log-gradient-end: rgba(37, 99, 235, 0.05);
+    
+    --log-level-error-gradient: linear-gradient(to bottom, #ef4444, rgba(239, 68, 68, 0.1));
+    --log-level-warning-gradient: linear-gradient(to bottom, #f59e0b, rgba(245, 158, 11, 0.1));
+    --log-level-info-gradient: linear-gradient(to bottom, #2563eb, rgba(37, 99, 235, 0.1));
+    
+    --log-level-error-bg: rgba(239, 68, 68, 0.1);
+    --log-level-error-color: #dc2626;
+    --log-level-error-border: rgba(239, 68, 68, 0.2);
+    
+    --log-level-warning-bg: rgba(245, 158, 11, 0.1);
+    --log-level-warning-color: #d97706;
+    --log-level-warning-border: rgba(245, 158, 11, 0.2);
+    
+    --log-level-info-bg: rgba(37, 99, 235, 0.1);
+    --log-level-info-color: #2563eb;
+    --log-level-info-border: rgba(37, 99, 235, 0.2);
+
+    // TimelineCard
+    --timeline-service-name: #1e293b;
+    --timeline-service-type: #64748b;
+    --timeline-time: #64748b;
+    
+    --timeline-duration-bg: rgba(37, 99, 235, 0.12);
+    --timeline-duration-border: rgba(37, 99, 235, 0.25);
+    --timeline-duration-text: #2563eb;
+    
+    --timeline-details-bg: rgba(37, 99, 235, 0.03);
+    --timeline-details-border: rgba(37, 99, 235, 0.15);
+    --timeline-details-label: #64748b;
+    --timeline-details-value-bg: rgba(37, 99, 235, 0.08);
+    --timeline-details-value-border: rgba(37, 99, 235, 0.2);
+    --timeline-details-value-text: #2563eb;
+    
+    --timeline-time-bg: rgba(37, 99, 235, 0.05);
+    --timeline-time-border: rgba(37, 99, 235, 0.1);
+    --timeline-time-color: #2563eb;
+    
+    --timeline-status-success: #10b981;
+    --timeline-status-error: #ef4444;
+    --timeline-status-throttle: #f59e0b;
+    --timeline-status-fault: #dc2626;
+    
+    --timeline-time-bg: rgba(37, 99, 235, 0.05);
+    --timeline-time-border: rgba(37, 99, 235, 0.1);
+    --timeline-time-color: #2563eb;
+
+    // LogCard
+    --log-info-time: #64748b;
+    --log-info-time-bg: rgba(37, 99, 235, 0.05);
+    --log-info-time-border: rgba(37, 99, 235, 0.1);
+    
+    --log-service-text: #64748b;
+    --log-service-bg: rgba(37, 99, 235, 0.05);
+    --log-service-border: rgba(37, 99, 235, 0.1);
+    --bg-hover-accent: rgba(37, 99, 235, 0.04);
+
+    // TimelineCard
+    --timeline-card-bg: #ffffff;
+    --timeline-card-border: rgba(37, 99, 235, 0.15);
+    --timeline-card-hover-bg: rgba(37, 99, 235, 0.04);
+    --timeline-card-hover-border: rgba(37, 99, 235, 0.25);
+    --timeline-card-active-bg: rgba(37, 99, 235, 0.05);
+    --timeline-card-active-hover-bg: rgba(37, 99, 235, 0.08);
+    --timeline-card-active-border: rgba(37, 99, 235, 0.3);
+    --timeline-card-hover-glow: rgba(37, 99, 235, 0.08);
+    --timeline-card-active-hover-glow: rgba(37, 99, 235, 0.12);
+
+    // TerminalNode
+    --terminal-node-bg: #ffffff;
+    --terminal-node-border: rgba(37, 99, 235, 0.1);
+    --terminal-node-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    
+    --terminal-node-title: #1e293b;
+    --terminal-node-subtitle: #64748b;
+    
+    --terminal-node-input-bg: rgba(37, 99, 235, 0.05);
+    --terminal-node-input-border: rgba(37, 99, 235, 0.1);
+    --terminal-node-input-text: #1e293b;
+    --terminal-node-input-placeholder: #94a3b8;
+
+    // CustomNode
+    --custom-node-bg: #ffffff;
+    --custom-node-border: rgba(37, 99, 235, 0.15);
+    --custom-node-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    --custom-node-hover-shadow: 0 8px 16px rgba(37, 99, 235, 0.12);
+    
+    --custom-node-title: #1e293b;
+    --custom-node-subtitle: #64748b;
+    
+    --custom-node-input-bg: rgba(37, 99, 235, 0.04);
+    --custom-node-input-border: rgba(37, 99, 235, 0.15);
+    --custom-node-input-text: #1e293b;
+    --custom-node-input-placeholder: #94a3b8;
+    
+    --custom-node-button-bg: rgba(37, 99, 235, 0.1);
+    --custom-node-button-hover-bg: rgba(37, 99, 235, 0.15);
+    --custom-node-button-active-bg: rgba(37, 99, 235, 0.2);
+    --custom-node-button-text: #2563eb;
+    --custom-node-button-border: rgba(37, 99, 235, 0.2);
+    
+    --custom-node-status-success: #10b981;
+    --custom-node-status-error: #ef4444;
+    --custom-node-status-warning: #f59e0b;
+    --custom-node-status-info: #3b82f6;
+    
+    --custom-node-badge-bg: rgba(37, 99, 235, 0.1);
+    --custom-node-badge-text: #2563eb;
+    --custom-node-badge-border: rgba(37, 99, 235, 0.2);
+
+    // CustomEdge
+    --edge-ready-color: #94a3b8;
+    --edge-ready-glow: rgba(148, 163, 184, 0.2);
+    --edge-ready-opacity: 0.7;
+    
+    --edge-progress-color: #3b82f6;
+    --edge-progress-glow: rgba(59, 130, 246, 0.4);
+    --edge-progress-secondary: #60a5fa;
+    
+    --edge-success-color: #10b981;
+    --edge-success-glow: rgba(16, 185, 129, 0.4);
+    --edge-success-secondary: #34d399;
+    
+    --edge-error-color: #ef4444;
+    --edge-error-glow: rgba(239, 68, 68, 0.4);
+    --edge-error-secondary: #f87171;
+
+    // ChoiceNode
+    --choice-node-bg-start: rgba(255, 255, 255, 0.98);
+    --choice-node-bg-end: rgba(249, 250, 251, 0.95);
+    --choice-node-border-color: rgba(99, 102, 241, 0.2);
+    --choice-node-border-hover: rgba(99, 102, 241, 0.4);
+    
+    --choice-node-shadow: rgba(99, 102, 241, 0.1);
+    --choice-node-inner-glow: rgba(255, 255, 255, 0.5);
+    --choice-node-hover-shadow: rgba(99, 102, 241, 0.15);
+    --choice-node-hover-glow: rgba(255, 255, 255, 0.7);
+    
+    --choice-node-title-color: #4F46E5;
+    --choice-node-condition-color: #1F2937;
+    --choice-node-label-color: #6B7280;
+    --choice-node-arrow-color: #4F46E5;
+    
+    --choice-node-handle-bg: rgba(99, 102, 241, 0.2);
+    --choice-node-handle-border: rgba(99, 102, 241, 0.3);
+
+    // WorkflowGroup
+    --workflow-bg-start: rgba(17, 24, 39, 0.02);
+    --workflow-bg-end: rgba(17, 24, 39, 0.05);
+    --workflow-border-color: rgba(17, 24, 39, 0.15);
+    --workflow-shadow: rgba(0, 0, 0, 0.1);
+    --workflow-shadow-secondary: rgba(0, 0, 0, 0.06);
+    --workflow-inner-glow: rgba(255, 255, 255, 0.5);
+    
+    --workflow-header-line: linear-gradient(to right, #1F2937, #374151);
+    --workflow-header-bg: rgba(17, 24, 39, 0.05);
+    --workflow-header-text: #1F2937;
+    --workflow-header-shadow: rgba(0, 0, 0, 0.05);
+    
+    --workflow-divider-start: rgba(17, 24, 39, 0.1);
+    --workflow-divider-end: rgba(17, 24, 39, 0.05);
+
+    // SubWorkflow specific
+    --sub-workflow-bg-start: rgba(79, 70, 229, 0.02);
+    --sub-workflow-bg-end: rgba(79, 70, 229, 0.05);
+    --sub-workflow-border: rgba(79, 70, 229, 0.2);
+    --sub-workflow-shadow: rgba(79, 70, 229, 0.05);
+    --sub-workflow-inner-glow: rgba(255, 255, 255, 0.8);
+    
+    --sub-workflow-header-bg: rgba(79, 70, 229, 0.05);
+    --sub-workflow-header-text: rgb(79, 70, 229);
+    --sub-workflow-header-shadow: rgba(79, 70, 229, 0.1);
+    --sub-workflow-arrow-color: rgba(79, 70, 229, 0.6);
+    
+    --sub-workflow-top-line: rgba(79, 70, 229, 0.3);
+    --sub-workflow-bottom-line: rgba(79, 70, 229, 0.2);
+
+    // Status Colors - Neutral
+    --status-neutral-bg: rgba(75, 85, 99, 0.1);
+    --status-neutral-border: rgba(75, 85, 99, 0.2);
+    --status-neutral-dot: rgba(75, 85, 99, 0.8);
+    --status-neutral-text: rgba(75, 85, 99, 0.9);
+
+    // Status Colors - Warning (Connecting)
+    --status-warning-bg: rgba(245, 158, 11, 0.1);
+    --status-warning-border: rgba(245, 158, 11, 0.2);
+    --status-warning-dot: rgba(245, 158, 11, 0.8);
+    --status-warning-text: rgba(245, 158, 11, 0.9);
+
+    // Status Colors - Success (Connected)
+    --status-success-bg: rgba(16, 185, 129, 0.1);
+    --status-success-border: rgba(16, 185, 129, 0.2);
+    --status-success-dot: rgba(16, 185, 129, 0.8);
+    --status-success-text: rgba(16, 185, 129, 0.9);
+
+    // Status Colors - Error
+    --status-error-bg: rgba(239, 68, 68, 0.1);
+    --status-error-border: rgba(239, 68, 68, 0.2);
+    --status-error-dot: rgba(239, 68, 68, 0.8);
+    --status-error-text: rgba(239, 68, 68, 0.9);
+
+    // Status Colors - Info (Completed)
+    --status-info-bg: rgba(6, 182, 212, 0.1);
+    --status-info-border: rgba(6, 182, 212, 0.2);
+    --status-info-dot: rgba(6, 182, 212, 0.8);
+    --status-info-text: rgba(6, 182, 212, 0.9);
+
+    // Connection Indicator
+    --connection-indicator-bg: rgba(17, 17, 21, 0.95);
+    --connection-indicator-border: rgba(6, 182, 212, 0.2);
+    --connection-indicator-text: rgba(255, 255, 255, 0.9);
+    --connection-pulse-color: rgba(6, 182, 212, 0.5);
+
+    // Progress Status
+
+    // WorkflowHistories
+    --histories-bg: rgba(248, 250, 252, 0.95);
+    --histories-header-bg: rgba(248, 250, 252, 0.98);
+    --histories-card-bg: rgba(255, 255, 255, 0.98);
+    --histories-search-bg: rgba(51, 65, 85, 0.04);
+    --histories-search-focus-bg: rgba(51, 65, 85, 0.02);
+    
+    --histories-border: rgba(51, 65, 85, 0.08);
+    --histories-search-border: rgba(51, 65, 85, 0.08);
+    --histories-search-focus-border: rgba(14, 165, 233, 0.5);
+    
+    --histories-text: rgba(51, 65, 85, 0.95);
+    --histories-text-secondary: rgba(51, 65, 85, 0.75);
+    --histories-text-tertiary: rgba(51, 65, 85, 0.6);
+    
+    --histories-status-processing: rgba(2, 132, 199, 0.1);
+    --histories-status-processing-text: #0284c7;
+    --histories-status-processing-dot: #0284c7;
+    
+    --histories-status-success: rgba(13, 148, 136, 0.1);
+    --histories-status-success-text: #0d9488;
+    --histories-status-success-dot: #0d9488;
+    
+    --histories-status-error: rgba(220, 38, 38, 0.1);
+    --histories-status-error-text: #dc2626;
+    --histories-status-error-dot: #dc2626;
+    
+    --histories-category-bg: rgba(14, 165, 233, 0.08);
+    --histories-category-text: #0284c7;
+    
+    --histories-card-shadow: rgba(51, 65, 85, 0.08);
+    --histories-card-active-bg: rgba(14, 165, 233, 0.04);
+    --histories-card-active-border: rgba(14, 165, 233, 0.5);
+    --histories-card-active-gradient: linear-gradient(45deg, #06b6d4, #0ea5e9);
+
+    --workflow-id-bg: rgba(37, 99, 235, 0.05);
+    --workflow-id-border: rgba(37, 99, 235, 0.1);
+    --workflow-id-text: #2563eb;
+    --workflow-id-hover-bg: rgba(37, 99, 235, 0.1);
+    --workflow-id-hover-border: rgba(37, 99, 235, 0.2);
+
+    // Supporting Group - Light Theme
+    --supporting-group-bg-start: rgba(248, 250, 252, 0.4);
+    --supporting-group-bg-end: rgba(241, 245, 249, 0.3);
+    --supporting-group-border: rgba(37, 99, 235, 0.1);
+    --supporting-group-shadow-inner: rgba(37, 99, 235, 0.03);
+    --supporting-group-shadow-outer: rgba(37, 99, 235, 0.05);
+
+    
+    --supporting-header-bg: rgba(37, 99, 235, 0.03);
+    --supporting-header-border: rgba(37, 99, 235, 0.08);
+    --supporting-header-shadow: rgba(37, 99, 235, 0.03);
+    --supporting-icon-shadow: rgba(37, 99, 235, 0.1);
+    --supporting-label-color: rgba(37, 99, 235, 0.8);
+    --supporting-label-shadow: rgba(255, 255, 255, 0.8);
+    
+    --supporting-line-color: rgba(37, 99, 235, 0.1);
+    --supporting-bottom-line-color: rgba(37, 99, 235, 0.05);
+    
+    --supporting-node-bg: linear-gradient(135deg, 
+      rgba(250, 250, 250, 0.95),
+      rgba(245, 245, 245, 0.9)
+    );
+    --supporting-node-border: rgba(148, 163, 184, 0.15);
+    --supporting-node-shadow: 
+      0 4px 6px rgba(148, 163, 184, 0.05),
+      0 8px 24px rgba(148, 163, 184, 0.08);
+    --supporting-node-scale: 0.95;
+    
+    --supporting-node-hover-bg: linear-gradient(135deg, 
+      rgba(252, 252, 252, 0.98),
+      rgba(248, 248, 248, 0.95)
+    );
+    --supporting-node-hover-border: rgba(148, 163, 184, 0.25);
+    --supporting-node-hover-shadow: 
+      0 8px 12px rgba(148, 163, 184, 0.08),
+      0 16px 32px rgba(148, 163, 184, 0.12);
+    --supporting-node-hover-scale: 0.97;
+    
+    --supporting-node-title-color: #475569;
+    --supporting-node-description-color: #64748b;
+    
+    --supporting-node-details-bg: rgba(255, 255, 255, 0.7);
+    --supporting-node-details-border: rgba(148, 163, 184, 0.12);
+    --supporting-node-details-color: #334155;
+    
+    --supporting-node-button-bg: rgba(255, 255, 255, 0.8);
+    --supporting-node-button-border: rgba(148, 163, 184, 0.15);
+    --supporting-node-button-color: #475569;
+    --supporting-node-button-hover-bg: rgba(255, 255, 255, 0.9);
+    --supporting-node-button-hover-color: #334155;
+
+    // CustomEdge
+    --edge-stopped-color: #94a3b8;
+    --edge-stopped-glow: rgba(148, 163, 184, 0.2);
+    --edge-stopped-secondary: #cbd5e1;
+
+    // CustomNode
+    --custom-node-stopped-bg: rgba(148, 163, 184, 0.1);
+    --custom-node-stopped-border: rgba(148, 163, 184, 0.3);
+    --custom-node-badge-stopped-bg: rgba(148, 163, 184, 0.15);
+    --custom-node-badge-stopped-text: #64748b;
+    --custom-node-badge-stopped-border: rgba(148, 163, 184, 0.3);
+
+    // Loading overlay
+    --loading-hex-bg: rgba(37, 99, 235, 0.05);
+    --loading-text-color: rgba(37, 99, 235, 0.8);
+
+    // CustomNode
+    --custom-node-ready-bg: rgba(37, 99, 235, 0.1);
+    --custom-node-ready-border: rgba(37, 99, 235, 0.3);
+    --custom-node-badge-ready-bg: rgba(37, 99, 235, 0.15);
+    --custom-node-badge-ready-text: #2563eb;
+    --custom-node-badge-ready-border: rgba(37, 99, 235, 0.3);
+
+    // Modal
+    --modal-overlay-bg: rgba(0, 0, 0, 0.4);
+    --modal-overlay-blur: blur(8px);
+    
+    --modal-content-bg: #ffffff;
+    --modal-content-border: rgba(226, 232, 240, 1);
+    --modal-content-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.05),
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    --modal-header-bg: #ffffff;
+    --modal-header-border: rgba(226, 232, 240, 1);
+    --modal-header-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    
+    --modal-title-color: #1e293b;
+    --modal-text-color: #334155;
+    --modal-close-color: #64748b;
+    --modal-close-hover-bg: #f1f5f9;
+    --modal-close-hover-color: #0f172a;
+
+    --download-button-bg: rgba(37, 99, 235, 0.08);
+    --download-button-hover-bg: rgba(37, 99, 235, 0.12);
+    --download-button-text: #2563eb;
+    --download-button-border: rgba(37, 99, 235, 0.2);
+    --download-button-hover-border: rgba(37, 99, 235, 0.3);
+    --download-button-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+    --download-button-hover-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+
+    // Connection Status Styles
+    --connection-status-bg: rgba(255, 255, 255, 0.95);
+    --connection-status-border: rgba(37, 99, 235, 0.15);
+    --connection-status-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    
+    // LIVE状態
+    --connection-status-live-bg: rgba(16, 185, 129, 0.1);
+    --connection-status-live-border: rgba(16, 185, 129, 0.2);
+    --connection-status-live-text: #059669;
+    --connection-status-live-icon: #10b981;
+    --connection-status-live-glow: 0 0 12px rgba(16, 185, 129, 0.2);
+    
+    // CONNECTING状態
+    --connection-status-connecting-bg: rgba(245, 158, 11, 0.1);
+    --connection-status-connecting-border: rgba(245, 158, 11, 0.2);
+    --connection-status-connecting-text: #d97706;
+    --connection-status-connecting-icon: #f59e0b;
+    --connection-status-connecting-glow: 0 0 12px rgba(245, 158, 11, 0.2);
+    
+    // ERROR状態
+    --connection-status-error-bg: rgba(239, 68, 68, 0.1);
+    --connection-status-error-border: rgba(239, 68, 68, 0.2);
+    --connection-status-error-text: #dc2626;
+    --connection-status-error-icon: #ef4444;
+    --connection-status-error-glow: 0 0 12px rgba(239, 68, 68, 0.2);
+
+    // Logs Collection Status
+    --logs-status-complete-bg: linear-gradient(98deg, rgba(16, 185, 129, 0.02) 0%, rgba(16, 185, 129, 0.05) 100%);
+    --logs-status-complete-border: rgba(16, 185, 129, 0.1);
+    
+    --logs-status-bg: linear-gradient(98deg, rgba(37, 99, 235, 0.02) 0%, rgba(37, 99, 235, 0.05) 100%);
+    --logs-status-border: rgba(37, 99, 235, 0.1);
+    --logs-status-text: #2563eb;
+    --logs-status-counter: rgba(37, 99, 235, 0.8);
+    
+    --logs-status-button-bg: #ffffff;
+    --logs-status-button-border: rgba(37, 99, 235, 0.2);
+    --logs-status-button-text: #2563eb;
+    --logs-status-button-hover-bg: rgba(37, 99, 235, 0.04);
+    --logs-status-button-hover-border: rgba(37, 99, 235, 0.3);
+  }
+
+  // Dark theme
+  [data-theme="dark"] {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #e2e8f0;
+    --text-tertiary: #94a3b8;
+    
+    --border-primary: rgba(255, 255, 255, 0.1);
+    --border-secondary: rgba(255, 255, 255, 0.05);
+    
+    --accent-primary: #06b6d4;
+    --accent-secondary: #22d3ee;
+    --accent-gradient-secondary: rgba(6, 182, 212, 0.8);
+    
+    --success-primary: #10b981;
+    --success-secondary: rgba(16, 185, 129, 0.8);
+    --success-border: rgba(16, 185, 129, 0.2);
+    
+    --error-primary: #ef4444;
+    --error-secondary: rgba(239, 68, 68, 0.8);
+    --error-border: rgba(239, 68, 68, 0.2);
+    
+    --warning-primary: #f59e0b;
+    --warning-secondary: rgba(245, 158, 11, 0.1);
+    --warning-border: rgba(245, 158, 11, 0.2);
+    
+    --card-bg: rgba(17, 17, 21, 0.4);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
+    --theme-toggle-bg: rgba(255, 255, 255, 0.05);
+    --theme-toggle-border: rgba(255, 255, 255, 0.1);
+    --theme-toggle-icon: #e2e8f0;
+    --theme-toggle-hover-bg: rgba(255, 255, 255, 0.1);
+    
+    // Header specific
+    --bg-header: rgba(13, 13, 15, 0.98);
+    --accent-gradient-start: rgba(6, 182, 212, 0.3);
+    --accent-gradient-middle: rgba(238, 246, 247, 0.5);
+    --accent-gradient-end: rgba(6, 182, 212, 0.3);
+    --accent-glow: rgba(6, 182, 212, 0.15);
+    --title-gradient: linear-gradient(to right, #06b6d4, #0891b2, #06b6d4);
+    
+    --status-badge-bg: rgba(6, 182, 212, 0.07);
+    --status-badge-border: rgba(6, 182, 212, 0.2);
+    --status-badge-text: #10b981;
+    --status-badge-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+    --status-dot-color: #10b981;
+    --status-dot-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+    
+    --text-divider: #4b5563;
+    
+    --input-group-bg: rgba(6, 182, 212, 0.02);
+    --input-group-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(6, 182, 212, 0.1);
+    --input-bg: rgba(13, 13, 15, 0.7);
+    --input-border: rgba(6, 182, 212, 0.2);
+    --input-focus-border: rgba(6, 182, 212, 0.5);
+    --input-focus-shadow: 0 0 0 1px rgba(6, 182, 212, 0.1), 0 0 20px rgba(6, 182, 212, 0.2);
+    --input-focus-bg: rgba(13, 13, 15, 0.9);
+    --text-placeholder: #6b7280;
+    
+    --button-gradient: linear-gradient(135deg, #06b6d4, #0891b2);
+    --button-text: #ffffff;
+    --button-shadow: 0 0 20px rgba(6, 182, 212, 0.2), 0 0 0 1px rgba(6, 182, 212, 0.1);
+    --button-hover-shadow: 0 0 30px rgba(6, 182, 212, 0.3), 0 0 0 1px rgba(6, 182, 212, 0.2);
+    --button-shine: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    --button-icon-shadow: drop-shadow(0 0 8px rgba(6, 182, 212, 0.5));
+    
+    // プログレスバー
+    --progress-wrapper-bg: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(13, 13, 15, 0.95)
+    );
+    --progress-bg: rgba(59, 130, 246, 0.1);
+    --progress-gradient: linear-gradient(90deg, #3b82f6, #60a5fa);
+    --progress-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+    --progress-shine: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2));
+    
+    --progress-success-gradient: linear-gradient(90deg, #10b981, #34d399);
+    --progress-error-gradient: linear-gradient(90deg, #ef4444, #f87171);
+    
+    --progress-percentage-color: #06b6d4;
+    --progress-percentage-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+    
+    --progress-status-processing: rgba(59, 130, 246, 0.15);
+    --progress-status-processing-border: rgba(59, 130, 246, 0.25);
+    --progress-status-processing-color: #60a5fa;
+    
+    --progress-status-success: rgba(34, 197, 94, 0.15);
+    --progress-status-success-border: rgba(34, 197, 94, 0.25);
+    --progress-status-success-color: #4ade80;
+    
+    --progress-status-error: rgba(239, 68, 68, 0.15);
+    --progress-status-error-border: rgba(239, 68, 68, 0.25);
+    --progress-status-error-color: #f87171;
+    
+    // TracesDashboard
+    --traces-bg: rgba(13, 13, 15, 0.98);
+    --traces-border: rgba(6, 182, 212, 0.15);
+    --traces-backdrop-blur: 20px;
+    --traces-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+    --traces-tab-bg: rgba(17, 17, 21, 0.4);
+    --traces-tab-hover: rgba(255, 255, 255, 0.05);
+    --traces-tab-active: #06b6d4;
+    --traces-tab-text: #94a3b8;
+    --traces-tab-text-active: #06b6d4;
+    --traces-tab-border: rgba(255, 255, 255, 0.1);
+
+    --traces-workflow-id-bg: rgba(6, 182, 212, 0.1);
+    --traces-workflow-id-text: #06b6d4;
+    --traces-workflow-id-border: rgba(6, 182, 212, 0.2);
+
+    --traces-stats-bg: rgba(17, 17, 21, 0.4);
+    --traces-stats-border: rgba(6, 181, 212, 0.554);
+    --traces-stats-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --traces-stats-value: #e2e8f0;
+    --traces-stats-label: #94a3b8;
+
+    --traces-section-title: #06b6d4;
+    --traces-section-border: #06b6d4;
+
+    --traces-stats-highlight: rgba(6, 182, 212, 0.8);
+    --traces-stats-gradient-start: rgba(6, 182, 212, 0.08);
+    --traces-stats-gradient-end: rgba(6, 182, 212, 0.02);
+    --traces-stats-value-shadow: rgba(6, 182, 212, 0.7);
+
+    // MetricsData
+    --metrics-lambda-accent: rgb(234, 179, 8);
+    --metrics-lambda-card-bg: rgba(234, 179, 8, 0.03);
+    --metrics-lambda-card-border: rgba(234, 179, 8, 0.1);
+    
+    --metrics-dynamodb-accent: rgb(59, 130, 246);
+    --metrics-dynamodb-card-bg: rgba(59, 130, 246, 0.03);
+    --metrics-dynamodb-card-border: rgba(59, 130, 246, 0.1);
+    
+    --metrics-s3-accent: rgb(34, 197, 94);
+    --metrics-s3-card-bg: rgba(34, 197, 94, 0.03);
+    --metrics-s3-card-border: rgba(34, 197, 94, 0.1);
+    
+    --metric-card-bg: rgba(255, 255, 255, 0.03);
+    --metric-card-border: rgba(255, 255, 255, 0.1);
+
+    --metric-title-color: #94a3b8;
+    --metric-value-color: #f8fafc;
+    --metric-unit-color: #94a3b8;
+    --metric-divider-color: rgba(255, 255, 255, 0.1);
+
+
+    // LogCard
+    --log-card-bg: rgba(17, 17, 21, 0.4);
+    --log-card-border: rgba(255, 255, 255, 0.1);
+    --log-card-hover-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    --log-card-message: rgba(255, 255, 255, 0.9);
+    --log-card-details: rgba(255, 255, 255, 0.6);
+    --log-card-service: rgba(255, 255, 255, 0.7);
+    --log-card-service-bg: rgba(255, 255, 255, 0.08);
+    
+    --log-gradient-start: rgba(6, 182, 212, 0.4);
+    --log-gradient-end: transparent;
+    
+    --log-level-error-gradient: linear-gradient(to bottom, #ef4444, transparent);
+    --log-level-warning-gradient: linear-gradient(to bottom, #f59e0b, transparent);
+    --log-level-info-gradient: linear-gradient(to bottom, #06b6d4, transparent);
+    
+    --log-level-error-bg: rgba(239, 68, 68, 0.25);
+    --log-level-error-color: #fee2e2;
+    --log-level-error-border: rgba(239, 68, 68, 0.5);
+    
+    --log-level-warning-bg: rgba(245, 158, 11, 0.25);
+    --log-level-warning-color: #fef3c7;
+    --log-level-warning-border: rgba(245, 158, 11, 0.5);
+    
+    --log-level-info-bg: rgba(6, 182, 212, 0.25);
+    --log-level-info-color: #cffafe;
+    --log-level-info-border: rgba(6, 182, 212, 0.5);
+
+    // TimelineCard
+    --timeline-service-name: #e2e8f0;
+    --timeline-service-type: #94a3b8;
+    --timeline-time: #94a3b8;
+    
+    --timeline-duration-bg: rgba(6, 182, 212, 0.2);
+    --timeline-duration-border: rgba(6, 182, 212, 0.3);
+    --timeline-duration-text: #22d3ee;
+    
+    --timeline-details-bg: rgba(6, 182, 212, 0.05);
+    --timeline-details-border: rgba(6, 182, 212, 0.2);
+    --timeline-details-label: #94a3b8;
+    --timeline-details-value-bg: rgba(6, 182, 212, 0.15);
+    --timeline-details-value-border: rgba(6, 182, 212, 0.25);
+    --timeline-details-value-text: #22d3ee;
+    
+    --timeline-status-success: #34d399;
+    --timeline-status-error: #f87171;
+    --timeline-status-throttle: #fbbf24;
+    --timeline-status-fault: #ef4444;
+    
+    --timeline-time-bg: rgba(255, 255, 255, 0.08);
+    --timeline-time-border: rgba(255, 255, 255, 0.12);
+    --timeline-time-color: #e2e8f0;
+
+    // LogCard
+    --log-info-time: rgba(255, 255, 255, 0.9);
+    --log-info-time-bg: rgba(255, 255, 255, 0.1);
+    --log-info-time-border: rgba(255, 255, 255, 0.2);
+    
+    --log-service-text: rgba(255, 255, 255, 0.9);
+    --log-service-bg: rgba(255, 255, 255, 0.1);
+    --log-service-border: rgba(255, 255, 255, 0.2);
+    --bg-hover-accent: rgba(6, 182, 212, 0.08);
+
+    // TimelineCard
+    --timeline-card-bg: rgba(17, 17, 21, 0.4);
+    --timeline-card-border: rgba(6, 182, 212, 0.2);
+    --timeline-card-hover-bg: rgba(6, 182, 212, 0.08);
+    --timeline-card-hover-border: rgba(6, 182, 212, 0.3);
+    --timeline-card-active-bg: rgba(6, 182, 212, 0.15);
+    --timeline-card-active-hover-bg: rgba(6, 182, 212, 0.2);
+    --timeline-card-active-border: rgba(6, 182, 212, 0.3);
+    --timeline-card-hover-glow: rgba(6, 182, 212, 0.08);
+    --timeline-card-active-hover-glow: rgba(6, 182, 212, 0.12);
+
+    // TerminalNode
+    --terminal-node-bg: rgba(17, 17, 21, 0.4);
+    --terminal-node-border: rgba(6, 182, 212, 0.15);
+    --terminal-node-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    
+    --terminal-node-title: #e2e8f0;
+    --terminal-node-subtitle: #94a3b8;
+    
+    --terminal-node-input-bg: rgba(255, 255, 255, 0.05);
+    --terminal-node-input-border: rgba(6, 182, 212, 0.2);
+    --terminal-node-input-text: #e2e8f0;
+    --terminal-node-input-placeholder: #64748b;
+
+    // CustomNode
+    --custom-node-bg: rgba(17, 17, 21, 0.4);
+    --custom-node-border: rgba(6, 182, 212, 0.2);
+    --custom-node-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --custom-node-hover-shadow: 0 8px 16px rgba(6, 182, 212, 0.15);
+    
+    --custom-node-title: #e2e8f0;
+    --custom-node-subtitle: #94a3b8;
+    
+    --custom-node-input-bg: rgba(255, 255, 255, 0.05);
+    --custom-node-input-border: rgba(6, 182, 212, 0.2);
+    --custom-node-input-text: #e2e8f0;
+    --custom-node-input-placeholder: #64748b;
+    
+    --custom-node-button-bg: rgba(6, 182, 212, 0.15);
+    --custom-node-button-hover-bg: rgba(6, 182, 212, 0.2);
+    --custom-node-button-active-bg: rgba(6, 182, 212, 0.25);
+    --custom-node-button-text: #22d3ee;
+    --custom-node-button-border: rgba(6, 182, 212, 0.3);
+    
+    --custom-node-status-success: #34d399;
+    --custom-node-status-error: #f87171;
+    --custom-node-status-warning: #fbbf24;
+    --custom-node-status-info: #38bdf8;
+    
+    --custom-node-badge-bg: rgba(6, 182, 212, 0.15);
+    --custom-node-badge-text: #22d3ee;
+    --custom-node-badge-border: rgba(6, 182, 212, 0.25);
+
+    // CustomEdge
+    --edge-ready-color: #64748b;
+    --edge-ready-glow: rgba(148, 163, 184, 0.25);
+    --edge-ready-opacity: 0.6;
+    
+    --edge-progress-color: #0ea5e9;
+    --edge-progress-glow: rgba(14, 165, 233, 0.5);
+    --edge-progress-secondary: #38bdf8;
+    
+    --edge-success-color: #10b981;
+    --edge-success-glow: rgba(16, 185, 129, 0.5);
+    --edge-success-secondary: #34d399;
+    
+    --edge-error-color: #ef4444;
+    --edge-error-glow: rgba(239, 68, 68, 0.5);
+    --edge-error-secondary: #f87171;
+
+    // ChoiceNode
+    --choice-node-bg-start: rgba(30, 41, 59, 0.98);
+    --choice-node-bg-end: rgba(30, 41, 59, 0.95);
+    --choice-node-border-color: rgba(6, 182, 212, 0.2);
+    --choice-node-border-hover: rgba(6, 182, 212, 0.4);
+    
+    --choice-node-shadow: rgba(0, 0, 0, 0.2);
+    --choice-node-inner-glow: rgba(6, 182, 212, 0.05);
+    --choice-node-hover-shadow: rgba(6, 182, 212, 0.2);
+    --choice-node-hover-glow: rgba(6, 182, 212, 0.1);
+    
+    --choice-node-title-color: #22d3ee;
+    --choice-node-condition-color: #e2e8f0;
+    --choice-node-label-color: #94a3b8;
+    --choice-node-arrow-color: #22d3ee;
+    
+    --choice-node-handle-bg: rgba(6, 182, 212, 0.2);
+    --choice-node-handle-border: rgba(6, 182, 212, 0.3);
+
+    // WorkflowGroup
+    --workflow-bg-start: rgba(17, 24, 39, 0.1);
+    --workflow-bg-end: rgba(17, 24, 39, 0.15);
+    --workflow-border-color: rgba(255, 255, 255, 0.1);
+    --workflow-shadow: rgba(0, 0, 0, 0.2);
+    --workflow-shadow-secondary: rgba(0, 0, 0, 0.15);
+    --workflow-inner-glow: rgba(255, 255, 255, 0.05);
+    
+    --workflow-header-line: linear-gradient(to right, #22d3ee, #0ea5e9);
+    --workflow-header-bg: rgba(6, 182, 212, 0.1);
+    --workflow-header-text: #e2e8f0;
+    --workflow-header-shadow: rgba(6, 182, 212, 0.1);
+    
+    --workflow-divider-start: rgba(6, 182, 212, 0.2);
+    --workflow-divider-end: rgba(6, 182, 212, 0.1);
+
+    // SubWorkflow specific
+    --sub-workflow-bg-start: rgba(6, 182, 212, 0.05);
+    --sub-workflow-bg-end: rgba(6, 182, 212, 0.1);
+    --sub-workflow-border: rgba(6, 182, 212, 0.2);
+    --sub-workflow-shadow: rgba(6, 182, 212, 0.1);
+    --sub-workflow-inner-glow: rgba(6, 182, 212, 0.05);
+    
+    --sub-workflow-header-bg: rgba(6, 182, 212, 0.15);
+    --sub-workflow-header-text: #22d3ee;
+    --sub-workflow-header-shadow: rgba(6, 182, 212, 0.2);
+    --sub-workflow-arrow-color: rgba(6, 182, 212, 0.8);
+    
+    --sub-workflow-top-line: rgba(6, 182, 212, 0.4);
+    --sub-workflow-bottom-line: rgba(6, 182, 212, 0.3);
+
+    // Status Colors - Neutral
+    --status-neutral-bg: rgba(75, 85, 99, 0.15);
+    --status-neutral-border: rgba(75, 85, 99, 0.25);
+    --status-neutral-dot: rgba(156, 163, 175, 0.9);
+    --status-neutral-text: rgba(156, 163, 175, 1);
+
+    // Status Colors - Warning
+    --status-warning-bg: rgba(245, 158, 11, 0.15);
+    --status-warning-border: rgba(245, 158, 11, 0.25);
+    --status-warning-dot: rgba(251, 191, 36, 0.9);
+    --status-warning-text: rgba(251, 191, 36, 1);
+
+    // Status Colors - Success
+    --status-success-bg: rgba(16, 185, 129, 0.15);
+    --status-success-border: rgba(16, 185, 129, 0.25);
+    --status-success-dot: rgba(34, 197, 94, 0.9);
+    --status-success-text: rgba(34, 197, 94, 1);
+
+    // Status Colors - Error
+    --status-error-bg: rgba(239, 68, 68, 0.15);
+    --status-error-border: rgba(239, 68, 68, 0.25);
+    --status-error-dot: rgba(248, 113, 113, 0.9);
+    --status-error-text: rgba(248, 113, 113, 1);
+
+    // Status Colors - Info
+    --status-info-bg: rgba(6, 182, 212, 0.15);
+    --status-info-border: rgba(6, 182, 212, 0.25);
+    --status-info-dot: rgba(34, 211, 238, 0.9);
+    --status-info-text: rgba(34, 211, 238, 1);
+
+    // Connection Indicator
+    --connection-indicator-bg: rgba(17, 17, 21, 0.98);
+    --connection-indicator-border: rgba(6, 182, 212, 0.25);
+    --connection-indicator-text: rgba(255, 255, 255, 0.95);
+    --connection-pulse-color: rgba(6, 182, 212, 0.6);
+
+    // WorkflowHistories
+    --histories-bg: rgba(17, 17, 21, 0.95);
+    --histories-header-bg: rgba(17, 17, 21, 0.98);
+    --histories-card-bg: rgba(255, 255, 255, 0.03);
+    --histories-search-bg: rgba(255, 255, 255, 0.05);
+    --histories-search-focus-bg: rgba(255, 255, 255, 0.07);
+    
+    --histories-border: rgba(255, 255, 255, 0.06);
+    --histories-search-border: rgba(255, 255, 255, 0.06);
+    --histories-search-focus-border: rgba(6, 182, 212, 0.5);
+    
+    --histories-text: rgba(255, 255, 255, 0.9);
+    --histories-text-secondary: rgba(255, 255, 255, 0.6);
+    --histories-text-tertiary: rgba(255, 255, 255, 0.5);
+    
+    --histories-status-processing: rgba(56, 189, 248, 0.15);
+    --histories-status-processing-text: #38bdf8;
+    --histories-status-processing-dot: #38bdf8;
+    
+    --histories-status-success: rgba(52, 211, 153, 0.15);
+    --histories-status-success-text: #34d399;
+    --histories-status-success-dot: #34d399;
+    
+    --histories-status-error: rgba(248, 113, 113, 0.15);
+    --histories-status-error-text: #f87171;
+    --histories-status-error-dot: #f87171;
+    
+    --histories-category-bg: rgba(6, 182, 212, 0.15);
+    --histories-category-text: #22d3ee;
+    
+    --histories-card-shadow: rgba(0, 0, 0, 0.2);
+    --histories-card-active-bg: rgba(6, 182, 212, 0.1);
+    --histories-card-active-border: rgba(6, 182, 212, 0.5);
+    --histories-card-active-gradient: linear-gradient(45deg, #06b6d4, #0ea5e9);
+
+    --workflow-id-bg: rgba(6, 182, 212, 0.1);
+    --workflow-id-border: rgba(6, 182, 212, 0.15);
+    --workflow-id-text: #22d3ee;
+    --workflow-id-hover-bg: rgba(6, 182, 212, 0.15);
+    --workflow-id-hover-border: rgba(6, 182, 212, 0.25);
+
+    // Supporting Group
+    --supporting-group-bg-start: rgba(30, 41, 59, 0.4);
+    --supporting-group-bg-end: rgba(15, 23, 42, 0.3);
+    --supporting-group-border: rgba(6, 182, 212, 0.1);
+    --supporting-group-shadow-inner: rgba(148, 163, 184, 0.05);
+    --supporting-group-shadow-outer: rgba(0, 0, 0, 0.2);
+    
+    --supporting-header-bg: rgba(30, 41, 59, 0.6);
+    --supporting-header-border: rgba(148, 163, 184, 0.1);
+    --supporting-header-shadow: rgba(0, 0, 0, 0.2);
+    --supporting-icon-shadow: rgba(0, 0, 0, 0.2);
+    --supporting-label-color: rgba(148, 163, 184, 0.9);
+    --supporting-label-shadow: rgba(0, 0, 0, 0.3);
+    
+    --supporting-line-color: rgba(148, 163, 184, 0.1);
+    --supporting-bottom-line-color: rgba(148, 163, 184, 0.05);
+    
+    --supporting-node-bg: linear-gradient(135deg,
+      rgba(30, 41, 59, 0.25),
+      rgba(15, 23, 42, 0.2)
+    );
+    --supporting-node-border: rgba(148, 163, 184, 0.15);
+    --supporting-node-shadow: 
+      0 4px 6px rgba(0, 0, 0, 0.15),
+      0 8px 24px rgba(148, 163, 184, 0.08);
+    
+    --supporting-node-hover-bg: linear-gradient(135deg,
+      rgba(30, 41, 59, 0.35),
+      rgba(15, 23, 42, 0.3)
+    );
+    --supporting-node-hover-border: rgba(148, 163, 184, 0.25);
+    --supporting-node-hover-shadow: 
+      0 8px 12px rgba(0, 0, 0, 0.25),
+      0 16px 32px rgba(148, 163, 184, 0.1);
+    
+    --supporting-node-title-color: #cbd5e1;
+    --supporting-node-description-color: #94a3b8;
+    
+    --supporting-node-details-bg: rgba(30, 41, 59, 0.3);
+    --supporting-node-details-border: rgba(148, 163, 184, 0.12);
+    --supporting-node-details-color: #e2e8f0;
+    
+    --supporting-node-button-bg: rgba(30, 41, 59, 0.4);
+    --supporting-node-button-border: rgba(148, 163, 184, 0.15);
+    --supporting-node-button-color: #cbd5e1;
+    --supporting-node-button-hover-bg: rgba(30, 41, 59, 0.5);
+    --supporting-node-button-hover-color: #e2e8f0;
+
+    // CustomEdge
+    --edge-stopped-color: #64748b;
+    --edge-stopped-glow: rgba(148, 163, 184, 0.3);
+    --edge-stopped-secondary: #94a3b8;
+
+    // CustomNode
+    --custom-node-stopped-bg: rgba(148, 163, 184, 0.08);
+    --custom-node-stopped-border: rgba(148, 163, 184, 0.2);
+    --custom-node-badge-stopped-bg: rgba(148, 163, 184, 0.1);
+    --custom-node-badge-stopped-text: #94a3b8;
+    --custom-node-badge-stopped-border: rgba(148, 163, 184, 0.25);
+
+    // Loading overlay
+    --loading-hex-bg: rgba(6, 182, 212, 0.05);
+    --loading-text-color: rgba(6, 182, 212, 0.8);
+
+    // CustomNode
+    --custom-node-ready-bg: rgba(148, 163, 184, 0.08);
+    --custom-node-ready-border: rgba(148, 163, 184, 0.2);
+    --custom-node-badge-ready-bg: rgba(148, 163, 184, 0.1);
+    --custom-node-badge-ready-text: #94a3b8;
+    --custom-node-badge-ready-border: rgba(148, 163, 184, 0.25);
+
+    // Modal
+    --modal-overlay-bg: rgba(0, 0, 0, 0.7);
+    --modal-overlay-blur: blur(8px);
+    
+    --modal-content-bg: #1e293b;
+    --modal-content-border: rgba(51, 65, 85, 1);
+    --modal-content-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.05),
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    
+    --modal-header-bg: #1e293b;
+    --modal-header-border: rgba(51, 65, 85, 1);
+    --modal-header-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    
+    --modal-title-color: #1e293b;
+    --modal-text-color: #334155;
+    --modal-close-color: #64748b;
+    --modal-close-hover-bg: #f1f5f9;
+    --modal-close-hover-color: #0f172a;
+
+    --download-button-bg: rgba(6, 182, 212, 0.1);
+    --download-button-hover-bg: rgba(6, 182, 212, 0.15);
+    --download-button-text: #06b6d4;
+    --download-button-border: rgba(6, 182, 212, 0.2);
+    --download-button-hover-border: rgba(6, 182, 212, 0.3);
+    --download-button-shadow: 0 4px 12px rgba(6, 182, 212, 0.12);
+    --download-button-hover-shadow: 0 6px 16px rgba(6, 182, 212, 0.2);
+
+    // Connection Status Styles
+    --connection-status-bg: rgba(255, 255, 255, 0.95);
+    --connection-status-border: rgba(37, 99, 235, 0.15);
+    --connection-status-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    
+    // LIVE状態
+    --connection-status-live-bg: rgba(16, 185, 129, 0.1);
+    --connection-status-live-border: rgba(16, 185, 129, 0.2);
+    --connection-status-live-text: #059669;
+    --connection-status-live-icon: #10b981;
+    --connection-status-live-glow: 0 0 12px rgba(16, 185, 129, 0.2);
+    
+    // CONNECTING状態
+    --connection-status-connecting-bg: rgba(245, 158, 11, 0.1);
+    --connection-status-connecting-border: rgba(245, 158, 11, 0.2);
+    --connection-status-connecting-text: #d97706;
+    --connection-status-connecting-icon: #f59e0b;
+    --connection-status-connecting-glow: 0 0 12px rgba(245, 158, 11, 0.2);
+    
+    // ERROR状態
+    --connection-status-error-bg: rgba(239, 68, 68, 0.15);
+    --connection-status-error-border: rgba(239, 68, 68, 0.25);
+    --connection-status-error-text: #f87171;
+    --connection-status-error-icon: #ef4444;
+    --connection-status-error-glow: 0 0 12px rgba(239, 68, 68, 0.3);
+
+    // Logs Collection Status
+    --logs-status-complete-bg: linear-gradient(98deg, rgba(16, 185, 129, 0.03) 0%, rgba(16, 185, 129, 0.06) 100%);
+    --logs-status-complete-border: rgba(16, 185, 129, 0.15);
+    
+    --logs-status-bg: linear-gradient(98deg, rgba(6, 182, 212, 0.03) 0%, rgba(6, 182, 212, 0.06) 100%);
+    --logs-status-border: rgba(6, 182, 212, 0.15);
+    --logs-status-text: #22d3ee;
+    --logs-status-counter: rgba(6, 182, 212, 0.9);
+    
+    --logs-status-button-bg: rgba(6, 182, 212, 0.06);
+    --logs-status-button-border: rgba(6, 182, 212, 0.2);
+    --logs-status-button-text: #22d3ee;
+    --logs-status-button-hover-bg: rgba(6, 182, 212, 0.1);
+    --logs-status-button-hover-border: rgba(6, 182, 212, 0.3);
+  }
+} 

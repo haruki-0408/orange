@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useMultiPlayerCursorStore } from '../stores/multiPlayerCursorStore';
-import WebSocketClient from '../lib/websocket/WebSocketClient';
+import { useMultiPlayerCursorStore } from '../../../stores/multiPlayerCursorStore';
+import WebSocketClient from '../../../lib/websocket/WebSocketClient';
 
 const useWebsocket = (url: string) => {
   const setConnectionStatus = useMultiPlayerCursorStore((state) => state.setConnectionStatus);

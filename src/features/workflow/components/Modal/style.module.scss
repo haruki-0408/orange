@@ -1,0 +1,118 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay-bg);
+  backdrop-filter: var(--modal-overlay-blur);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+  padding: 24px;
+}
+
+.content {
+  position: relative;
+  background: var(--modal-content-bg);
+  border: 1px solid var(--modal-content-border);
+  border-radius: 16px;
+  max-width: 1000px;
+  max-height: calc(100vh - 48px);
+  margin: auto;
+  overflow: hidden;
+  box-shadow: var(--modal-content-shadow);
+  transform: translateY(10px);
+  animation: slideUp 0.4s ease forwards;
+  display: flex;
+  flex-direction: column;
+  width: 95vw;
+  min-width: 320px;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 20px 24px;
+  background: var(--modal-header-bg);
+  border-bottom: 1px solid var(--modal-header-border);
+  box-shadow: var(--modal-header-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--modal-title-color);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  color: var(--modal-close-color);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--modal-close-hover-bg);
+    color: var(--modal-close-hover-color);
+    transform: rotate(90deg);
+  }
+
+  &:active {
+    transform: rotate(90deg) scale(0.95);
+  }
+}
+
+.body {
+  flex: 1;
+  padding: 24px;
+  color: var(--modal-text-color);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  > * {
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

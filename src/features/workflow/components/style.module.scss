@@ -1,0 +1,13 @@
+.container {
+  background: var(--bg-primary);
+
+  .flowContainer {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+  }
+
+  .controls {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-secondary);
+  }
+} 

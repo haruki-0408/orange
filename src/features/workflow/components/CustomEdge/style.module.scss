@@ -1,0 +1,145 @@
+.customEdge {
+  stroke-width: 2.5;
+  fill: none;
+  pointer-events: all;
+  transition: all 0.3s ease;
+
+  &.ready {
+    stroke: var(--edge-ready-color);
+    stroke-dasharray: 6;
+    filter: drop-shadow(0 0 2px var(--edge-ready-glow));
+    opacity: var(--edge-ready-opacity);
+  }
+
+  &.progress {
+    stroke: var(--edge-progress-color);
+    stroke-width: 3;
+    stroke-dasharray: 8;
+    animation: flowProgress 15s linear infinite;
+    filter: drop-shadow(0 0 4px var(--edge-progress-glow));
+  }
+
+  &.success {
+    stroke: var(--edge-success-color);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 4px var(--edge-success-glow));
+    animation: glowSuccess 2s ease-in-out infinite;
+  }
+
+  &.failed {
+    stroke: var(--edge-error-color);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 4px var(--edge-error-glow));
+    animation: flashError 2s ease-in-out infinite;
+  }
+
+  &.stopped {
+    stroke: var(--edge-stopped-color);
+    stroke-width: 2;
+    stroke-dasharray: 4;
+    filter: drop-shadow(0 0 2px var(--edge-stopped-glow));
+    opacity: 0.5;
+  }
+}
+
+.arrow {
+  transition: all 0.3s ease;
+
+  &.ready {
+    fill: var(--edge-ready-color);
+    stroke: var(--edge-ready-color);
+  }
+
+  &.progress {
+    fill: var(--edge-progress-secondary);
+    stroke: var(--edge-progress-color);
+  }
+
+  &.success {
+    fill: var(--edge-success-secondary);
+    stroke: var(--edge-success-color);
+  }
+
+  &.failed {
+    fill: var(--edge-error-secondary);
+    stroke: var(--edge-error-color);
+  }
+
+  &.stopped {
+    fill: var(--edge-stopped-secondary);
+    stroke: var(--edge-stopped-color);
+  }
+}
+
+@keyframes flowProgress {
+  0% {
+    stroke-dashoffset: 0;
+    stroke: var(--edge-progress-color);
+  }
+  50% {
+    stroke: var(--edge-progress-secondary);
+  }
+  100% {
+    stroke-dashoffset: -1000;
+    stroke: var(--edge-progress-color);
+  }
+}
+
+@keyframes glowSuccess {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px var(--edge-success-glow));
+    stroke: var(--edge-success-color);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px var(--edge-success-glow));
+    stroke: var(--edge-success-secondary);
+  }
+}
+
+@keyframes flashError {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px var(--edge-error-glow));
+    stroke: var(--edge-error-color);
+  }
+  50% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 8px var(--edge-error-glow));
+    stroke: var(--edge-error-secondary);
+  }
+}
+
+@keyframes arrowProgress {
+  0%, 100% {
+    transform: scale(1);
+    fill: var(--edge-progress-color);
+  }
+  50% {
+    transform: scale(1.2);
+    fill: var(--edge-progress-secondary);
+  }
+}
+
+@keyframes arrowSuccess {
+  0%, 100% {
+    transform: scale(1) translateX(0);
+    fill: var(--edge-success-color);
+  }
+  50% {
+    transform: scale(1.1) translateX(1px);
+    fill: var(--edge-success-secondary);
+  }
+}
+
+@keyframes arrowError {
+  0%, 100% {
+    transform: scale(1) rotate(0);
+    fill: var(--edge-error-color);
+  }
+  50% {
+    transform: scale(1.1) rotate(3deg);
+    fill: var(--edge-error-secondary);
+  }
+}
+  
+  

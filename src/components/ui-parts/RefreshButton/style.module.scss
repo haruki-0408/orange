@@ -1,0 +1,84 @@
+.refreshButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  cursor: pointer;
+
+  .icon {
+    transition: transform 0.3s ease;
+  }
+
+  &:hover:not(:disabled) {
+    .icon {
+      transform: rotate(90deg);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: wait;
+
+    .icon {
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  // サイズバリエーション
+  &.small {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    .icon {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  &.medium {
+    padding: 6px 12px;
+    font-size: 0.8125rem;
+    .icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  &.large {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  // カラーバリエーション
+  &.primary {
+    background: var(--logs-status-button-bg);
+    border: 1px solid var(--logs-status-button-border);
+    color: var(--logs-status-button-text);
+
+    &:hover:not(:disabled) {
+      background: var(--logs-status-button-hover-bg);
+      border-color: var(--logs-status-button-hover-border);
+    }
+  }
+
+  &.secondary {
+    background: transparent;
+    border: 1px solid var(--logs-status-button-border);
+    color: var(--logs-status-button-text);
+
+    &:hover:not(:disabled) {
+      background: var(--logs-status-button-hover-bg);
+    }
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+} 
