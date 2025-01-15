@@ -69,7 +69,7 @@ const xrayClient = new XRayClient({
 export async function getCategories(): Promise<Category[]> {
   try {
     const result = await docClient.send(new ScanCommand({
-      TableName: process.env.CATEGORIES_TABLE_NAME!,
+      TableName: process.env.WORKFLOW_CATEGORIES_TABLE_NAME!,
       ConsistentRead: true
     }));
 
