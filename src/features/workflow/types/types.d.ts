@@ -71,12 +71,14 @@ export interface ServiceDetails {
   DynamoDB: {
     tableName: string;
     primaryKey: string;
+    capacityMode: string;
     readCapacity: number;
     writeCapacity: number;
     indexes?: string[];
   };
   SQS: {
     queueName: string;
+    type: string;
     messageRetention: number;
     visibilityTimeout: number;
     delaySeconds: number;
@@ -89,9 +91,9 @@ export interface ServiceDetails {
   };
   S3: {
     bucketName: string;
-    versioning: boolean;
+    versioning: string;
     encryption: string;
-    accessControl: string;
+    publicAccess: string;
   };
 }
 

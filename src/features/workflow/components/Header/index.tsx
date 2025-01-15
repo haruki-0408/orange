@@ -24,6 +24,7 @@ export const Header: FCX<Props> = ({
   categories,
   selectedCategory,
   onCategoryChange,
+  
 }) => {
   const { selectedWorkflow, isActiveWorkflow } = useWorkflowStore();
   const { connectionStatus } = useSSEStore();
@@ -89,8 +90,34 @@ export const Header: FCX<Props> = ({
           <p className={styles.description}>
             イベント駆動型サーバーレスアプリケーション
             <span className={styles.divider}>/</span>
-            処理の可視化と透明性を重視したデモンストレーションアプリ
+            処理の可視化と透明性を重視したワークフローアプリケーション
           </p>
+        </div>
+
+        <div className={styles.exampleSection}>
+          <div className={styles.title}>使い方</div>
+          <div className={styles.examples}>
+            <div className={styles.example}>
+              <strong data-step="1">生成すると面白そうな嘘の内容の論文タイトルを入力</strong>
+              <span className={styles.note}>例: 「野菜の光合成を使用した永久機関の開発」など</span>
+            </div>
+            <div className={styles.example}>
+              <strong data-step="2">カテゴリを選択</strong>
+              <span className={styles.note}>タイトルに応じたカテゴリを選択「新技術開発」など</span>
+            </div>
+            <div className={styles.step}>
+              <strong data-step="3">生成開始ボタンを押すと論文生成がリアルタイムで進行します</strong>
+            </div>
+            <div className={styles.step}>
+              <strong data-step="4">生成完了後 「Workflow Histories」からPDFダウンロードボタンを押して閲覧</strong>
+            </div>
+            <div className={styles.example}>
+              <strong data-step="5">さらに「Result Dashboard」から論文の生成結果に関するログ&パフォーマンスを確認</strong>
+              <span className={styles.note}>「Logs」タブにおける全てのログ(Collectiong logs ⚪︎/⚪︎)が収集されてから「Total Duration」と「Timeline」&「Metrics」タブが表示されます。
+              「Logs」タブ内でCloudwatch Logsのログを読み取っており生成が終了してから反映されるまで時間(数分)がかかることがございます。その際は「Refresh」ボタンを押して
+              ログの取得状況を更新してください。</span>
+            </div>
+          </div>
         </div>
 
         <div className={styles.inputSection}>

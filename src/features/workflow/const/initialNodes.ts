@@ -22,10 +22,10 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "APIGateway",
       details: {
-        endpoint: "/api/v1/thesis",
+        endpoint: "/workflow",
         method: "POST",
-        stage: "prod",
-        authType: "IAM"
+        stage: "prd",
+        authType: "API Key",
       }
     }
   },
@@ -75,10 +75,10 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "get-thesis-format",
+        functionName: "melon_prd_get_fake_thesis_title_category_format",
         memory: 256,
-        timeout: 30,
-        runtime: "Python 3.12"
+        timeout: 900,
+        runtime: "Python 3.12",
       }
     },
     parentId: "format-services",
@@ -97,9 +97,12 @@ export const initialNodes: Node[] = [
       serviceType: "DynamoDB",
       isSupporting: true,
       details: {
-        tableName: "category-table",
-        partitionKey: "category_id",
-        sortKey: "timestamp",
+        tableName: "melon_prd_master_fake_thesis_category_formats_table",
+        primaryKey: "category_type_en",
+        capacityMode: "Provisioned",
+        readCapacity: 1,
+        writeCapacity: 1,
+        sortKey: "-",
       }
     },
     parentId: "format-services",
@@ -117,9 +120,9 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "generate-prompt",
-        memory: 256,
-        timeout: 30,
+        functionName: "melon_prd_generate_prompt_parameters",
+        memory: 512,
+        timeout: 900,
         runtime: "Python 3.12"
       }
     },
@@ -138,7 +141,8 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "SQS",
       details: {
-        queueName: "thesis-callback-queue",
+        queueName: "melon_prd_workflow_callback_trigger_queue",
+        type: "Standard",
         messageRetention: 345600,
         visibilityTimeout: 30,
         delaySeconds: 0
@@ -171,9 +175,9 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "generate-thesis",
-        memory: 1024,
-        timeout: 60,
+        functionName: "melon_prd_request_generative_ai_model_api",
+        memory: 512,
+        timeout: 900,
         runtime: "Python 3.12"
       }
     },
@@ -192,9 +196,9 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "validate-thesis",
+        functionName: "melon_prd_fake_thesis_data_validation",
         memory: 256,
-        timeout: 30,
+        timeout: 900,
         runtime: "Python 3.12"
       }
     },
@@ -224,9 +228,9 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "return-token",
+        functionName: "melon_prd_send_workflow_callback",
         memory: 256,
-        timeout: 30,
+        timeout: 900,
         runtime: "Python 3.12"
       }
     },
@@ -245,9 +249,9 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "fix-thesis-data",
+        functionName: "melon_prd_fix_fake_thesis_data",
         memory: 256,
-        timeout: 30,
+        timeout: 900,
         runtime: "Python 3.12"
       }
     },
@@ -266,9 +270,9 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "generate-formulas",
+        functionName: "melon_prd_generate_fake_formula",
         memory: 512,
-        timeout: 60,
+        timeout: 900,
         runtime: "Python 3.12"
       }
     },
@@ -287,9 +291,9 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "generate-tables",
-        memory: 512,
-        timeout: 60,
+        functionName: "melon_prd_generate_fake_table",
+        memory: 1024,
+        timeout: 900,
         runtime: "Python 3.12"
       }
     },
@@ -308,9 +312,9 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "generate-graphs",
-        memory: 512,
-        timeout: 60,
+        functionName: "melon_prd_generate_fake_graph",
+        memory: 1024,
+        timeout: 900,
         runtime: "Python 3.12"
       }
     },
@@ -329,9 +333,9 @@ export const initialNodes: Node[] = [
       status: "ready",
       serviceType: "Lambda",
       details: {
-        functionName: "format-pdf",
-        memory: 1024,
-        timeout: 60,
+        functionName: "melon_prd_convert_to_pdf",
+        memory: 512,
+        timeout: 900,
         runtime: "Python 3.12"
       }
     },
@@ -351,10 +355,10 @@ export const initialNodes: Node[] = [
       serviceType: "S3",
       isSupporting: true,
       details: {
-        bucketName: "fake-thesis-bucket",
-        versioning: true,
-        encryption: "AES-256",
-        accessControl: "Private"
+        bucketName: "melon-prd-fake-thesis-bucket",
+        versioning: "Suspended",
+        encryption: "SSE-S3",
+        publicAccess: "Blocked",
       }
     },
     parentId: "pdf-services",

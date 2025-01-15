@@ -138,6 +138,101 @@
   }
 }
 
+.exampleSection {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(
+    to right,
+    var(--input-group-bg),
+    var(--bg-header)
+  );
+  border-radius: 0.75rem;
+  box-shadow: var(--input-group-shadow);
+
+  .title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: '✨';
+      font-size: 1rem;
+    }
+  }
+
+  .examples {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    .example, .step {
+      position: relative;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      padding-left: 2rem;
+      padding-bottom: 1rem;
+
+      .note {
+        font-weight: 400;
+        font-size: 0.75rem;
+        opacity: 0.7;
+      }
+      
+      strong {
+        display: block;
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        position: relative;
+
+        &::before {
+          content: attr(data-step);
+          position: absolute;
+          left: -2rem;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 1.5rem;
+          height: 1.5rem;
+          background: var(--button-gradient);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--button-text);
+          font-size: 0.75rem;
+          font-weight: 600;
+          box-shadow: var(--button-shadow);
+          z-index: 1;
+        }
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: calc(0.75rem - 1px);
+        top: 1.75rem;
+        height: calc(100% - 0.75rem);
+        width: 2px;
+        background: var(--input-border);
+        opacity: 0.5;
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+        
+        &::after {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
 .inputSection {
   margin-bottom: 1.5rem;
   .inputGroup {

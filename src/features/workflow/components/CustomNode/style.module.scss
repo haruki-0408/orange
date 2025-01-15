@@ -282,20 +282,27 @@
 
 .detailItem {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   margin-bottom: 8px;
+  gap: 4px;
 }
 
 .detailLabel {
   color: var(--custom-node-subtitle);
   font-weight: 500;
-  min-width: 80px;
+  font-size: 0.75rem;
 }
 
 .detailValue {
   color: var(--custom-node-title);
   font-family: 'Geist Mono', monospace;
+  word-wrap: break-word;
   font-size: 0.8rem;
+  max-width: 100%;
+  line-height: 1.4;
+  padding: 4px 8px;
+  background: var(--custom-node-input-bg);
+  border-radius: 4px;
 }
 
 .detailsRow {
