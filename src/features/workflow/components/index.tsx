@@ -117,7 +117,6 @@ export const Workflow: FCX<Props> = ({ className, categories, initialHistories }
       return { 
         isValid: false, 
         message: '次の文字は使用できません: \\ ` \' " | ;' 
-        //　使用できる特殊文字　< > { } [ ] + = , ? ! @ # $ % ^ & * ( ) ~ / : . -
       };
     }
     return { isValid: true };
@@ -147,7 +146,7 @@ export const Workflow: FCX<Props> = ({ className, categories, initialHistories }
       // タイトルの最終サニタイズ
       const sanitizedTitle = thesisTitle;
       
-      const response = await startWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
+      await startWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
       
       addWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
 

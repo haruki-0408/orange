@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 import { FCX } from '@/types/types';
 import styles from './style.module.scss';
 import { Category } from '@/features/workflow/types/types';
@@ -7,6 +7,7 @@ import { ThemeToggle } from '../ThemeToggle';
 import { useSSEStore } from '../../stores/useSSEStore';
 import { useProgressStore } from '../../stores/useProgressStore';
 import { useWorkflowStore } from '../../stores/useWorkflowStore';
+
 interface Props {
   title: string;
   onStart: () => void;
@@ -16,7 +17,7 @@ interface Props {
   onCategoryChange: (category: string) => void;
 }
 
-export const Header: FCX<Props> = memo(({ 
+export const Header: FCX<Props> = ({ 
   title, 
   onStart, 
   onTitleChange, 
@@ -148,7 +149,7 @@ export const Header: FCX<Props> = memo(({
 
         <div className={clsx(
           styles.progressWrapper,
-          ((isActiveWorkflow(selectedWorkflow?.workflow_id!) && connectionStatus === 'LIVE') || progressBar.status === 'SUCCESS' || progressBar.status === 'FAILED') && styles.active
+          ((selectedWorkflow && isActiveWorkflow(selectedWorkflow?.workflow_id) && connectionStatus === 'LIVE') || progressBar.status === 'SUCCESS' || progressBar.status === 'FAILED') && styles.active
         )}>
           {selectedWorkflow?.workflow_id && (
               <span className={clsx(
@@ -180,6 +181,4 @@ export const Header: FCX<Props> = memo(({
       </div>
     </header>
   );
-});
-
-export default Header; 
+};

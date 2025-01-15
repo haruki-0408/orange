@@ -1,13 +1,7 @@
 import { 
-  StateType, 
-  WorkflowNodeId, 
-  NodeData, 
-  EdgeData,
   ProgressbarType,
-  ProgressData,
-  WorkflowProgressItem,
 } from '../types/types';
-import { Node, Edge } from "@xyflow/react";
+import { Node } from "@xyflow/react";
 import { getWorkflowProgress } from '@/app/actions/workflow';
 export const progressService = {
   /**

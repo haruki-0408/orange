@@ -94,7 +94,7 @@ export async function startWorkflow(
 ): Promise<StartWorkflowResponse> {
   try {
     // ダブルクォートをエスケープ
-    const sanitizedTitle = title.replace(/"/g, '\"');
+    const sanitizedTitle = title.replace(/"/g, '"');
 
     const body = {
       workflow_id: workflowId,

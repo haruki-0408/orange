@@ -4,8 +4,9 @@ import {
   WorkflowProgressItem,
   LogData,
   TraceIds,
+  TraceData
 } from '../types/types';
-import { Trace, Segment } from '@aws-sdk/client-xray';
+import { Trace } from '@aws-sdk/client-xray';
 import { getXRayTraces } from '@/app/actions/workflow';
 
 export const traceService = {
@@ -194,7 +195,7 @@ export const traceService = {
         try {
           const doc = JSON.parse(functionSegment.Document || '{}');
           const handlerSubsegment = doc.subsegments?.find(
-            (subsegment: any) => subsegment?.name === '## lambda_handler'
+            (subsegment: TraceData) => subsegment?.name === '## lambda_handler'
           );
           
           if (handlerSubsegment?.annotations?.ColdStart === true) {

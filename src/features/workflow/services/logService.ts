@@ -40,7 +40,7 @@ export const logService = {
       .map(([requestId, entries]) => {
         const logGroupName = logGroupRequests[requestId] || '';
         const stateName = Object.entries(stateNameLogGroupNameMapping).find(
-          ([_, value]) => value === logGroupName
+          ([, value]) => value === logGroupName
         )?.[0] || 'Unknown State';
 
         return {

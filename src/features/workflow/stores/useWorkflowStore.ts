@@ -91,7 +91,6 @@ export const useWorkflowStore = create<WorkflowState>()(
 
       getActiveWorkflowBySession: (sessionId) => {
         const { activeWorkflows } = get();
-        set
         return Array.from(activeWorkflows.values())
           .find(workflow => workflow.session_id === sessionId);
       },

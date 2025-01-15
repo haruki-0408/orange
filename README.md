@@ -1,17 +1,24 @@
 # 嘘論文生成アプリケーション(フロントエンド)
 
 ## 参考ドキュメント
-[Miro 構想資料](https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893)
+- [Miro 構想資料](https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893)
+- [サーバーサイド・インフラのリポジトリ](https://github.com/y-kawasaki/workflow-server)
+
+## はじめに
+
+本プロジェクトは、転職活動用に用意したAIを活用した嘘論文生成プロセスを可視化・制御するためのフロントエンドに関する機能リポジトリです。
+
+運用・監視・保守を考慮したアプリの構想 →　アーキテクチャ設計 → 開発・実装能力 → デプロイ
+
+まで一貫した能力があることを表現するために作成しましたので、もしよろしければ構想段階の資料とサーバーサイド・インフラのリポジトリも合わせてご覧くださいませ。
 
 ## プロジェクトの目的
-
-本プロジェクトは、AIを活用した嘘論文生成プロセスを可視化・制御するためのフロントエンドアプリケーションです。
-サーバーレスアーキテクチャで構築されたバックエンドと連携し、以下の機能を提供します：
-
+サーバーレスアーキテクチャで構築されたバックエンドと連携し、以下の機能を提供。
+- **ユーザーが入力したタイトルとカテゴリからユーモアのある嘘の内容の論文を生成AIを活用して作成する**
 - **生成プロセスの可視化**: Step Functionsの実行状態をリアルタイムに表示
 - **進捗管理**: 各ステップの実行状況をリアルタイムに監視
 - **パフォーマンス分析**: 実行時間やリソース使用状況の可視化
-- **マルチプレーヤーカーソルの表示**: 複数ユーザーでの同時閲覧感を出しています
+- **マルチプレーヤーカーソルの表示**: 複数ユーザーでの同時閲覧感を出力(おまけ)
 
 ## 技術的なハイライト
 
@@ -29,8 +36,8 @@
 ### 2. 直感的なUI/UX
 - **ReactFlowによるワークフロー表現**
   - カスタムノード・エッジの実装
-  - ドラッグ＆ドロップ操作
-  - 状態に応じたアニメーション
+  - 状態に応じたオリジナルアニメーション
+  - 進行状態を伝えるプログレスバーの表示
 
 - **リアルタイムコラボレーション**
   - マルチプレーヤーカーソル同期
@@ -40,7 +47,7 @@
 ### 3. 堅牢なアーキテクチャ
 - **Next.js 14の活用**
   - App Routerの採用
-  - サーバーコンポーネントの活用
+  - サーバーコンポーネントの活用(ServerActions)
   - 最適化されたビルド
 
 - **型安全性の徹底**
@@ -50,56 +57,120 @@
 
 ## システムアーキテクチャ
 
-本リポジトリは、下図のフロントエンド部分（Next.jsサーバー）を実装しています。
+本リポジトリは、下図のフロントエンド部分（Next.jsサーバー(on Vercel)）を実装しています。
 バックエンドとの通信を担い、ユーザーインターフェースを提供します。
 
 ![SSE進捗通知システム](./sse.jpg)
 
 ### SSE進捗通知システム
 
-Server-Sent Events (SSE)を活用して、ワークフローの進捗状態をリアルタイムに更新する仕組みを実装しています：
+Server-Sent Events (SSE)を活用して、ワークフローの進捗状態をリアルタイムに更新する仕組みを実装しています。
 
-1. **SSEManagerの実装**
-   ```typescript
-   // src/lib/sse/SSEManager.ts
-   export class SSEManager {
-     private eventSource: EventSource | null = null;
-     private reconnectAttempts = 0;
-     
-     connect(workflowId: string) {
-       this.eventSource = new EventSource(`/api/sse/${workflowId}`);
-       this.setupEventHandlers();
-     }
-     
-     private setupEventHandlers() {
-       // 進捗通知イベントの処理
-       this.eventSource?.addEventListener('progress', this.handleProgress);
-       // 接続状態の監視
-       this.eventSource?.addEventListener('error', this.handleError);
-     }
-   }
-   ```
+1. **SSEClientの実装(クラス)**
+  ```typescript
+   // src/lib/sse/SSEClient.ts
+   export default class SSEClient {
+    // 静的プロパティ：クライアントのデータを格納
+    private static clients: Map<string, Client[]> = new Map();
 
-2. **進捗状態の管理**
-   ```typescript
-   // src/features/workflow/stores/useProgressStore.ts
-   export const useProgressStore = create<ProgressStore>((set) => ({
-     progress: {},
-     updateProgress: (data: ProgressData) => 
-       set((state) => ({
-         progress: {
-           ...state.progress,
-           [data.state_name]: data
-         }
-       }))
-   }));
-   ```
+    // クライアントを追加
+    static addClient(workflowId: string, controller: ReadableStreamDefaultController): void {
+      const currentClients = this.clients.get(workflowId) || [];
+      currentClients.push({ workflowId, controller });
+      this.clients.set(workflowId, currentClients);
+      console.log(`Client added for workflow: ${workflowId}, Total clients: ${currentClients.length}`);
+    }
 
-3. **UIコンポーネントとの連携**
-   ```typescript
+    // クライアントを削除
+    static removeClient(workflowId: string, controller: ReadableStreamDefaultController): void {
+      const currentClients = this.clients.get(workflowId);
+      if (!currentClients) return;
+
+      const updatedClients = currentClients.filter(client => client.controller !== controller);
+      if (updatedClients.length === 0) {
+        this.clients.delete(workflowId);
+      } else {
+        this.clients.set(workflowId, updatedClients);
+      }
+      console.log(`Client removed for workflow: ${workflowId}, Remaining clients: ${updatedClients.length}`);
+    }
+
+    // 指定されたworkflowIdのクライアントにデータを送信
+    static broadcastToWorkflow(workflowId: string, data: ProgressData): void {
+      const currentClients = this.clients.get(workflowId);
+
+      console.log(`Broadcasting to workflow ${workflowId}, Active clients:`, 
+        currentClients?.length || 0
+      );
+
+      if (!currentClients || currentClients.length === 0) {
+        console.warn(`No active clients found for workflow: ${workflowId}`);
+        return;
+      }
+
+      const message = `data: ${JSON.stringify(data)}\n\n`;
+      const encoded = new TextEncoder().encode(message);
+
+      const failedClients: number[] = [];
+      currentClients.forEach((client, index) => {
+        try {
+          client.controller.enqueue(encoded);
+          console.log(`Message sent to client for workflow: ${workflowId}`);
+        } catch (error) {
+          console.error(`Failed to send message to client for workflow: ${workflowId}`, error);
+          failedClients.push(index);
+        }
+      });
+
+      // 失敗したクライアントを除去
+      if (failedClients.length > 0) {
+        const validClients = currentClients.filter((_, index) => !failedClients.includes(index));
+        if (validClients.length === 0) {
+          this.clients.delete(workflowId);
+        } else {
+          this.clients.set(workflowId, validClients);
+        }
+      }
+    }
+
+    // アクティブなクライアント数を取得
+    static getActiveClientsCount(workflowId: string): number {
+      return this.clients.get(workflowId)?.length || 0;
+    }
+  }
+   
+  ```
+
+2. **進捗状態の管理(Zustand)**
+  ```typescript
+  // src/features/workflow/stores/useProgressStore.ts
+  export const useProgressStore = create<ProgressStore>((set, get) => ({
+    progressBar: {
+      percentage: 0,
+      status: 'PROCESSING'
+    },
+    updateProgress: (percentage, status) => {
+      set({ progressBar: { percentage, status } });
+      
+      if ((status === 'SUCCESS' && percentage === 100) || status === 'FAILED') {
+        get().onProgressComplete?.(status);
+      }
+    },
+    resetProgress: () => set({
+      progressBar: { percentage: 0, status: 'PROCESSING' }
+    }),
+    onProgressComplete: undefined,
+    setOnProgressComplete: (callback) => set({ 
+      onProgressComplete: callback 
+    })
+  })); 
+  ```
+
+3. **UIコンポーネントとの連携(カスタムフック)**
+  ```typescript
    // src/features/workflow/hooks/useWorkflowProgress.ts
    export const useWorkflowProgress = (workflowId: string) => {
-     const sseManager = useMemo(() => new SSEManager(), []);
+     const sseManager = useMemo(() => new SSEClient(), []);
      const updateProgress = useProgressStore((state) => state.updateProgress);
      
      useEffect(() => {
@@ -107,7 +178,7 @@ Server-Sent Events (SSE)を活用して、ワークフローの進捗状態を�
        return () => sseManager.disconnect();
      }, [workflowId]);
    };
-   ```
+  ```
 
 ## プロジェクト構造
 
@@ -159,6 +230,7 @@ src/
 - **SCSS Modules**: コンポーネント別スタイリング
 
 ### 状態管理・データフェッチ
+- **ServerActions**: サーバーサイドでのデータ取得
 - **Zustand**: 軽量な状態管理
 - **useSWR**: データフェッチング
 

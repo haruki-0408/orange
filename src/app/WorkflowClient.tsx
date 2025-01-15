@@ -12,19 +12,19 @@ interface Props {
 
 export default function WorkflowClient({ initialCategories, initialHistories }: Props) {
   return (
-    // <Room>
+    <Room>
       <div className="w-full">
-        {/* <MultiplayerLayer> */}
+        <MultiplayerLayer>
           <ThemeProvider>
-            <div className="relative max-w-[1440px] mx-auto">
+            <div className="relative max-w-[1920px] mx-auto">
               <Workflow
                 categories={initialCategories}
                 initialHistories={initialHistories}
               />
             </div>
           </ThemeProvider>
-        {/* </MultiplayerLayer> */}
+        </MultiplayerLayer>
       </div>
-    // </Room>
+    </Room>
   );
 } 

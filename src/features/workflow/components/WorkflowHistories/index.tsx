@@ -124,7 +124,7 @@ export const WorkflowHistories: FCX<Props> = ({ histories }) => {
         </div>
       );
     },
-    [selectedWorkflow, isActiveWorkflow]
+    [selectedWorkflow, isActiveWorkflow, getActiveWorkflowStatus]
   );
 
   // 履歴選択時の処理

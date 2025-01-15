@@ -2,7 +2,7 @@ import { FCX } from "@/types/types";
 import React from "react";
 import { NameLabel } from "@/features/room/components/NameLabel";
 import { Cursor } from "@/features/room/components/Cursor";
-import styles from "./style.module.scss";
+// import styles from "./style.module.scss";
 
 type Props = {
   id: string;

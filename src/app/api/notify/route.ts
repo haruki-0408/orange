@@ -1,4 +1,5 @@
-import { broadcastToWorkflow } from "@/lib/sse/SSEManager";
+// import { broadcastToWorkflow } from "@/lib/sse/SSEClient";
+import SSEClient from "@/lib/sse/SSEClient";
 import { ProgressData } from "@/features/workflow/types/types";
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
       timestamp: formattedTimestamp
     }
 
-    broadcastToWorkflow(workflow_id, progress);
+    SSEClient.broadcastToWorkflow(workflow_id, progress);
 
     return NextResponse.json({ status: 'ok' });
   } catch (error) {

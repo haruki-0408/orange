@@ -1,4 +1,5 @@
-import { addClient, removeClient } from "@/lib/sse/SSEManager";
+// import { addClient, removeClient } from "@/lib/sse/SSEClient";
+import SSEClient from "@/lib/sse/SSEClient";
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest, { params }: { params: { workflow_id: string } }) {
@@ -6,10 +7,10 @@ export async function GET(req: NextRequest, { params }: { params: { workflow_id:
 
   const stream = new ReadableStream({
     start(controller) {
-      addClient(workflow_id, controller);
+      SSEClient.addClient(workflow_id, controller);
 
       req.signal.addEventListener('abort', () => {
-        removeClient(workflow_id, controller);
+        SSEClient.removeClient(workflow_id, controller);
       });
 
       controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ progress: `Connected workflow_id : ${workflow_id}`, workflowId: workflow_id })}\n\n`));

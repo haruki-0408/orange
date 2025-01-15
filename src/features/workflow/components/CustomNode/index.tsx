@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import styles from "./style.module.scss";
 import clsx from "clsx";
@@ -23,7 +23,7 @@ export type CustomNode = Node<
 export default function CustomNode(props: NodeProps<CustomNode>) {
   const renderServiceDetails = () => {
     switch (props.data.serviceType) {
-      case "Lambda":
+      case "Lambda": {
         const lambdaDetails = props.data.details as ServiceDetails["Lambda"];
         return (
           <div className={styles.serviceDetails}>
@@ -47,8 +47,9 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
             </div>
           </div>
         );
+      }
 
-      case "DynamoDB":
+      case "DynamoDB": {
         const dynamoDetails = props.data.details as ServiceDetails["DynamoDB"];
         return (
           <div className={styles.serviceDetails}>
@@ -81,8 +82,9 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
             )}
           </div>
         );
+      }
 
-      case "SQS":
+      case "SQS": {
         const sqsDetails = props.data.details as ServiceDetails["SQS"];
         return (
           <div className={styles.serviceDetails}>
@@ -106,8 +108,9 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
             </div>
           </div>
         );
+      }
 
-      case "APIGateway":
+      case "APIGateway": {
         const apiDetails = props.data.details as ServiceDetails["APIGateway"];
         return (
           <div className={styles.serviceDetails}>
@@ -131,8 +134,9 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
             </div>
           </div>
         );
+      }
 
-      case "S3":
+      case "S3": {
         const s3Details = props.data.details as ServiceDetails["S3"];
         return (
           <div className={styles.serviceDetails}>
@@ -156,6 +160,7 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
             </div>
           </div>
         );
+      }
     }
   };
 
@@ -165,20 +170,6 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
     height: "10px",
     background: "#555",
     border: "1px solid #333"
-  };
-
-  // 補助ノードの場合は異なるボタンテキストを使用
-  const getDetailsButtonText = () => {
-    if (props.data.isSupporting) {
-      return {
-        closed: "Show storage details",
-        open: "Hide details"
-      };
-    }
-    return {
-      closed: "View execution details",
-      open: "Hide details"
-    };
   };
 
   // 補助ノードの場合はステータスバッジを表示しない

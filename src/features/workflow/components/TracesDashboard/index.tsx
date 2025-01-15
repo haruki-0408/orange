@@ -12,9 +12,9 @@ import { RefreshButton } from '@/components/ui-parts/RefreshButton';
 import { useWorkflowTraces } from '../../hooks/useWorkflowTraces';
 import { TracesDashboardTabLoading } from '../TracesDashboardTabLoading';
 import { MetricsData } from '../MetricsData';
-import { mockTimelineData } from '../../const/mockTimelineData';
-import { mockMetricsData } from '../../const/mockMetricsData';
-import { mockLogData } from '../../const/mockLogData';
+// import { mockTimelineData } from '../../const/mockTimelineData';
+// import { mockMetricsData } from '../../const/mockMetricsData';
+// import { mockLogData } from '../../const/mockLogData';
 import { usingServices } from '../../const/usingServicesMapping';
 import { useWorkflowProgress } from '../../hooks/useWorkflowProgress';
 

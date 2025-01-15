@@ -1,6 +1,6 @@
 import React from "react";
 import { FCX } from "@/types/types";
-import styles from "./style.module.scss";
+// import styles from "./style.module.scss";
 
 interface Props {
   color: string;
