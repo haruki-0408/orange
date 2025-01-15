@@ -130,7 +130,7 @@ export async function getWorkflowHistories(): Promise<WorkflowHistory[]> {
     const result = await docClient.send(new ScanCommand({
       TableName: process.env.WORKFLOW_HISTORIES_TABLE_NAME!,
       ConsistentRead: true,
-      Limit: 30
+      Limit: 50
     }));
 
     return (result.Items as WorkflowHistory[])

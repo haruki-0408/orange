@@ -28,7 +28,7 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
-              <span className={styles.detailLabel}>Function:</span>
+              <span className={styles.detailLabel}>Function</span>
               <span className={styles.detailValue}>{lambdaDetails.functionName}</span>
             </div>
             <div className={styles.detailsRow}>
@@ -54,7 +54,7 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
-              <span className={styles.detailLabel}>Table:</span>
+              <span className={styles.detailLabel}>Table</span>
               <span className={styles.detailValue}>{dynamoDetails.tableName}</span>
             </div>
             <div className={styles.detailItem}>
@@ -62,6 +62,10 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
               <span className={styles.detailValue}>{dynamoDetails.primaryKey}</span>
             </div>
             <div className={styles.detailsRow}>
+            <div className={styles.detailChip}>
+                <span className={styles.chipIcon}>💾</span>
+                Capacity Mode: {dynamoDetails.capacityMode}
+              </div>
               <div className={styles.detailChip}>
                 <span className={styles.chipIcon}>📖</span>
                 RCU: {dynamoDetails.readCapacity}
@@ -89,10 +93,14 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
-              <span className={styles.detailLabel}>Queue:</span>
+              <span className={styles.detailLabel}>Queue</span>
               <span className={styles.detailValue}>{sqsDetails.queueName}</span>
             </div>
             <div className={styles.detailsRow}>
+              <div className={styles.detailChip}>
+                <span className={styles.chipIcon}>🔄</span>
+                Type: {sqsDetails.type}
+              </div>
               <div className={styles.detailChip}>
                 <span className={styles.chipIcon}>🕒</span>
                 Retention: {sqsDetails.messageRetention}s
@@ -115,7 +123,7 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
-              <span className={styles.detailLabel}>Endpoint:</span>
+              <span className={styles.detailLabel}>Endpoint</span>
               <span className={styles.detailValue}>{apiDetails.endpoint}</span>
             </div>
             <div className={styles.detailsRow}>
@@ -141,13 +149,13 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
         return (
           <div className={styles.serviceDetails}>
             <div className={styles.detailItem}>
-              <span className={styles.detailLabel}>Bucket:</span>
+              <span className={styles.detailLabel}>Bucket</span>
               <span className={styles.detailValue}>{s3Details.bucketName}</span>
             </div>
             <div className={styles.detailsRow}>
               <div className={styles.detailChip}>
                 <span className={styles.chipIcon}>📚</span>
-                Versioning: {s3Details.versioning ? "Enabled" : "Disabled"}
+                Versioning: {s3Details.versioning}
               </div>
               <div className={styles.detailChip}>
                 <span className={styles.chipIcon}>🔐</span>
@@ -155,7 +163,7 @@ export default function CustomNode(props: NodeProps<CustomNode>) {
               </div>
               <div className={styles.detailChip}>
                 <span className={styles.chipIcon}>👥</span>
-                {s3Details.accessControl}
+                {s3Details.publicAccess}
               </div>
             </div>
           </div>
