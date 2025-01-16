@@ -564,6 +564,14 @@
     --logs-status-button-text: #2563eb;
     --logs-status-button-hover-bg: rgba(37, 99, 235, 0.04);
     --logs-status-button-hover-border: rgba(37, 99, 235, 0.3);
+
+    // GitHub Link styles
+    --github-link-bg: rgba(37, 99, 235, 0.04);
+    --github-link-border: rgba(37, 99, 235, 0.1);
+    --github-link-text: #1e293b;
+    --github-link-hover-bg: rgba(37, 99, 235, 0.08);
+    --github-link-hover-border: rgba(37, 99, 235, 0.2);
+    --github-link-icon-filter: none;
   }
 
   // Dark theme
@@ -1119,5 +1127,13 @@
     --logs-status-button-text: #22d3ee;
     --logs-status-button-hover-bg: rgba(6, 182, 212, 0.1);
     --logs-status-button-hover-border: rgba(6, 182, 212, 0.3);
+
+    // GitHub Link styles
+    --github-link-bg: rgba(255, 255, 255, 0.05);
+    --github-link-border: rgba(255, 255, 255, 0.1);
+    --github-link-text: #e2e8f0;
+    --github-link-hover-bg: rgba(255, 255, 255, 0.1);
+    --github-link-hover-border: rgba(255, 255, 255, 0.2);
+    --github-link-icon-filter: invert(1);
   }
 } 

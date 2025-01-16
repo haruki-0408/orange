@@ -16,6 +16,7 @@ export const NameLabel: FCX<Props> = ({ x, y, name, color }) => {
           position: 'absolute',
           top: y + 25,
           left: x,
+          zIndex: 9999,
           transform: 'translateX(-50%)',
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           color: color,

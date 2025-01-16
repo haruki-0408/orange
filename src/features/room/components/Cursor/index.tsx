@@ -15,6 +15,7 @@ export const Cursor:FCX<Props> = ({color, x, y}) => {
       position: "absolute",
       left: 0,
       top: 0,
+      zIndex: 9999,
       transform: `translateX(${x}px) translateY(${y}px)`,
     }}
     width="24"
