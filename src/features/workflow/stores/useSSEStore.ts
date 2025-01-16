@@ -55,7 +55,7 @@ export const useSSEStore = create<SSEState>()(
         eventSource.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data) as ProgressData;
-            console.log('SSE Message received:', data);
+            // console.log('SSE Message received:', data);
             
             if (isFirstMessage) {
               isFirstMessage = false;
@@ -64,15 +64,15 @@ export const useSSEStore = create<SSEState>()(
               return;
             }
             onMessage(data);
-          } catch (error) {
-            console.error("Error processing SSE message:", error);
+          } catch  {
+            // console.error("Error processing SSE message:", error);
             setConnection('ERROR');
             eventSource.close();
           }
         };
 
-        eventSource.onerror = (e) => {
-          console.log('Error processing SSE', e);
+        eventSource.onerror = () => {
+          // console.log('Error processing SSE', e);
           setConnection('ERROR');
           eventSource.close();
         };
@@ -88,7 +88,7 @@ export const useSSEStore = create<SSEState>()(
 
         // 既存のEventSourceがあれば接続を閉じる
         if (currentEventSource) {
-          console.log("SSE接続終了");
+          // console.log("SSE接続終了");
           currentEventSource.close();
         }
         set(initialState);
