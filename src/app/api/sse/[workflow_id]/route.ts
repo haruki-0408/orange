@@ -2,6 +2,10 @@
 import SSEClient from "@/lib/sse/SSEClient";
 import { NextRequest } from 'next/server';
 
+export const config = {
+  runtime: 'edge', // VercelのEdge Runtimeを使用
+};
+
 export async function GET(req: NextRequest, { params }: { params: { workflow_id: string } }) {
   const { workflow_id } = params;
 
