@@ -10,8 +10,10 @@ export async function GET(req: NextRequest, { params }: { params: { workflow_id:
   const stream = new ReadableStream({
     start(controller) {
       SSEClient.addClient(workflow_id, controller);
-
+      console.log('addClient success');
+      
       req.signal.addEventListener('abort', () => {
+        console.log('addEventListner abort');
         SSEClient.removeClient(workflow_id, controller);
       });
 
