@@ -2,9 +2,9 @@
 import SSEClient from "@/lib/sse/SSEClient";
 import { NextRequest } from 'next/server';
 
-// export const runtime = 'edge';
+export const runtime = 'edge';
 export const dynamic = "force-dynamic"
-export const maxDuration = 60;
+// export const maxDuration = 60;
 
 export async function GET(req: NextRequest, { params }: { params: { workflow_id: string } }) {
   const { workflow_id } = params;
