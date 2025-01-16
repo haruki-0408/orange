@@ -11,7 +11,7 @@ import { WorkflowHistories } from "./WorkflowHistories";
 import { useWorkflowStore } from "../stores/useWorkflowStore";
 import { WorkflowVisualizer } from "./WorkflowVisualizer";
 import { useProgressStore } from "../stores/useProgressStore";
-// import { startWorkflow } from "@/app/actions/workflow";
+import { startWorkflow } from "@/app/actions/workflow";
 import { useWorkflowHistories } from "../hooks/useWorkflowHistories";
 import { useSSEStore } from "../stores/useSSEStore";
 
@@ -146,7 +146,7 @@ export const Workflow: FCX<Props> = ({ className, categories, initialHistories }
       // タイトルの最終サニタイズ
       const sanitizedTitle = thesisTitle;
       
-      // await startWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
+      await startWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
       
       addWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
 
