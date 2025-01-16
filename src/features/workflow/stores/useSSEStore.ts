@@ -71,7 +71,8 @@ export const useSSEStore = create<SSEState>()(
           }
         };
 
-        eventSource.onerror = () => {
+        eventSource.onerror = (e) => {
+          console.log('Error processing SSE', e);
           setConnection('ERROR');
           eventSource.close();
         };

@@ -17,7 +17,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
   updateProgress: (percentage, status) => {
     set({ progressBar: { percentage, status } });
     
-    if ((status === 'SUCCESS' && percentage === 100) || status === 'FAILED') {
+    if ((status === 'SUCCESS') || status === 'FAILED') {
       get().onProgressComplete?.(status);
     }
   },
