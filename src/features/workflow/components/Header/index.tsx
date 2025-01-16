@@ -7,6 +7,8 @@ import { ThemeToggle } from '../ThemeToggle';
 import { useSSEStore } from '../../stores/useSSEStore';
 import { useProgressStore } from '../../stores/useProgressStore';
 import { useWorkflowStore } from '../../stores/useWorkflowStore';
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface Props {
   title: string;
@@ -83,12 +85,44 @@ export const Header: FCX<Props> = ({
                 </div>
               )}
             </div>
-            <div className={styles.themeToggleWrapper}>
-              <ThemeToggle />
+            <div className={styles.actions}>
+              <div className={styles.githubLinks}>
+                <Link 
+                  href="https://github.com/haruki-0408/orange"
+                  target="_blank"
+                  className={styles.githubLink}
+                  title="フロントエンドリポジトリ"
+                >
+                  <Image 
+                    src="/github-mark.svg" 
+                    alt="GitHub" 
+                    width={20} 
+                    height={20} 
+                  />
+                  <span>Frontend</span>
+                </Link>
+                <Link 
+                  href="https://github.com/haruki-0408/melon"
+                  target="_blank"
+                  className={styles.githubLink}
+                  title="サーバーレス・インフラリポジトリ"
+                >
+                  <Image 
+                    src="/github-mark.svg" 
+                    alt="GitHub" 
+                    width={20} 
+                    height={20} 
+                  />
+                  <span>Backend</span>
+                </Link>
+              </div>
+              <div className={styles.themeToggleWrapper}>
+                <ThemeToggle />
+              </div>
             </div>
           </div>
           <p className={styles.description}>
-            イベント駆動型サーバーレスアプリケーション
+            イベント駆動型サーバーレスアーキテクチャ
             <span className={styles.divider}>/</span>
             処理の可視化と透明性を重視したワークフローアプリケーション
           </p>

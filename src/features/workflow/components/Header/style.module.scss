@@ -69,8 +69,9 @@
   }
 }
 
-.themeToggleWrapper { 
-  margin-left: auto;
+.themeToggleWrapper {
+  display: flex;
+  align-items: center;
 }
 
 .statusBadge {
@@ -606,4 +607,47 @@
   align-items: center;
   margin-bottom: 8px;
   gap: 12px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.githubLinks {
+  display: flex;
+  gap: 8px;
+}
+
+.githubLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: var(--github-link-bg, rgba(255, 255, 255, 0.1));
+  border: 1px solid var(--github-link-border, rgba(255, 255, 255, 0.1));
+  transition: all 0.2s ease;
+  
+  span {
+    font-size: 0.75rem;
+    color: var(--github-link-text, #24292f);
+  }
+  
+  &:hover {
+    background: var(--github-link-hover-bg, rgba(255, 255, 255, 0.2));
+    transform: translateY(-1px);
+  }
+
+  img {
+    filter: var(--github-link-icon-filter);
+  }
+
+  &:hover {
+    background: var(--github-link-hover-bg);
+    border-color: var(--github-link-hover-border);
+    transform: translateY(-1px);
+  }
 }

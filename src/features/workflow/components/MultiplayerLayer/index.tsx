@@ -1,7 +1,7 @@
 import React from "react";
 import { FCX } from "@/types/types";
 import { useOthers, useMyPresence } from "@liveblocks/react";
-import { MultiplayerCursor } from "@/features/room/components/MutiplayerCursor";
+import { MultiplayerCursor } from "@/features/room/components/MultiplayerCursor";
 
 /**
  * This file shows how to add basic live cursors on your product.
