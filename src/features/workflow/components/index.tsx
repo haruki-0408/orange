@@ -142,11 +142,11 @@ export const Workflow: FCX<Props> = ({ className, categories, initialHistories }
 
     try {
       // ワークフローIDの生成
-    const newWorkflowId = generateWorkflowId();
+      const newWorkflowId = generateWorkflowId();
       // タイトルの最終サニタイズ
       const sanitizedTitle = thesisTitle;
       
-      await startWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
+      // await startWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
       
       addWorkflow(newWorkflowId, sanitizedTitle, selectedCategory);
 
