@@ -36,8 +36,9 @@
 import SSEClient from "@/lib/sse/SSEClient";
 import { NextRequest } from 'next/server';
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 export const dynamic = "force-dynamic"
+// export const maxDuration = 60; // 最大接続タイムアウト時間
 
 export async function GET(req: NextRequest, { params }: { params: { workflow_id: string } }) {
   const { workflow_id } = params;
