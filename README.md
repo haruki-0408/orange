@@ -1,138 +1,253 @@
-# 嘘論文生成アプリケーション(フロントエンド)
+<div align="center">
+  <img src="logo.png" alt="Fake Thesis Generator" width="600" />
 
-## 参考ドキュメント
-- <a href="https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893" target="_blank" rel="noopener noreferrer">Miro 構想資料</a>
-- <a href="https://github.com/haruki-0408/melon" target="_blank" rel="noopener noreferrer">サーバーサイド・インフラリポジトリ</a>
+  <h1>嘘論文生成アプリケーション</h1>
+  <p><i>生成AIを活用した論文生成 & 可視化システム</i></p>
 
-## はじめに
+  <p>
+    <a href="https://nextjs.org">
+      <img src="https://img.shields.io/badge/Next.js-14.0-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+    </a>
+    <a href="https://www.typescriptlang.org">
+      <img src="https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
+    </a>
+    <a href="https://aws.amazon.com/serverless/">
+      <img src="https://img.shields.io/badge/AWS-Serverless-orange?style=for-the-badge&logo=amazon-aws" alt="AWS Serverless" />
+    </a>
+    <a href="https://redis.io">
+      <img src="https://img.shields.io/badge/Redis-Pub%2FSub-red?style=for-the-badge&logo=redis" alt="Redis" />
+    </a>
+  </p>
+  <p>
+    <a href="https://liveblocks.io">
+      <img src="https://img.shields.io/badge/Realtime-Liveblocks-purple?style=for-the-badge" alt="Liveblocks" />
+    </a>
+    <a href="https://reactflow.dev">
+      <img src="https://img.shields.io/badge/Visualization-React%20Flow-cyan?style=for-the-badge" alt="React Flow" />
+    </a>
+    <a href="https://tailwindcss.com">
+      <img src="https://img.shields.io/badge/CSS-Tailwind-06B6D4?style=for-the-badge&logo=tailwindcss" alt="Tailwind CSS" />
+    </a>
+  </p>
+  <p>
+    <a href="https://vercel.com">
+      <img src="https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel" alt="Vercel" />
+    </a>
+    <img src="https://img.shields.io/badge/Status-Beta-yellow?style=for-the-badge" alt="Status" />
+  </p>
 
-本プロジェクトは、転職活動用に用意したAIを活用した嘘論文生成プロセスを可視化・制御するためのフロントエンドに関する機能リポジトリです。
+  <p>
+    <a href="https://orange-webp.vercel.app/">デモを試す</a>
+    ·
+    <a href="https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893">構想資料</a>
+    ·
+    <a href="https://github.com/haruki-0408/melon">バックエンド</a>
+  </p>
+</div>
 
-運用・監視・保守を考慮したアプリの構想 →　アーキテクチャ設計 → 開発・実装能力 → デプロイ
+---
 
-まで一貫した能力があることを表現するために作成しましたので、もしよろしければ<a href="https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893" target="_blank" rel="noopener noreferrer">構想資料</a>と<a href="https://github.com/haruki-0408/melon" target="_blank" rel="noopener noreferrer">サーバーサイド・インフラ</a>のリポジトリも合わせてご覧くださいませ。
+## 📖 はじめに
 
-## アプリケーションページ
-ぜひお気軽にお試しください！
+本プロジェクトは、転職活動用に用意した生成AIを活用した嘘の内容の論文を生成 & 可視化するためのフロントエンドに関する機能リポジトリです。
 
-<a href="https://orange-webp.vercel.app/" target="_blank" rel="noopener noreferrer">嘘論文生成アプリケーション(FakeThesisGenerator)</a>
+<div align="center">
+  <h3>🔄 開発プロセス</h3>
+  <p>
+    <code>アプリの構想</code> ▶︎ 
+    <code>アーキテクチャ設計</code> ▶︎ 
+    <code>開発・実装</code> ▶︎ 
+    <code>デプロイ</code>
+  </p>
+</div>
 
+上記一貫した能力があることを表現するために作成しましたので、もしよろしければ[構想資料](https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893)と[サーバーサイド・インフラ](https://github.com/haruki-0408/melon)のリポジトリも合わせてご覧くださいませ。
 
-## プロジェクトの目的
-サーバーレスアーキテクチャで構築されたバックエンドと連携し、以下の機能を提供。
-- **ユーモアのある嘘論文の生成**: ユーザーが入力したタイトルとカテゴリからユーモアのある嘘の内容の論文を生成AIを活用して作成しPDF形式でダウンロードできる
+## ✨ プロジェクトの目的
 
-- **生成プロセスの可視化**: Redisを用いたSSE接続とReactFlowを活用してStep Functionsの実行状態をリアルタイムに表示
-- **パフォーマンス分析**: X-ray, Cloudwatch Logsを用いて実行時間やリソース使用状況など全体のログ・モニタリングの可視化できる
-- **マルチプレーヤーカーソルの表示**: 複数ユーザーでの同時閲覧感を出力(おまけ)
+サーバーレスアーキテクチャで構築されたバックエンドと連携し、以下の機能を提供します：
 
-## 技術的なハイライト
+### 🎯 主要機能
+
+- **ユーモアのある嘘論文の生成**
+  - ユーザーが入力したタイトルとカテゴリから嘘の内容の論文を生成
+  - 生成AIを活用したPDF形式での出力
+  - ダウンロード機能の提供
+
+- **生成プロセスの可視化**
+  - Redisを用いたSSE接続による状態管理
+  - ReactFlowを活用したStep Functions実行状態のリアルタイム表示
+  - 直感的なワークフロー進捗の把握
+
+- **パフォーマンス分析**
+  - X-ray, CloudWatch Logsを用いた実行時間の計測
+  - リソース使用状況の可視化
+  - 包括的なログ・モニタリング機能
+
+- **マルチプレーヤー機能**
+  - リアルタイムカーソル同期
+  - 複数ユーザーでの同時閲覧体験
+  - Liveblocksを活用したプレゼンス管理
+
+## 🛠 技術的なハイライト
 
 ### 1. リアルタイム通信の最適化
-- **SSEによる効率的な進捗監視**
-  - 軽量な単方向通信による状態更新
-  - Redis Pub/Subによるスケーラブルな通知
-  - 再接続ロジックによる安定性確保
-  - バックエンドからのプッシュ通知
 
-- **状態管理の工夫**
-  - Zustandによる効率的な状態管理
-  - useSWRを活用したデータフェッチ
-  - 不要な再レンダリングの防止
+#### SSEによる効率的な進捗監視
+- 軽量な単方向通信による状態更新
+- Redis Pub/Subによるスケーラブルな通知
+- 再接続ロジックによる安定性確保
+- バックエンドからのプッシュ通知
+
+#### 状態管理の工夫
+- Zustandによる効率的な状態管理
+- useSWRを活用したデータフェッチ
+- 不要な再レンダリングの防止
 
 ### 2. 直感的なUI/UX
-- **ReactFlowによるワークフロー表現**
-  - カスタムノード・エッジの実装
-  - 状態に応じたオリジナルアニメーション
-  - 進行状態を伝えるプログレスバーの表示
 
-- **モニタリングパフォーマンス測定**
-  - X-ray, Cloudwatch Logsを用いて実行時間やリソース使用状況など全体のログ・モニタリングの可視化できる
-  - マルチプレーヤーカーソル同期
-  - LiveblocksによるWebSocketの制御
-  - プレゼンス管理
+#### ReactFlowによるワークフロー表現
+- カスタムノード・エッジの実装
+- 状態に応じたオリジナルアニメーション
+- 進行状態を伝えるプログレスバーの表示
+
+#### モニタリングパフォーマンス測定
+- X-ray, CloudWatch Logsによる実行時間の可視化
+- リソース使用状況のリアルタイム監視
+- マルチプレーヤーカーソル同期
+- LiveblocksによるWebSocket制御
 
 ### 3. 堅牢なアーキテクチャ
-- **Next.js 14の活用**
-  - App Routerの採用
-  - サーバーコンポーネントの活用(ServerActions)
-  - 最適化されたビルド
 
-- **型安全性の徹底**
-  - TypeScriptによる静的型チェック
-  - APIレスポンスの型定義
-  - エラーハンドリングの強化
+#### Next.js 14の活用
+- App Routerの採用
+- サーバーコンポーネントの活用(ServerActions)
+- 最適化されたビルド
 
-## システムアーキテクチャ
+#### 型安全性の徹底
+- TypeScriptによる静的型チェック
+- APIレスポンスの型定義
+- エラーハンドリングの強化
 
-本リポジトリは、下図のフロントエンド部分（Next.jsサーバー(on Vercel)）を実装しています。
+## 🌐 システムアーキテクチャ
+
+本リポジトリは、下図のフロントエンド部分（Next.jsサーバー on Vercel）を実装しています。
 バックエンドとの通信を担い、ユーザーインターフェースを提供します。
 
-![SSE進捗通知システム](./sse.jpg)
+<div align="center">
+  <img src="./sse.jpg" alt="SSE進捗通知システム" width="800" />
+</div>
 
 ### SSE進捗通知システム
 
-このプロジェクトは、Server-Sent Events (SSE)を活用して、ワークフローの進捗をリアルタイムで管理・可視化するための高スケーラブルなアーキテクチャを示しています。以下に主要技術とその役割を説明します。
+このプロジェクトは、Server-Sent Events (SSE)を活用して、ワークフローの進捗をリアルタイムで管理・可視化するための高スケーラブルなアーキテクチャを実現しています。
 
+<div align="center">
+  <img src="./redis.png" alt="Redis Pub/Subを用いたSSE接続管理" width="800" />
+  <p><i>Redis Pub/Subを用いたSSE接続管理</i></p>
+</div>
 
-主要機能と技術
+### 主要機能と技術
 
-### 1. ▼ Next.js App Router
+#### ▼ Next.js App Router
+- 動的APIルート: Next.jsの動的ルーティング機能を活用
+- Node.jsランタイム: サーバーサイドレンダリングと高い応答性を実現
 
-動的APIルート: Next.jsの動的ルーティング機能を活用し、ワークフロー進捗の更新やServer-Sent Events（SSE）接続のAPIリクエストを処理します。
+#### 👀 Server-Sent Events (SSE)
+- SSEストリーム: クライアントとの長時間接続を確立
+- イベント処理: 接続初期化、メッセージ処理、切断時のクリーンアップ
 
-Node.jsランタイム: サーバーサイドレンダリングとNode.jsランタイムを活用し、低遅延で高い応答性を実現します。
+#### 🚨 Redis Pub/Sub
+- スケーラブルな通知システム
+- イベントプロデューサー/コンシューマーの分離
+- サーバーレス環境での最適化
 
-### 2. 👀 リアルタイム更新のためのServer-Sent Events (SSE)
+## 📦 プロジェクト構造
 
-SSEストリーム: クライアントとの長時間接続を確立し、リアルタイムの進捗更新をプッシュします。ReadableStreamを使用してフロントエンドとシームレスに統合。
+本プロジェクトは、以下のような独自のモジュール分割アプローチで設計されています：
 
-イベント処理: 接続初期化、メッセージ処理、切断時のクリーンアップなど、クライアントライフサイクルを管理します。
+```
+src/
+├── features/          # 機能モジュール
+│   ├── workflow/      # メイン機能：ワークフロー管理
+│   │   ├── components/  # 機能固有のコンポーネント
+│   │   │   ├── WorkflowVisualizer/  # ワークフロー表示
+│   │   │   ├── TracesDashboard/     # トレース情報
+│   │   │   └── WorkflowHistories/   # 実行履歴
+│   │   ├── hooks/      # カスタムフック
+│   │   ├── stores/     # 状態管理
+│   │   ├── services/   # APIサービス
+│   │   └── types/      # 型定義
+│   └── room/         # マルチプレーヤーカーソルに関する機能
+├── components/        # 共通コンポーネント
+│   ├── ui-mass/      # 複合コンポーネント
+│   └── ui-parts/     # 基本コンポーネント
+├── lib/              # 共通ユーティリティ
+└── styles/           # グローバルスタイル
+```
 
-ユースケース: ワークフロー実行の進捗監視など、リアルタイムフィードバックが必要なシナリオに最適です。
+### モジュール構成の特徴
 
-### 3. 🚨 Redis Pub/Subによるスケーラブルな通知
+1. **機能ベースの分割**
+   - メイン機能とサポート機能の明確な分離
+   - 機能ごとの完全な独立性
+   - 依存関係の最小化
 
-![Redis Pub/Subを用いたSSE接続管理](./redis.png)
+2. **コンポーネント階層**
+   - 複合/基本コンポーネントの明確な分離
+   - 再利用性を考慮した設計
+   - 責務の明確な定義
 
-Redis Pub/Subメカニズム: Redisを使用して、メッセージの発行と購読を行い、効率的に進捗更新を配信します。
+3. **共通基盤**
+   - 通信機能の集約
+   - ユーティリティの共有
+   - スタイルの一元管理
 
-マルチクライアント対応: イベントプロデューサー（バックエンド）とイベントコンシューマー（SSEクライアント）を分離し、スケーラビリティを確保。Vercelなどのサーバーレス環境でも利用可能なようにコンポーネントの分離を意識しています。
+## 🔧 技術スタック
 
-実装ハイライト:
+### フロントエンド基盤
+- **Next.js 14**: Reactフレームワーク
+- **TypeScript**: 静的型付け
+- **TailwindCSS**: スタイリング
+- **SCSS Modules**: コンポーネント別スタイリング
 
-発行: ワークフロー進捗の更新をRedisチャンネルに発行。
+### SSE接続管理
+- **Redis**: Pub/Subによるスケーラブルな通知
+- **Server-Sent Events**: リアルタイム通信
 
-購読: バックエンドがRedisチャンネルを購読し、SSEを介して接続クライアントに更新を配信。
+### 状態管理・データフェッチ
+- **ServerActions**: サーバーサイドでのデータ取得
+- **Zustand**: 量な状態管理
+- **useSWR**: データフェッチング
 
-### 4. ⛅️　Zustandによる状態管理
+### UI/UXライブラリ
+- **ReactFlow**: ワークフローの可視化
+- **Liveblocks**: リアルタイムコラボレーション
 
-グローバル状態管理: Zustandを使用して、クライアントサイドのSSE接続状態とアクティブなワークフローを管理。
+### 開発ツール
+- **ESLint**: コード品質管理
+- **Prettier**: コードフォーマット
+- **PostCSS**: CSSの最適化
 
-簡素化された統合: SSE接続の初期化や終了を簡単に行えるメソッドを提供し、複雑さを隠蔽。
+## 🚀 セットアップガイド
 
-### ワークフローアーキテクチャ
+### 環境変数の設定
 
-ワークフロー実行:
+`.env.local`ファイルを作成し、必要な環境変数を設定してください。詳細は`.env.sample`を参照してください。
 
-ユーザーがワークフローを開始するとトリガーされます。
+### 開発環境のセットアップ
 
-クライアントはリアルタイム進捗の受信のために/api/sse/[workflow_id]に接続します。
+```bash
+# パッケージのインストール
+npm install
 
-通知フロー:
+# 開発サーバーの起動
+npm run dev
+```
 
-ワークフローの進捗データは、Lambdaなどからバックエンドの/api/notifyエンドポイントに送信されます。
+## 📝 コード例
 
-バックエンドは進捗更新をRedisチャンネルに発行します。
-
-リアルタイム可視化:
-
-購読しているSSEクライアントがこれらの更新をリアルタイムで受信します。
-
-更新が動的に表示され、ユーザーは即座にワークフローの進捗を把握できます。
-
-コードハイライト
-Redis Pub/Sub統合を管理し、リアルタイムデータ配信を実現。
+### SSE接続の実装例
 
 ```typescript
 // /lib/sse/SSEClient.ts
@@ -179,7 +294,6 @@ export async function GET(req: NextRequest, { params }: { params: { workflow_id:
 }
 ```
 
-
 ワークフロー進捗更新を発行するためのAPIエンドポイント。
 ```typescript
 // /app/api/notify/route.ts
@@ -202,98 +316,43 @@ export async function POST(req: NextRequest) {
     console.error('Error in /api/notify:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-} 
-```
+}
 
-このアーキテクチャの優位性
-
-スケーラビリティ: Redis Pub/Subにより、多数のクライアントとワークフローを同時に処理可能。
-
-効率性: SSEはリアルタイム更新に最適な軽量な仕組みであり、サーバーとネットワークの負荷を最小化。
-
-開発者体験: Next.js App RouterとZustandの統合により、バックエンドとフロントエンド開発の効率化を実現。
-
-これらの技術の強みを活用することで、リアルタイムなワークフロー管理と可視化を実現する堅牢で応答性の高いシステムを構築しています。
-
-## プロジェクト構造
-
-本プロジェクトは、以下のような独自のモジュール分割アプローチで設計されています：
 
 ```
-src/
-├── features/          # 機能モジュール
-│   ├── workflow/      # メイン機能：ワークフロー管理
-│   │   ├── components/  # 機能固有のコンポーネント
-│   │   │   ├── WorkflowVisualizer/  # ワークフロー表示
-│   │   │   ├── TracesDashboard/     # トレース情報
-│   │   │   └── WorkflowHistories/   # 実行履歴
-│   │   ├── hooks/      # カスタムフック
-│   │   ├── stores/     # 状態管理
-│   │   ├── services/   # APIサービス
-│   │   └── types/      # 型定義
-│   └── room/         # マルチプレーヤーカーソルに関する機能
-├── components/        # 共通コンポーネント
-│   ├── ui-mass/      # 複合コンポーネント
-│   └── ui-parts/     # 基本コンポーネント
-├── lib/              # 共通ユーティリティ
-└── styles/           # グローバルスタイル
-```
 
-### モジュール構成の特徴
+## 🔍 主要な実装ポイント
 
-1. **機能ベースの分割**
-   - メイン機能とサポート機能の明確な分離
-   - 機能ごとの完全な独立性
-   - 依存関係の最小化
+### リアルタイム通信の最適化
 
-2. **コンポーネント階層**
-   - 複合/基本コンポーネントの明確な分離
-   - 再利用性を考慮した設計
-   - 責務の明確な定義
+- **SSE接続の効率化**
+  - 再接続ロジックの実装
+  - エラーハンドリングの強化
+  - メモリリークの防止
 
-3. **共通基盤**
-   - 通信機能の集約
-   - ユーティリティの共有
-   - スタイルの一元管理
+- **状態管理の最適化**
+  - Zustandによるグローバルステート
+  - useSWRによるキャッシュ制御
+  - 不要な再レンダリングの抑制
 
-## 技術スタック
+### UI/UXの改善
 
-### フロントエンド基盤
-- **Next.js 14**: Reactフレームワーク
-- **TypeScript**: 静的型付け
-- **TailwindCSS**: スタイリング
-- **SCSS Modules**: コンポーネント別スタイリング
+- **ワークフロー可視化**
+  - カスタムノードの実装
+  - アニメーションの最適化
+  - レスポンシブ対応
 
-### SSE接続管理
-- **Redis**: Pub/Subによるスケーラブルな通知
+- **パフォーマンス監視**
+  - メトリクスの可視化
+  - エラー検知と通知
+  - ログ収集の効率化
 
-### 状態管理・データフェッチ
-- **ServerActions**: サーバーサイドでのデータ取得
-- **Zustand**: 軽量な状態管理
-- **useSWR**: データフェッチング
 
-### UI/UXライブラリ
-- **ReactFlow**: ワークフローの可視化
-- **Liveblocks**: リアルタイムコラボレーション
+## 📫 フィードバック
 
-### 開発ツール
-- **ESLint**: コード品質管理
-- **Prettier**: コードフォーマット
-- **PostCSS**: CSSの最適化
+問題の報告や提案がございましたら、以下までご連絡くださいませ。
 
-## セットアップガイド
+- haru0408g1@gmail.com
 
-### 環境変数の設定
-
-`.env`ファイルを作成し、必要な環境変数を設定してください。詳細は`.env.sample`を参照してください。
-
-### 開発環境のセットアップ
-```bash
-# パッケージのインストール
-npm install
-
-# 開発サーバーの起動
-npm run dev
-```
-
+最後まで閲覧していただきありがとうございます。
 
