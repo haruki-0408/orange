@@ -182,7 +182,6 @@ export async function GET(req: NextRequest, { params }: { params: { workflow_id:
 
 ワークフロー進捗更新を発行するためのAPIエンドポイント。
 ```typescript
-
 // /app/api/notify/route.ts
 
 export async function POST(req: NextRequest) {
