@@ -1,8 +1,8 @@
 # 嘘論文生成アプリケーション(フロントエンド)
 
 ## 参考ドキュメント
-- [Miro 構想資料](https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893)
-- [サーバーサイド・インフラのリポジトリ](https://github.com/haruki-0408/melon)
+- <a href="https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893" target="_blank" rel="noopener noreferrer">Miro 構想資料</a>
+- <a href="https://github.com/haruki-0408/melon" target="_blank" rel="noopener noreferrer">サーバーサイド・インフラリポジトリ</a>
 
 ## はじめに
 
@@ -10,14 +10,20 @@
 
 運用・監視・保守を考慮したアプリの構想 →　アーキテクチャ設計 → 開発・実装能力 → デプロイ
 
-まで一貫した能力があることを表現するために作成しましたので、もしよろしければ[構想資料](https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893)の資料と[サーバーサイド・インフラ](https://github.com/haruki-0408/melon)のリポジトリも合わせてご覧くださいませ。
+まで一貫した能力があることを表現するために作成しましたので、もしよろしければ<a href="https://miro.com/app/board/uXjVLuyj9ss=/?share_link_id=568802384893" target="_blank" rel="noopener noreferrer">構想資料</a>と<a href="https://github.com/haruki-0408/melon" target="_blank" rel="noopener noreferrer">サーバーサイド・インフラ</a>のリポジトリも合わせてご覧くださいませ。
+
+## アプリケーションページ
+ぜひお気軽にお試しください！
+
+<a href="https://orange-webp.vercel.app/" target="_blank" rel="noopener noreferrer">嘘論文生成アプリケーション(FakeThesisGenerator)</a>
+
 
 ## プロジェクトの目的
 サーバーレスアーキテクチャで構築されたバックエンドと連携し、以下の機能を提供。
-- **ユーザーが入力したタイトルとカテゴリからユーモアのある嘘の内容の論文を生成AIを活用して作成する**
-- **生成プロセスの可視化**: Step Functionsの実行状態をリアルタイムに表示
-- **進捗管理**: 各ステップの実行状況をリアルタイムに監視
-- **パフォーマンス分析**: 実行時間やリソース使用状況の可視化
+- **ユーモアのある嘘論文の生成**: ユーザーが入力したタイトルとカテゴリからユーモアのある嘘の内容の論文を生成AIを活用して作成しPDF形式でダウンロードできる
+
+- **生成プロセスの可視化**: Redisを用いたSSE接続とReactFlowを活用してStep Functionsの実行状態をリアルタイムに表示
+- **パフォーマンス分析**: X-ray, Cloudwatch Logsを用いて実行時間やリソース使用状況など全体のログ・モニタリングの可視化できる
 - **マルチプレーヤーカーソルの表示**: 複数ユーザーでの同時閲覧感を出力(おまけ)
 
 ## 技術的なハイライト
@@ -25,6 +31,7 @@
 ### 1. リアルタイム通信の最適化
 - **SSEによる効率的な進捗監視**
   - 軽量な単方向通信による状態更新
+  - Redis Pub/Subによるスケーラブルな通知
   - 再接続ロジックによる安定性確保
   - バックエンドからのプッシュ通知
 
@@ -39,7 +46,8 @@
   - 状態に応じたオリジナルアニメーション
   - 進行状態を伝えるプログレスバーの表示
 
-- **リアルタイムコラボレーション**
+- **モニタリングパフォーマンス測定**
+  - X-ray, Cloudwatch Logsを用いて実行時間やリソース使用状況など全体のログ・モニタリングの可視化できる
   - マルチプレーヤーカーソル同期
   - LiveblocksによるWebSocketの制御
   - プレゼンス管理
@@ -64,121 +72,149 @@
 
 ### SSE進捗通知システム
 
-Server-Sent Events (SSE)を活用して、ワークフローの進捗状態をリアルタイムに更新する仕組みを実装しています。
+このプロジェクトは、Server-Sent Events (SSE)を活用して、ワークフローの進捗をリアルタイムで管理・可視化するための高スケーラブルなアーキテクチャを示しています。以下に主要技術とその役割を説明します。
 
-1. **SSEClientの実装(クラス)**
-  ```typescript
-   // src/lib/sse/SSEClient.ts
-   export default class SSEClient {
-    // 静的プロパティ：クライアントのデータを格納
-    private static clients: Map<string, Client[]> = new Map();
 
-    // クライアントを追加
-    static addClient(workflowId: string, controller: ReadableStreamDefaultController): void {
-      const currentClients = this.clients.get(workflowId) || [];
-      currentClients.push({ workflowId, controller });
-      this.clients.set(workflowId, currentClients);
-      console.log(`Client added for workflow: ${workflowId}, Total clients: ${currentClients.length}`);
+主要機能と技術
+
+### 1. ▼ Next.js App Router
+
+動的APIルート: Next.jsの動的ルーティング機能を活用し、ワークフロー進捗の更新やServer-Sent Events（SSE）接続のAPIリクエストを処理します。
+
+Node.jsランタイム: サーバーサイドレンダリングとNode.jsランタイムを活用し、低遅延で高い応答性を実現します。
+
+### 2. 👀 リアルタイム更新のためのServer-Sent Events (SSE)
+
+SSEストリーム: クライアントとの長時間接続を確立し、リアルタイムの進捗更新をプッシュします。ReadableStreamを使用してフロントエンドとシームレスに統合。
+
+イベント処理: 接続初期化、メッセージ処理、切断時のクリーンアップなど、クライアントライフサイクルを管理します。
+
+ユースケース: ワークフロー実行の進捗監視など、リアルタイムフィードバックが必要なシナリオに最適です。
+
+### 3. 🚨 Redis Pub/Subによるスケーラブルな通知
+
+![Redis Pub/Subを用いたSSE接続管理](./redis.png)
+
+Redis Pub/Subメカニズム: Redisを使用して、メッセージの発行と購読を行い、効率的に進捗更新を配信します。
+
+マルチクライアント対応: イベントプロデューサー（バックエンド）とイベントコンシューマー（SSEクライアント）を分離し、スケーラビリティを確保。Vercelなどのサーバーレス環境でも利用可能なようにコンポーネントの分離を意識しています。
+
+実装ハイライト:
+
+発行: ワークフロー進捗の更新をRedisチャンネルに発行。
+
+購読: バックエンドがRedisチャンネルを購読し、SSEを介して接続クライアントに更新を配信。
+
+### 4. ⛅️　Zustandによる状態管理
+
+グローバル状態管理: Zustandを使用して、クライアントサイドのSSE接続状態とアクティブなワークフローを管理。
+
+簡素化された統合: SSE接続の初期化や終了を簡単に行えるメソッドを提供し、複雑さを隠蔽。
+
+### ワークフローアーキテクチャ
+
+ワークフロー実行:
+
+ユーザーがワークフローを開始するとトリガーされます。
+
+クライアントはリアルタイム進捗の受信のために/api/sse/[workflow_id]に接続します。
+
+通知フロー:
+
+ワークフローの進捗データは、Lambdaなどからバックエンドの/api/notifyエンドポイントに送信されます。
+
+バックエンドは進捗更新をRedisチャンネルに発行します。
+
+リアルタイム可視化:
+
+購読しているSSEクライアントがこれらの更新をリアルタイムで受信します。
+
+更新が動的に表示され、ユーザーは即座にワークフローの進捗を把握できます。
+
+コードハイライト
+Redis Pub/Sub統合を管理し、リアルタイムデータ配信を実現。
+
+```typescript
+// /lib/sse/SSEClient.ts
+static async subscribeRedis(workflowId: string, controller: ReadableStreamDefaultController): Promise<void> {
+  this.redisSubscribe.subscribe(workflowId, (error) => {
+    if (error) {
+      console.error('Failed to subscribe:', error);
     }
+  });
 
-    // クライアントを削除
-    static removeClient(workflowId: string, controller: ReadableStreamDefaultController): void {
-      const currentClients = this.clients.get(workflowId);
-      if (!currentClients) return;
+  this.redisSubscribe.on('message', (channel, message) => {
+    controller.enqueue(new TextEncoder().encode(`data: ${message}\n\n`));
+  });
+}
 
-      const updatedClients = currentClients.filter(client => client.controller !== controller);
-      if (updatedClients.length === 0) {
-        this.clients.delete(workflowId);
-      } else {
-        this.clients.set(workflowId, updatedClients);
-      }
-      console.log(`Client removed for workflow: ${workflowId}, Remaining clients: ${updatedClients.length}`);
-    }
+static async publishProgress(workflowId: string, data: ProgressData): Promise<void> {
+  await this.redisPublish.publish(workflowId, JSON.stringify(data));
+}
+```
 
-    // 指定されたworkflowIdのクライアントにデータを送信
-    static broadcastToWorkflow(workflowId: string, data: ProgressData): void {
-      const currentClients = this.clients.get(workflowId);
+クライアント接続を確立し管理するSSE APIルートを定義。
+```typescript
+// /app/api/sse/[workflow_id]/route.ts
 
-      console.log(`Broadcasting to workflow ${workflowId}, Active clients:`, 
-        currentClients?.length || 0
-      );
+export async function GET(req: NextRequest, { params }: { params: { workflow_id: string } }) {
+  const { workflow_id } = params;
 
-      if (!currentClients || currentClients.length === 0) {
-        console.warn(`No active clients found for workflow: ${workflowId}`);
-        return;
-      }
-
-      const message = `data: ${JSON.stringify(data)}\n\n`;
-      const encoded = new TextEncoder().encode(message);
-
-      const failedClients: number[] = [];
-      currentClients.forEach((client, index) => {
-        try {
-          client.controller.enqueue(encoded);
-          console.log(`Message sent to client for workflow: ${workflowId}`);
-        } catch (error) {
-          console.error(`Failed to send message to client for workflow: ${workflowId}`, error);
-          failedClients.push(index);
-        }
+  const stream = new ReadableStream({
+    start(controller) {
+      SSEClient.subscribeRedis(workflow_id, controller);
+      req.signal.addEventListener('abort', () => {
+        SSEClient.unsubscribeRedis(workflow_id);
       });
+    },
+  });
 
-      // 失敗したクライアントを除去
-      if (failedClients.length > 0) {
-        const validClients = currentClients.filter((_, index) => !failedClients.includes(index));
-        if (validClients.length === 0) {
-          this.clients.delete(workflowId);
-        } else {
-          this.clients.set(workflowId, validClients);
-        }
-      }
-    }
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    },
+  });
+}
+```
 
-    // アクティブなクライアント数を取得
-    static getActiveClientsCount(workflowId: string): number {
-      return this.clients.get(workflowId)?.length || 0;
-    }
+
+ワークフロー進捗更新を発行するためのAPIエンドポイント。
+```typescript
+
+// /app/api/notify/route.ts
+
+export async function POST(req: NextRequest) {
+  try {
+    const json = await req.json();
+    const { workflow_id, status, state_name } = json;
+
+    const progress: ProgressData = {
+      execution_id: json.execution_id,
+      status,
+      state_name,
+      timestamp: new Date().toISOString(),
+    };
+
+    await SSEClient.publishProgress(workflow_id, progress);
+    return NextResponse.json({ status: 'ok' });
+  } catch (error) {
+    console.error('Error in /api/notify:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-   
-  ```
+} 
+```
 
-2. **進捗状態の管理(Zustand)**
-  ```typescript
-  // src/features/workflow/stores/useProgressStore.ts
-  export const useProgressStore = create<ProgressStore>((set, get) => ({
-    progressBar: {
-      percentage: 0,
-      status: 'PROCESSING'
-    },
-    updateProgress: (percentage, status) => {
-      set({ progressBar: { percentage, status } });
-      
-      if ((status === 'SUCCESS' && percentage === 100) || status === 'FAILED') {
-        get().onProgressComplete?.(status);
-      }
-    },
-    resetProgress: () => set({
-      progressBar: { percentage: 0, status: 'PROCESSING' }
-    }),
-    onProgressComplete: undefined,
-    setOnProgressComplete: (callback) => set({ 
-      onProgressComplete: callback 
-    })
-  })); 
-  ```
+このアーキテクチャの優位性
 
-3. **UIコンポーネントとの連携(カスタムフック)**
-  ```typescript
-   // src/features/workflow/hooks/useWorkflowProgress.ts
-   export const useWorkflowProgress = (workflowId: string) => {
-     const sseManager = useMemo(() => new SSEClient(), []);
-     const updateProgress = useProgressStore((state) => state.updateProgress);
-     
-     useEffect(() => {
-       sseManager.connect(workflowId);
-       return () => sseManager.disconnect();
-     }, [workflowId]);
-   };
-  ```
+スケーラビリティ: Redis Pub/Subにより、多数のクライアントとワークフローを同時に処理可能。
+
+効率性: SSEはリアルタイム更新に最適な軽量な仕組みであり、サーバーとネットワークの負荷を最小化。
+
+開発者体験: Next.js App RouterとZustandの統合により、バックエンドとフロントエンド開発の効率化を実現。
+
+これらの技術の強みを活用することで、リアルタイムなワークフロー管理と可視化を実現する堅牢で応答性の高いシステムを構築しています。
 
 ## プロジェクト構造
 
@@ -229,9 +265,12 @@ src/
 - **TailwindCSS**: スタイリング
 - **SCSS Modules**: コンポーネント別スタイリング
 
+### SSE接続管理
+- **Redis**: Pub/Subによるスケーラブルな通知
+
 ### 状態管理・データフェッチ
 - **ServerActions**: サーバーサイドでのデータ取得
-- **Zustand**: 軽量な状態管理
+- **Zustand**: 量な状態管理
 - **useSWR**: データフェッチング
 
 ### UI/UXライブラリ
@@ -245,6 +284,10 @@ src/
 
 ## セットアップガイド
 
+### 環境変数の設定
+
+`.env`ファイルを作成し、必要な環境変数を設定してください。詳細は`.env.sample`を参照してください。
+
 ### 開発環境のセットアップ
 ```bash
 # パッケージのインストール
@@ -254,6 +297,4 @@ npm install
 npm run dev
 ```
 
-### 環境変数の設定
 
-`.env`ファイルを作成し、必要な環境変数を設定してください。詳細は`.env.sample`を参照してください。
